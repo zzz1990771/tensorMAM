@@ -1,0 +1,82 @@
+\name{generateData}
+\alias{generateData}
+\docType{package}
+\title{
+  Generate data from MAM model.
+}
+\description{
+  Generate data for a high-dimensional multivariate additive model, with or without aparsity assumptions.
+}
+
+\usage{
+generateData(n, q, p, s, D2, sigma2=NULL)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{n}{Sample size.}
+  
+  \item{q}{The number of responses.}
+  
+  \item{p}{The number of covariates.}
+  
+  \item{s}{The true covariates associating to response.}
+  
+  \item{D2}{The mode of unfolding \code{\eqn{D_{(2)}}}.}
+  
+  \item{sigma2}{err variance. Default is 0.1.}
+}
+
+\details{This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
+  tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
+  and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
+}
+
+\value{
+%%  ~Describe the value returned
+%%  If it is a LIST, use
+  \item{Y}{Response, a \code{\eqn{n\times q}}-matrix.}
+  
+  \item{X}{Design matrix, a \code{\eqn{n\times p}}-matrix.}
+  
+  \item{f0}{True functions.}
+}
+
+%\author{
+%Your Name, email optional.
+%Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
+%}
+\references{
+  A tensor estimation approach to multivariate additive models.
+}
+\keyword{ High-dimensional; Sparse models; Tensor estimation; Tucker decomposition. }
+\seealso{
+  mam_sparse
+}
+\examples{
+  # Example 1
+  D2 <- matrix(runif(30, 0.7, 1), 2, 15)
+  mydata <- generateData(200, 3, 5, 5, D2)
+    
+  Y <- mydata$Y  
+  X <- mydata$X
+    
+    
+  # Example 2
+  n <- 500
+  p <- 10
+  q <- 10
+  s <- 10
+  K <- 6
+  s0 <- s
+  r10=r20=r30=2
+  S3 <- matrix(runif(r10*r20*r30,3,7),nrow = r30)
+  T1 <- matrix(rnorm(s0*r10),nrow = s0)
+  U1 <- qr.Q(qr(T1))
+  T1 <- matrix(rnorm(K*r20),nrow = K)
+  U2 <- qr.Q(qr(T1))
+  T1 <- matrix(rnorm(q*r30),nrow = q)
+  U3 <- qr.Q(qr(T1))
+  D3 <- U3\%*\%S3\%*\%t(kronecker(U2,U1))
+  D2 <- TransferModalUnfoldings(D3,3,2,s0,K,q)
+  mydata <- generateData(n,q,p,s0,D2)
+}

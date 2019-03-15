@@ -1,0 +1,23 @@
+Package: tensorMam
+Type: Package
+Title: tensorMam
+Version: 1.0
+Date: 2018-10-25
+Authors@R: c(person(given = "Xu", family = "Liu", role = c("aut","cre")),
+             person(given = "Jian", family = "Huang", role = "aut"),
+             person(given = "Heng", family = "Lian", role = "aut"),
+             person(given = "Xiangyong", family = "Tan", role = "ctb"))
+Author: Xu Liu [aut,cre], 
+        Jian Huang [aut],
+        Heng Lian [aut],
+        Xiangyong Tan [ctb]
+Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
+Description: A tensor Estimation approach to multivariate additive models. The B-splines are used to approximate unknown function. The number of predictors can be diverged as sample size increases, in which the penalty LASSO, MCP or SCAD can be used.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.11.15), RcppEigen (>= 0.3.2.3.0)
+LinkingTo: Rcpp, RcppEigen
+NeedsCompilation: yes
+Repository: github
+URL: https://github.com/xliusufe/tensorMam
+Encoding: UTF-8
+Packaged: 2018-09-17 01:35:21 UTC; admin

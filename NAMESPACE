@@ -1,0 +1,4 @@
+import('splines')
+useDynLib(tensorMam, .registration=TRUE)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
