@@ -53,8 +53,18 @@ truefuns <- function(n,q,p,s,D2,seed_id){
 }
 ##--------------generate data----------------------##
 generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
+  if(n<2) stop("n must be not smaller than 2")
+  if(q<1) stop("q must be not smaller than 1")
+  if(p<1) stop("p must be not smaller than 1")
+  if(s<1) stop("s must be not smaller than 1")
+  pq <- dim(D2)
+  if(is.null(np)|(np[1]<=1)|(np[2]<=1))stop("D2 should be a matrix with 2 or more rows and columns")
   if(is.null(t)) t = 0
   if(is.null(sigma2)) sigma2 = 0.1
+  if(sigma2<=0){
+    warning("alpha<0; set to 0")
+    sigma2=0.1
+  }
   set.seed(seed_id)
   rho = 0.0
   W <- matrix(runif(n*p), nrow = n)
@@ -68,16 +78,21 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
   f0 <- matrix(rep(basefuns1,q),nrow=n)*matrix(rep(D2[1,],each=n),n) + matrix(rep(basefuns2,q),nrow=n)*matrix(rep(D2[2,],each=n),n)
   
   Sigma = matrix(rho,q,q)+diag(1-rho,q,q)
-  A = chol(Sigma) #t(A)*A=Sigma
+  A = chol(Sigma) 
   eps <- matrix(rnorm(n*q),n,q)
-  Y <- fl + sigma2*eps%*%A
-  #Y <- fl + eps
+  Y <- fl + sqrt(sigma2)*eps%*%A
   return(list(Y=Y,X=X,f0=f0))
 }
 
 ##--------------plot curve of function f_{jl} ----------------------##
 plotfuns <- function(fit,funTrueID){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
+  qj1 = funTrueID[1]
+  qj = funTrueID[2]
+  if(qj1>s0) stop("j must not be larger than s !")
+  if(qj>q) stop("l must not be larger than q !")
+  j0 = s0*(qj-1) + qj1
+  
   n = nrow(fit$Y)
   p = ncol(fit$X)
   q = ncol(fit$Y)
@@ -85,12 +100,6 @@ plotfuns <- function(fit,funTrueID){
   D2 = fit$D2
   X = fit$X0
   n0 = nrow(X)
-  
-  qj1 = funTrueID[1]
-  qj = funTrueID[2]
-  j0 = s0*(qj-1) + qj1
-  if(qj1>s0) stop("j must not be larger than s !")
-  if(qj>q) stop("l must not be larger than q !")
   
   funhat = trans(X,fit$Dnew,p,q,fit$K,fit$degr,s0)
   

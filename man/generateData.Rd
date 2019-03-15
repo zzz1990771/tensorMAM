@@ -15,11 +15,11 @@ generateData(n, q, p, s, D2, sigma2=NULL)
 \arguments{
   \item{n}{Sample size.}
   
-  \item{q}{The number of responses.}
+  \item{q}{The number of responses, \code{\eqn{q\geq1}}.}
   
-  \item{p}{The number of covariates.}
+  \item{p}{The number of covariates, \code{\eqn{p\geq1}}.}
   
-  \item{s}{The true covariates associating to response.}
+  \item{s}{The true covariates associating to response, \code{\eqn{s\geq1}}.}
   
   \item{D2}{The mode of unfolding \code{\eqn{D_{(2)}}}.}
   

@@ -1,7 +1,6 @@
 
 ##--------------without sparsity----------------------##
 mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,degr=3,eps=1e-4,max_step=20){
-
   n <- dim(Y)[1]
   q <- dim(Y)[2]
   p <- dim(X)[2]
