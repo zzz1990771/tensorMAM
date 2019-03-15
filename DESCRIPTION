@@ -16,6 +16,7 @@ Description: A tensor Estimation approach to multivariate additive models. The B
 License: GPL (>= 2)
 Imports: splines, Rcpp (>= 0.11.15), RcppEigen (>= 0.3.2.3.0)
 LinkingTo: Rcpp, RcppEigen
+RoxygenNote: 6.0.1
 NeedsCompilation: yes
 Repository: github
 URL: https://github.com/xliusufe/tensorMam

@@ -30,11 +30,13 @@
   \item{r1_index}{A user-specified sequence of \code{\eqn{r_1}} values, where 
                    \code{\eqn{r_1}} is the first dimension of single value matrix of the 
                    tensor. Default is 
-                   \code{r1_index\eqn{=1,\cdots,\min(\log(n)\rceil,p)}}.}
+                   \code{r1_index\eqn{=1,\cdots,\min(\log(n)\rceil,p)}}.
+                   }
    
   \item{r2_index}{A user-specified sequence of \code{\eqn{r_2}} values, where 
                   \code{\eqn{r_2}} is the second dimension of single value matrix of the 
                   tensor. Default is \code{r2_index\eqn{=1,\cdots},max{K_index}.}
+                  }
    
   \item{r3_index}{A user-specified sequence of \code{\eqn{r_3}} values, where 
                   \code{\eqn{r_3}} is the third dimension of single value matrix of the  
@@ -82,17 +84,17 @@
 %Your Name, email optional.
 %Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
 %}
-\references{"A tensor estimation approach to multivariate additive models".
+\references{A tensor estimation approach to multivariate additive models.
 }
-\keyword{High-dimensional; Sparse models; Tensor estimation; Tucker decomposition. }
 \seealso{
-  mam and mam_sparse_dr
+  mam, mam_sparse_dr
 }
 \examples{ 
-    D2 <- matrix(runif(50, 0.7, 1), 2, 25)
+    D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
     mydata <- generateData(200, 5, 5, 5, D2)
     
     fit <- mam_dr(mydata$Y, mydata$X)
     D3hat <- fit$Dnew
+    D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
     opt <- fit$rk_opt
 }

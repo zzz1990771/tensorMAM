@@ -1,7 +1,7 @@
 \name{plotfuns}
 \alias{plotfuns}
 \docType{package}
-\title{Plot the estimated curves from \codes{tensorMam}.}
+\title{Plot the estimated curves from \code{tensorMam}.}
 \description{
   Plot the curves fit by \code{mam}, \code{mam_dr}, \code{mam_sparse}, and \code{mam_sparse_dr}
 }
@@ -10,7 +10,7 @@
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{fit}{\code{mam} or \code{mam_sparse} object.
+  \item{fit}{object output from \code{mam}, \code{mam_dr}, \code{mam_sparse} or \code{mam_sparse_dr}.
 }
   \item{funTrueID}{Which function be plotted.}
 }
@@ -20,17 +20,11 @@
   tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
   and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
 }
-
-%\author{
-%Your Name, email optional.
-%Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
-%}
 \references{
   A tensor estimation approach to multivariate additive models.
 }
-\keyword{ High-dimensional; Sparse models; Tensor estimation; Tucker decomposition. }
 \seealso{
-  mam
+  mam, mam_dr, mam_sparse, mam_sparse_dr
 }
 \examples{
   n <- 200

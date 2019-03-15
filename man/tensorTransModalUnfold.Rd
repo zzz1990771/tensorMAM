@@ -52,6 +52,6 @@ tensorTransModeUnfold(T, d1, d2 , r1, r2, r3)
 }
 \keyword{ High-dimensional, Sparse models; Tensor estimation; Tucker decomposition. }
 \examples{
-  T <- matrix(1:24,nrow = 4)
-  TransferModalUnfoldings(T,1,2,4,3,2)
+  D1 <- matrix(1:24,nrow = 4) # tensor with size 5*2*5
+  D2 <- TransferModalUnfoldings(D1,1,2,4,3,2)
 }

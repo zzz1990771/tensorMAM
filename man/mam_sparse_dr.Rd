@@ -26,7 +26,7 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   \item{method}{The method to be applied to select parameters.  Either "BIC"
                 (the default), or "CV".}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is                   \code{"BIC"}, \code{ncv} is useless.}
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is \code{BIC}, \code{ncv} is useless.}
   
   \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default), 
                  "SCAD", or "MCP".}
@@ -42,6 +42,7 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   \item{r2_index}{A user-specified sequence of \code{\eqn{r_2}} values, where 
                   \code{\eqn{r_2}}is the second dimension of single value matrix of the
                   tensor. Default is\code{r2_index\eqn{=1,\cdots},max{K_index}.}
+                  }
                   
   \item{r3_index}{A user-specified sequence of \code{\eqn{r_3}} values, where 
                   \code{\eqn{r_3}} is the third dimension of single value matrix of the  
@@ -111,11 +112,9 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   
   \item{lambda}{The sequence of regularization parameter values in the path.}
   
-  \item{selectedID }{The index of \code{lambda} corresponding to
-                    \code{lambda_opt}.}
+  \item{selectedID }{The index of \code{lambda} corresponding to \code{lambda_opt}.}
   
-  \item{lambda_opt }{The value of \code{lambda} with the minimum \code{BIC} or \code{CV}
-                     value.}
+  \item{lambda_opt }{The value of \code{lambda} with the minimum \code{BIC} or \code{CV} value.}
   
   \item{RSS}{The values of \code{BIC} or \code{CV}, which is a vector.}
   
@@ -136,17 +135,17 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 \references{
   A tensor estimation approach to multivariate additive models.
 }
-\keyword{ High-dimensional; Sparse models; Tensor estimation; Tucker decomposition. }
 \seealso{
   mam_dr, mam_sparse
 }
 
 \examples{
-     D2 <- matrix(runif(50, 0.7, 1), 2, 25)
+     D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
      mydata <- generateData(200, 5, 10, 5, D2)
      
      fit <- mam_sparse_dr(mydata$Y, mydata$X)
      D3hat <- fit$Dnew
+     D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
      opt <- fit$rk_opt
 
 }

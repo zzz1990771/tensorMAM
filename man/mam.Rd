@@ -71,9 +71,10 @@ A tensor estimation approach to multivariate additive models.
   mam_sparse
 }
 \examples{ 
-    D2 <- matrix(runif(50, 0.7, 1), 2, 25)
+    D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
     mydata <- generateData(200, 5, 5, 5, D2)
     
     fit <- mam(mydata$Y, mydata$X)
     D3hat <- fit$Dnew
+    D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
 }

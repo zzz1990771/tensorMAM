@@ -124,10 +124,11 @@ mam_sparse(y, x, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
 }
 
 \examples{
-    D2 <- matrix(runif(50, 0.7, 1), 2, 25)
+    D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
     mydata <- generateData(200, 5, 10, 5, D2)
      
     fit <- mam_sparse(mydata$Y, mydata$X)
     D3hat <- fit$Dnew
+    D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
 
 }
