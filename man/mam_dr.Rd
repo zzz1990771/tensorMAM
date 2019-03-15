@@ -93,5 +93,6 @@
     mydata <- generateData(200, 5, 5, 5, D2)
     
     fit <- mam_dr(mydata$Y, mydata$X)
+    D3hat <- fit$Dnew
     opt <- fit$rk_opt
 }

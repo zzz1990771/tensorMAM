@@ -146,6 +146,7 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
      mydata <- generateData(200, 5, 10, 5, D2)
      
      fit <- mam_sparse_dr(mydata$Y, mydata$X)
+     D3hat <- fit$Dnew
      opt <- fit$rk_opt
 
 }

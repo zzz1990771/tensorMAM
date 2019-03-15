@@ -75,5 +75,5 @@ A tensor estimation approach to multivariate additive models.
     mydata <- generateData(200, 5, 5, 5, D2)
     
     fit <- mam(mydata$Y, mydata$X)
-    Coeff <- fit$Dnew
+    D3hat <- fit$Dnew
 }

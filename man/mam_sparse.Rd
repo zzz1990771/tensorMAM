@@ -128,6 +128,6 @@ mam_sparse(y, x, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
     mydata <- generateData(200, 5, 10, 5, D2)
      
     fit <- mam_sparse(mydata$Y, mydata$X)
-    Coeff <- fit$Dnew
+    D3hat <- fit$Dnew
 
 }
