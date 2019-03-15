@@ -34,7 +34,7 @@
    
   \item{r2_index}{A user-specified sequence of \code{\eqn{r_2}} values, where 
                   \code{\eqn{r_2}} is the second dimension of single value matrix of the 
-                  tensor. Default is \code{r2_index\eqn{=1,\cdots,\max{K_index}}}.}
+                  tensor. Default is \code{r2_index\eqn{=1,\cdots},max{K_index}.}
    
   \item{r3_index}{A user-specified sequence of \code{\eqn{r_3}} values, where 
                   \code{\eqn{r_3}} is the third dimension of single value matrix of the  
@@ -67,7 +67,7 @@
   
   \item{rss}{Residual sum of squares (RSS).}
   
-  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}.}
+  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \code{\eqn{r_1},  \eqn{r_2}, \eqn{r_3}}, and \code{\eqn{K}}.}
   
   \item{selected}{Which \eqn{\lambda} is selection.}
   

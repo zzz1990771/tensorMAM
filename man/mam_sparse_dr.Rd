@@ -41,7 +41,7 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
             
   \item{r2_index}{A user-specified sequence of \code{\eqn{r_2}} values, where 
                   \code{\eqn{r_2}}is the second dimension of single value matrix of the
-                  tensor. Default is\code{r2_index\eqn{=1,\cdots,\max{K_index}}}.}
+                  tensor. Default is\code{r2_index\eqn{=1,\cdots},max{K_index}.}
                   
   \item{r3_index}{A user-specified sequence of \code{\eqn{r_3}} values, where 
                   \code{\eqn{r_3}} is the third dimension of single value matrix of the  
@@ -119,7 +119,7 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   
   \item{RSS}{The values of \code{BIC} or \code{CV}, which is a vector.}
   
-  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}.}
+  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \code{\eqn{r_1},  \eqn{r_2}, \eqn{r_3}}, and \code{\eqn{K}}.}
   
   \item{Y}{Response \code{\eqn{Y}}.}
   

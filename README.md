@@ -22,7 +22,7 @@
     D2 <- matrix(runif(50, 0.7, 1), 2, 25)
     mydata <- generateData(200, 5, 5, 5, D2)    
     fit <- mam(mydata$Y, mydata$X)
-    Coeff <- fit$Dnew
+    coeff <- fit$Dnew
     
     fit_dr <- mam_dr(mydata$Y, mydata$X)
     opt <- fit_dr$rk_opt

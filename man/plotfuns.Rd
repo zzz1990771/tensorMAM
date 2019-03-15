@@ -10,7 +10,7 @@
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{fit}{??????\code{mam} or \code{mam_sparse} object.
+  \item{fit}{\code{mam} or \code{mam_sparse} object.
 }
   \item{funTrueID}{Which function be plotted.}
 }
@@ -33,10 +33,26 @@
   mam
 }
 \examples{
-\dontrun{
-    D2 <- matrix(runif(50, 0.7, 1), 2, 25)
-    mydata <- generateData(200, 5, 5, 5, D2)
-    fit <- mam(mydata$Y, mydata$X)
-    plotfuns(fit, c(1,1)) 
-}
+  n <- 200
+  p <- 10
+  q <- 10
+  s <- 10
+  K <- 6
+  s0 <- s
+  r10=r20=r30=2
+  S3 <- matrix(runif(r10*r20*r30,3,7),nrow = r30)
+  T1 <- matrix(rnorm(s0*r10),nrow = s0)
+  U1 <- qr.Q(qr(T1))
+  T1 <- matrix(rnorm(K*r20),nrow = K)
+  U2 <- qr.Q(qr(T1))
+  T1 <- matrix(rnorm(q*r30),nrow = q)
+  U3 <- qr.Q(qr(T1))
+  D3 <- U3\%*\%S3\%*\%t(kronecker(U2,U1))
+  D2 <- TransferModalUnfoldings(D3,3,2,s0,K,q)
+  mydata <- generateData(n, q, p, K, D2)
+  fit <- mam(mydata$Y, mydata$X)
+  fit$D2 <- D2
+  fit$s0 <- s0
+  fit$X0 <- matrix(runif(100*p),100,p)
+  plotfuns(fit, c(1,1)) 
 }

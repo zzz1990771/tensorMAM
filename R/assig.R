@@ -70,30 +70,6 @@ truefuns <- function(n,q,p,s,D2,seed_id){
   
 }
 ##--------------generate data----------------------##
-generateData1 <- function(n,q,p,s,D2,seed_id,rho=0.0,S = NULL){
-  set.seed(seed_id)
-  if(is.null(S)) {
-    S = diag(p)
-    for(j in 1:p){
-      for(i in j:p) S[i,j]= rho^(i-j)
-    }
-    S = S + t(S) - diag(p)
-  }
-  Sroot <- chol(S)
-  X <- matrix(runif(n*p), nrow = n)%*%Sroot
-  X1 <- X[,1:s]
-  basefuns1 <- sin(2*pi*X1)
-  basefuns2 <- cos(pi*X1)
-  
-  fl <- basefuns1%*%matrix(D2[1,],nrow=s)+basefuns2%*%matrix(D2[2,],nrow=s)
-  f0 <- matrix(rep(basefuns1,q),nrow=n)*matrix(rep(D2[1,],each=n),n) + matrix(rep(basefuns2,q),nrow=n)*matrix(rep(D2[2,],each=n),n)
-  
-  eps <- matrix(rnorm(n*q),n,q)
-  Y <- fl + eps*0.1
-  return(list(Y=Y,X=X,f0=f0))
-}
-
-##--------------generate data----------------------##
 generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
   if(is.null(t)) t = 0
   if(is.null(sigma2)) sigma2 = 0.1
@@ -117,30 +93,15 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
   return(list(Y=Y,X=X,f0=f0))
 }
 
-##--------------generate data----------------------##
-generateData2 <- function(n,q,p,s,D3,K,degr,seed_id, t=NULL, sigma2=NULL){
-  if(is.null(t)) t = 0
-  if(is.null(sigma2)) sigma2 = 0.1
-  set.seed(seed_id)
-  W <- matrix(runif(n*p), nrow = n)
-  U <- runif(n)
-  X <- (W+t*matrix(rep(U,p),nrow = n))/(1+t)
-  X1 <- X[,1:s]
-  
-  Z = bsbasefun(X1,K,degr)
-  fl = Z%*%t(D3)
-  f0 = fl
-  eps <- matrix(rnorm(n*q),n,q)
-  Y <- fl + sigma2 * eps
-  return(list(Y=Y,X=X,f0=f0))
-}
-
 ##--------------plot curve of function f_{jl} ----------------------##
 plotfuns <- function(fit,funTrueID){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
-  n = fit$n
-  p = fit$p
-  q = fit$q
+  Y = fit$Y
+  X = fit$X
+  
+  n = ncol(Y)
+  p = nrow(X)
+  q = nrow(Y)
   s0 = fit$s0
   D2 = fit$D2
   X = fit$X0
@@ -169,22 +130,7 @@ plotfuns <- function(fit,funTrueID){
 }
 
 
-Imse <- function(fit){
-  n = fit$n
-  p = fit$p
-  q = fit$q
-  s0 = fit$s0
-  D2 = fit$D2
-  X = fit$X0
-  funhat = fit$funhat
-  
-  n0 = dim(X)[1]
-  X1 <- X[,1:s0]
-  basefuns1 <- sin(2*pi*X1)
-  basefuns2 <- cos(pi*X1)
-  f0 <- matrix(rep(basefuns1,q),nrow=n0)*matrix(rep(D2[1,],each=n0),n0)+matrix(rep(basefuns2,q),nrow=n0)*matrix(rep(D2[2,],each=n0),n0)
-  return(colSums((f0-funhat)^2)/n0)
-}
+
 
 plotfuns1 <- function(fit,funTrueID){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
@@ -269,22 +215,5 @@ plotfuns2 <- function(fit,funTrueID){
   lines(w,f11hat[iw],col="red")
 }
 
-Imse2 <- function(fit){
-  n = fit$n
-  p = fit$p
-  q = fit$q
-  s0 = fit$s0
-  D2 = fit$D2
-  X = fit$X0
-  K = fit$K
-  degr = fit$degr
-  funhat = fit$funhat
-  
-  n0 = dim(X)[1]
-  X1 <- X[,1:s0]
-  D3 = TransferModalUnfoldings(D2,2,3,s0,K,q)
-  f0 = trans(X1,D3,s0,q,K,degr,s0)
-  return(colSums((f0-funhat)^2)/n0)
-}
 
 
