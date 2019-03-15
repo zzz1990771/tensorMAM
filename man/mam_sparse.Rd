@@ -10,16 +10,16 @@
 }
 
 \usage{
-mam_sparse(y, x, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
+mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
            lambda = NULL, SABC = NULL, degr = 3, nlam = 20, lam_min = 1e-3, 
            eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, maxstep2 = 20, gamma = 2,
            dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
   
-  \item{x}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
+  \item{X}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
   
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
           functioin and the number of knots. Default is \code{7}.}

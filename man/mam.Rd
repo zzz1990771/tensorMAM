@@ -9,14 +9,14 @@
   Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and given ranks given ranks \eqn{r_1, r_2, r_3}.
 }
 
-\usage{mam(y, x, K = 7, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, degr = 3,
+\usage{mam(Y, X, K = 7, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, degr = 3,
        eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
   
-  \item{x}{A \code{\eqn{n\times p}} numeric design matrix for the model.}
+  \item{X}{A \code{\eqn{n\times p}} numeric design matrix for the model.}
   
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base functioin and the number of knots. Default is \code{6}.}
   

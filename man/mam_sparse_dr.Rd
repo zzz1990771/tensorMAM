@@ -11,7 +11,7 @@
 }
 
 \usage{
-mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
+mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
               r1_index = NULL, r2_index = NULL, r3_index = NULL, lambda = NULL,
               SABC = NULL, nlam = 50, degr = 3, lam_min = 0.01,
               eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, maxstep2 = 20, gamma = 2,
@@ -19,9 +19,9 @@ mam_sparse_dr(y, x, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
   
-  \item{x}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
+  \item{X}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
   
   \item{method}{The method to be applied to select parameters.  Either "BIC"
                 (the default), or "CV".}

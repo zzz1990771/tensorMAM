@@ -3,16 +3,16 @@
 \docType{package}
 \title{Plot the estimated curves from \code{tensorMam}.}
 \description{
-  Plot the curves fit by \code{mam}, \code{mam_dr}, \code{mam_sparse}, and \code{mam_sparse_dr}
+  Plot the curves fitted by \code{mam}, \code{mam_dr}, \code{mam_sparse}, and \code{mam_sparse_dr}
 }
 
 \usage{plotfuns(fit,funTrueID)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{fit}{object output from \code{mam}, \code{mam_dr}, \code{mam_sparse} or \code{mam_sparse_dr}.
+  \item{fit}{Object outputting from \code{mam}, \code{mam_dr}, \code{mam_sparse} or \code{mam_sparse_dr}.
 }
-  \item{funTrueID}{Which function be plotted.}
+  \item{funTrueID}{Which function to be plotted. It is a 2-vector. In MAM models, there are \eqn{s_0\times q} true functions. Thus, the first argument must be smaller than \eqn{s_0}, and the second argument must be smaller than \eqn{q}.}
 }
 
 \details{

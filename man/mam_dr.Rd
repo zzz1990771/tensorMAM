@@ -9,15 +9,15 @@
   Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and with ranks \eqn{r_1, r_2, r_3} selected by \code{BIC} or \code{CV}.
 } 
 
-\usage{mam_dr(y, x, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
+\usage{mam_dr(Y, X, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
        r2_index = NULL, r3_index = NULL, SABC = NULL, degr = 3, eps = 1e-4,
        max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
   
-  \item{x}{A \code{\eqn{n\times p}} numeric design matrix for the model.}
+  \item{X}{A \code{\eqn{n\times p}} numeric design matrix for the model.}
 
   \item{method}{The method to be applied to select parameters.  Either "BIC"
                 (the default), or "CV".}
