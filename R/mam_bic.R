@@ -32,7 +32,9 @@ mam_bic <- function(Y,X,K_index,r1_index,r2_index,r3_index,S,A,B,C,degr=3,eps=1e
               selected=selected,
               Y = Y,
               X = X,
-              Z = Z
+              Z = Z,
+              degr = degr,
+              K = K
               )
          )
 }

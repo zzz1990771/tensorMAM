@@ -49,7 +49,7 @@
   U3 <- qr.Q(qr(T1))
   D3 <- U3\%*\%S3\%*\%t(kronecker(U2,U1))
   D2 <- TransferModalUnfoldings(D3,3,2,s0,K,q)
-  mydata <- generateData(n, q, p, K, D2)
+  mydata <- generateData(n, q, p, s0, D2)
   fit <- mam(mydata$Y, mydata$X)
   fit$D2 <- D2
   fit$s0 <- s0

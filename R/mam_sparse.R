@@ -75,7 +75,9 @@ mam_sparse <-
                 Dnew=Dnew,
                 Y = Y,
                 X = X,
-                Z = Z
+                Z = Z,
+                degr = degr,
+                K = K
                 )
            )
   }

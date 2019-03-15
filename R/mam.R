@@ -31,7 +31,9 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,degr=3,eps=1e-4,max_st
               rss=fit$likhd,
               Y = Y,
               X = X,
-              Z = Z
+              Z = Z,
+              degr = degr,
+              K = K
               )
          )
 }

@@ -14,7 +14,7 @@ Author: Xu Liu [aut,cre],
 Maintainer: Xu Liu <liu.xu@sufe.edu.cn>
 Description: A tensor Estimation approach to multivariate additive models. The B-splines are used to approximate unknown function. The number of predictors can be diverged as sample size increases, in which the penalty LASSO, MCP or SCAD can be used.
 License: GPL (>= 2)
-Imports: Rcpp (>= 0.11.15), RcppEigen (>= 0.3.2.3.0)
+Imports: splines, Rcpp (>= 0.11.15), RcppEigen (>= 0.3.2.3.0)
 LinkingTo: Rcpp, RcppEigen
 NeedsCompilation: yes
 Repository: github

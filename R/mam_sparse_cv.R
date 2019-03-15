@@ -62,7 +62,9 @@ mam_sparse_cv <-
                 rk_opt=c(r1_opt,r2_opt,r3_opt,K_opt),
                 Y = Y,
                 X = X,
-                Z = Z
+                Z = Z,
+                degr = degr,
+                K = K
     )
     )
   }

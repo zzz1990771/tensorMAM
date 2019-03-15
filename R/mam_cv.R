@@ -45,7 +45,9 @@ mam_cv <- function(Y,X,ncv,K_index,r1_index,r2_index,r3_index,S,A,B,C,degr,eps,m
               selected=selected,
               Y = Y,
               X = X,
-              Z = Z
+              Z = Z,
+              degr = degr,
+              K = K
               )
          )
 }

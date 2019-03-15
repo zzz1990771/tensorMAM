@@ -6,25 +6,6 @@ assig <- function(n_args){
 }
 
 ##--------------produce the B-spline functions----------------------##
-bsbasefun1 <- function(X,K,degr){
-  n = dim(X)[1]
-  p = dim(X)[2]
-  nk = K - degr - 1
-  u.k = seq(0, 1, length=nk+2)[-c(1,nk+2)]
-  BS = NULL
-  for(j in 1:p){
-    Knots = as.numeric(quantile(X[,j], u.k))  
-    BS0 = bs(X[,j], knots=Knots, intercept=TRUE, degree=degr)
-    BS = cbind(BS,BS0)
-  }
-  id = seq(1,p*K,K)
-  Z = NULL
-  for(j in 1:K){
-    Z = cbind(Z,BS[,id+j-1])
-  }
-  return(Z)
-}
-
 bsbasefun <- function(X,K,degr){
   n = dim(X)[1]
   p = dim(X)[2]
@@ -52,6 +33,7 @@ trans <- function(X,D3,p,q,K,degr,s0){
   fjl = assig(c(s0,q))
   funhat = NULL
   for(j0 in 1:(q*s0)){
+    cat("j0=",j0,"\n")
     qj1 = fjl[1,j0]
     qj = fjl[2,j0]
     funhat = cbind(funhat,Z[,id+qj1-1]%*%D3[qj,id+qj1-1])
@@ -96,23 +78,21 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
 ##--------------plot curve of function f_{jl} ----------------------##
 plotfuns <- function(fit,funTrueID){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
-  Y = fit$Y
-  X = fit$X
-  
-  n = ncol(Y)
-  p = nrow(X)
-  q = nrow(Y)
+  n = nrow(fit$Y)
+  p = ncol(fit$X)
+  q = ncol(fit$Y)
   s0 = fit$s0
   D2 = fit$D2
   X = fit$X0
-  funhat = fit$funhat
-  n0 = dim(X)[1]
+  n0 = nrow(X)
   
   qj1 = funTrueID[1]
   qj = funTrueID[2]
   j0 = s0*(qj-1) + qj1
   if(qj1>s0) stop("j must not be larger than s !")
   if(qj>q) stop("l must not be larger than q !")
+  
+  funhat = trans(X,fit$Dnew,p,q,fit$K,fit$degr,s0)
   
   X1 <- X[,1:s0]
   basefuns1 <- sin(2*pi*X1)
@@ -126,92 +106,6 @@ plotfuns <- function(fit,funTrueID){
   
   f11hat = funhat[,j0]
   plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.2,max(f11[iw])+0.2))
-  lines(w,f11hat[iw],col="red")
-}
-
-
-
-
-plotfuns1 <- function(fit,funTrueID){
-  # funTrueID = c(j,l) is the index of the f_{jl}th function
-  n = fit$n
-  p = fit$p
-  q = fit$q
-  s0 = fit$s0
-  D2 = fit$D2
-  X = fit$X0
-  funhat = fit$funhat
-  
-  n0 = dim(X)[1]
-  
-  # Let true functions is a matrix F with dimension p*q
-  # Then qj is the column number of F
-  # qj1 is the row number of F
-  # that is, (qj1,qj) element of F
-  j0 = funTrueID
-  qj = ceiling(j0/s0)
-  qj1 = j0%%s0
-  
-  if(qj1==0) qj1=s0
-  if(qj1>s0) stop("j must not be larger than s !")
-  if(qj>q) stop("l must not be larger than q !")
-  cat("(j,l) = ",qj1,qj,"\n")
-  
-  
-  X1 <- X[,1:s0]
-  basefuns1 <- sin(2*pi*X1)
-  basefuns2 <- cos(pi*X1)
-  f0 <- matrix(rep(basefuns1,q),nrow=n0)*matrix(rep(D2[1,],each=n0),n0)+matrix(rep(basefuns2,q),nrow=n0)*matrix(rep(D2[2,],each=n0),n0)
-  xs = sort(X[,qj1],index.return = T)
-  w = xs$x
-  iw = xs$ix
-  if(qj1>s0)  f11 = rep(0,n)
-  if(qj1<=s0) f11 = f0[,j0]
-  
-  f11hat = funhat[,j0]
-  plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.1,max(f11[iw])+0.1))
-  lines(w,f11hat[iw],col="red")
-}
-
-plotfuns2 <- function(fit,funTrueID){
-  # funTrueID = c(j,l) is the index of the f_{jl}th function
-  n = fit$n
-  p = fit$p
-  q = fit$q
-  s0 = fit$s0
-  D2 = fit$D2
-  X = fit$X0
-  K = fit$K
-  funhat = fit$funhat
-  
-  degr = 3
-  n0 = dim(X)[1]
-  
-  # Let true functions is a matrix F with dimension p*q
-  # Then qj is the column number of F
-  # qj1 is the row number of F
-  # that is, (qj1,qj) element of F
-  j0 = funTrueID
-  qj = ceiling(j0/s0)
-  qj1 = j0%%s0
-  
-  if(qj1==0) qj1=s0
-  if(qj1>s0) stop("j must not be larger than s !")
-  if(qj>q) stop("l must not be larger than q !")
-  cat("(j,l) = ",qj1,qj,"\n")
-  
-  
-  X1 <- X[,1:s0]
-  D3 = TransferModalUnfoldings(D2,2,3,s0,K,q)
-  f0 = trans(X,D3,p,q,K,degr,s0)
-  xs = sort(X[,qj1],index.return = T)
-  w = xs$x
-  iw = xs$ix
-  if(qj1>s0)  f11 = rep(0,n)
-  if(qj1<=s0) f11 = f0[,j0]
-  
-  f11hat = funhat[,j0]
-  plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.1,max(f11[iw])+0.1))
   lines(w,f11hat[iw],col="red")
 }
 
