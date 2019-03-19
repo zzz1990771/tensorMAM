@@ -153,8 +153,9 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   #Example 2
 
   data(breastData)
-  Y = t(breastData$dna[breastData$chrom==21,]) 
-  Xt = t(breastData$rna[which(breastData$genechr==21),])
+  attach(breastData)
+  Y = t(dna[chrom==21,])
+  Xt = t(rna[which(genechr==21),])
   n = nrow(Y)
 
   minX = apply(Xt,2,min)
@@ -164,4 +165,5 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   fit <- mam_sparse_dr(Y, X)
   D3hat <- fit$Dnew
   opt <- fit$rk_opt
+  detach(breastData)
 }

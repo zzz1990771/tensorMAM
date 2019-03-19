@@ -51,8 +51,9 @@ nuclear norm penalization. Biometrika, {\bold{100(4)}}, 901-920.
 }
 \examples{
   data(breastData)
-  Y = t(breastData$dna[breastData$chrom==21,]) 
-  Xt = t(breastData$rna[which(breastData$genechr==21),])
+  attach(breastData)
+  Y = t(dna[chrom==21,])
+  Xt = t(rna[which(genechr==21),])
   n = nrow(Y)
 
   minX = apply(Xt,2,min)
@@ -62,5 +63,6 @@ nuclear norm penalization. Biometrika, {\bold{100(4)}}, 901-920.
   fit <- mam_sparse_dr(Y, X)
   D3hat <- fit$Dnew
   opt <- fit$rk_opt
+  detach(breastData)
 }
 \keyword{datasets}
