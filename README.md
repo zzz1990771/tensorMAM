@@ -7,8 +7,9 @@
   functions for sparsity situation.
 # Installation
 
-    #install.packages("devtools")
     #install Rtools 3.5 (http://cran.r-project.org/bin/windows/Rtools)
+    #install.packages("devtools")
+    #instal.packages("Rcpp")
     library(devtools)
     install_github("xliusufe/tensorMam")
 
