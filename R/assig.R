@@ -52,7 +52,7 @@ truefuns <- function(n,q,p,s,D2,seed_id){
   
 }
 ##--------------generate data----------------------##
-generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
+generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=NULL){
   if(n<2) stop("n must be not smaller than 2")
   if(q<1) stop("q must be not smaller than 1")
   if(p<1) stop("p must be not smaller than 1")
@@ -65,6 +65,7 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
     warning("sigma2 <= 0; set to 0.1")
     sigma2=0.1
   }
+  if(is.null(seed_id)) seed_id=1000
   set.seed(seed_id)
   rho = 0.0
   W <- matrix(runif(n*p), nrow = n)
@@ -89,8 +90,6 @@ plotfuns <- function(fit,funTrueID){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
   qj1 = funTrueID[1]
   qj = funTrueID[2]
-  if(qj1>s0) stop("j must not be larger than s !")
-  if(qj>q) stop("l must not be larger than q !")
   j0 = s0*(qj-1) + qj1
   
   n = nrow(fit$Y)

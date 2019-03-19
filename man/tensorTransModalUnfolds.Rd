@@ -8,18 +8,18 @@
 }
 
 \usage{
-tensorTransModeUnfold(T, d1, d2 , r1, r2, r3)
+tensorTransModeUnfolds(T, d1, d2 , r1, r2, r3)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{T}{
-  A mode-d1-unfolding of a tensor with size \code{\eqn{r_1\times r_2\times r_3}}, input unfolding
+  A mode-d1-unfolding of a tensor with size \eqn{r_1\times r_2\times r_3}, input unfolding
 }
   \item{d1}{
-  An integer, the mode of unfolding \code{\eqn{T_{(d_1)}}}
+  An integer, the mode of unfolding \eqn{T_{(d_1)}}
 }
   \item{d2}{
-   An integer, the mode of output unfolding \code{\eqn{T_{(d_2)}}}
+   An integer, the mode of output unfolding \eqn{T_{(d_2)}}
 }
   \item{r1}{
   The fist dimension of tensor 
@@ -33,14 +33,14 @@ tensorTransModeUnfold(T, d1, d2 , r1, r2, r3)
 }
 
 \details{
-  This function transfers an input mode-d1-unfolding \code{\eqn{T_{(d_1)}}} 
-  to mode-d2-unfolding \code{\eqn{T_{(d_2)}}}
+  This function transfers an input mode-d1-unfolding \eqn{T_{(d_1)}} 
+  to mode-d2-unfolding \eqn{T_{(d_2)}}
 }
 
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-  \item{D}{the output mode-d2-unfolding, \code{\eqn{T_{(d_2)}}}}
+  \item{D}{the output mode-d2-unfolding, \eqn{T_{(d_2)}}}
 }
 
 %\author{

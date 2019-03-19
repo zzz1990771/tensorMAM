@@ -17,8 +17,8 @@
 
 \details{
   This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
-  tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
-  and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
+  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2}
+  and \eqn{r_3} by \code{BIC} or \code{CV}.
 }
 \references{
   A tensor estimation approach to multivariate additive models.

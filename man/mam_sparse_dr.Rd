@@ -19,9 +19,9 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \eqn{n\times q} numeric matrix of responses.}
   
-  \item{X}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
+  \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
   
   \item{method}{The method to be applied to select parameters.  Either "BIC"
                 (the default), or "CV".}
@@ -34,27 +34,28 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   \item{K_index}{A user-specified sequence of \code{K} values, where \code{K} is he number 
                  of B-spline base function. Default is \code{k_index=6}.}
                  
-  \item{r1_index}{A user-specified sequence of \code{\eqn{r_1}} values, where 
-                  \code{\eqn{r_1}} is the first dimension of single value matrix of the  
+  \item{r1_index}{A user-specified sequence of \eqn{r_1} values, where 
+                  \eqn{r_1} is the first dimension of single value matrix of the  
                   tensor. Default is 
-                  \code{r1_index\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,p)}}.}
+                  \code{r1_index}\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,p)}.}
             
-  \item{r2_index}{A user-specified sequence of \code{\eqn{r_2}} values, where 
+  \item{r2_index}{A user-specified sequence of \eqn{r_2} values, where 
                   \code{\eqn{r_2}}is the second dimension of single value matrix of the
-                  tensor. Default is\code{r2_index\eqn{=1,\cdots},max{K_index}.}
+                  tensor. Default is \code{r2_index}\eqn{=1,\cdots},\code{max{K_index}.}
                   }
                   
-  \item{r3_index}{A user-specified sequence of \code{\eqn{r_3}} values, where 
-                  \code{\eqn{r_3}} is the third dimension of single value matrix of the  
+  \item{r3_index}{A user-specified sequence of \eqn{r_3} values, where 
+                  \eqn{r_3} is the third dimension of single value matrix of the  
                   tensor. Default is 
-                  \code{r3_index\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,q)}}.}
+                  \code{r3_index}\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,q)}.
+                  }
                   
   \item{lambda}{A user-specified sequence of lambda values.  By default,
                 a sequence of values of length \code{nlam} is computed, equally
                 spaced on the log scale.}
 
-  \item{SABC}{A user-specified list of initial coefficient matrix of \code{\eqn{S}},  
-              \code{\eqn{A}}, \code{\eqn{B}}, \code{\eqn{C}}. By default,
+  \item{SABC}{A user-specified list of initial coefficient matrix of \eqn{S},  
+              \eqn{A}, \eqn{B}, \eqn{C}. By default,
               initial matrices are provided by random.}
               
   \item{nlam}{The number of lambda values.  Default is 50.}
@@ -94,8 +95,8 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 
 \details{
   This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
-  tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
-  and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
+  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2} 
+  and \eqn{r_3}  by \code{BIC} or \code{CV}.
 }
 
 \value{
@@ -118,11 +119,11 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   
   \item{RSS}{The values of \code{BIC} or \code{CV}, which is a vector.}
   
-  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \code{\eqn{r_1},  \eqn{r_2}, \eqn{r_3}}, and \code{\eqn{K}}.}
+  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \eqn{r_1},  \eqn{r_2}, \eqn{r_3}, and \eqn{K}.}
   
-  \item{Y}{Response \code{\eqn{Y}}.}
+  \item{Y}{Response \eqn{Y}.}
   
-  \item{X}{Design matrix \code{\eqn{X}}.}
+  \item{X}{Design matrix \eqn{X}.}
   
   \item{Z}{Design matrix of Bspline approximation.}
   %\item{...}{ Other options for CompositeQuantile.}

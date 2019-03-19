@@ -17,9 +17,9 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{Y}{A \code{\eqn{n\times q}} numeric matrix of responses.}
+  \item{Y}{A \eqn{n\times q} numeric matrix of responses.}
   
-  \item{X}{A \code{\eqn{n\times q}} numeric design matrix for the model.}
+  \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
   
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
           functioin and the number of knots. Default is \code{7}.}
@@ -39,8 +39,8 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
         a sequence of values of length \code{nlam} is computed, equally
         spaced on the log scale.}
         
-  \item{SABC}{A user-specified list of initial coefficient matrix of \code{\eqn{S}},
-              \code{\eqn{A}}, \code{\eqn{B}}, \code{\eqn{C}}. By default,
+  \item{SABC}{A user-specified list of initial coefficient matrix of \eqn{S},
+              \eqn{A}, \eqn{B}, \eqn{C}. By default,
               initial matrices are provided by random.}
               
   \item{nlam}{The number of lambda values. Default is 20.}
@@ -78,14 +78,14 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
 
 \details{
   This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
-  tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
-  and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
+  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2} 
+  and \eqn{r_3}  by \code{BIC} or \code{CV}.
 }
 
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-  \item{betapath}{Solution path of \code{\eqn{\beta}}.}
+  \item{betapath}{Solution path of \eqn{\beta}.}
   
   \item{rss}{Residual sum of squares (RSS).}
   
@@ -101,13 +101,13 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
   
   \item{activeA}{The active set.}
   
-  \item{Dnew}{Estimator of \code{\eqn{D_{(3)}}}.}
+  \item{Dnew}{Estimator of \eqn{D_{(3)}}.}
   
-  \item{Y}{Response \code{\eqn{Y}}.}
+  \item{Y}{Response \eqn{Y}.}
   
-  \item{X}{Design matrix \code{\eqn{X}}.}
+  \item{X}{Design matrix \eqn{X}.}
   
-  \item{Z}{Design matrix of Bspline approximation \code{\eqn{\lambda}}.}
+  \item{Z}{Design matrix of Bspline approximation \eqn{\lambda}.}
   %\item{...}{ Other options for CompositeQuantile.}
 }
 

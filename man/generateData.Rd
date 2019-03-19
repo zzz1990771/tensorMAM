@@ -15,11 +15,11 @@ generateData(n, q, p, s, D2, sigma2=NULL)
 \arguments{
   \item{n}{Sample size.}
   
-  \item{q}{The number of responses, \code{\eqn{q\geq1}}.}
+  \item{q}{The number of responses, \eqn{q\geq1}.}
   
-  \item{p}{The number of covariates, \code{\eqn{p\geq1}}.}
+  \item{p}{The number of covariates, \eqn{p\geq1}.}
   
-  \item{s}{The true covariates associating to response, \code{\eqn{s\geq1}}.}
+  \item{s}{The true covariates associating to response, \eqn{s\geq1}.}
   
   \item{D2}{The mode of unfolding \code{\eqn{D_{(2)}}}.}
   
@@ -27,16 +27,16 @@ generateData(n, q, p, s, D2, sigma2=NULL)
 }
 
 \details{This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
-  tensor is a \code{\eqn{r_1\times r_2\times r_3}}-tensor. We choose \code{\eqn{r_1}}, \code{\eqn{r_2}} 
-  and \code{\eqn{r_3}}  by \code{BIC} or \code{CV}.
+  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2} 
+  and \eqn{r_3}  by \code{BIC} or \code{CV}.
 }
 
 \value{
 %%  ~Describe the value returned
 %%  If it is a LIST, use
-  \item{Y}{Response, a \code{\eqn{n\times q}}-matrix.}
+  \item{Y}{Response, a \eqn{n\times q}-matrix.}
   
-  \item{X}{Design matrix, a \code{\eqn{n\times p}}-matrix.}
+  \item{X}{Design matrix, a \eqn{n\times p}-matrix.}
   
   \item{f0}{True functions.}
 }

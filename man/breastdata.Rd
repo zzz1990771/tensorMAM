@@ -47,7 +47,7 @@ principal components and canonical correlation analysis. Biostatistics {\bold{10
 
 
 Chen, K., Dong, H., and Chan, K. S. (2013). Reduced rank regression via adaptive
-nuclear norm penalization. Biometrika, {\bold{100(4)}}, 901-920.
+nuclear norm penalization. Biometrika, {\bold{100 (4)}}, 901-920.
 }
 \examples{
   data(breastData)
