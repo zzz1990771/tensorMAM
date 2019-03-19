@@ -82,7 +82,7 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL,seed_id=NULL){
 }
 
 ##--------------plot curve of function f_{jl} ----------------------##
-plotfuns <- function(fit,funTrueID){
+plotfuns <- function(fit,funTrueID,true.curve){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
   qj1 = funTrueID[1]
   qj = funTrueID[2]
@@ -92,25 +92,32 @@ plotfuns <- function(fit,funTrueID){
   p = ncol(fit$X)
   q = ncol(fit$Y)
   s0 = fit$s0
-  D2 = fit$D2
   X = fit$X0
   n0 = nrow(X)
-  
   funhat = trans(X,fit$Dnew,p,q,fit$K,fit$degr,s0)
-  
-  X1 <- X[,1:s0]
-  basefuns1 <- sin(2*pi*X1)
-  basefuns2 <- cos(pi*X1)
-  f0 <- matrix(rep(basefuns1,q),nrow=n0)*matrix(rep(D2[1,],each=n0),n0)+matrix(rep(basefuns2,q),nrow=n0)*matrix(rep(D2[2,],each=n0),n0)
   xs = sort(X[,qj1],index.return = T)
   w = xs$x
   iw = xs$ix
-  if(qj1>s0)  f11 = rep(0,n)
-  if(qj1<=s0) f11 = f0[,j0]
   
-  f11hat = funhat[,j0]
-  plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.2,max(f11[iw])+0.2))
-  lines(w,f11hat[iw],col="red")
+  if(true.curve){
+    D2 = fit$D2
+    
+    X1 <- X[,1:s0]
+    basefuns1 <- sin(2*pi*X1)
+    basefuns2 <- cos(pi*X1)
+    f0 <- matrix(rep(basefuns1,q),nrow=n0)*matrix(rep(D2[1,],each=n0),n0)+matrix(rep(basefuns2,q),nrow=n0)*matrix(rep(D2[2,],each=n0),n0)
+
+    if(qj1>s0)  f11 = rep(0,n)
+    if(qj1<=s0) f11 = f0[,j0]
+    
+    f11hat = funhat[,j0]
+    plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.2,max(f11[iw])+0.2))
+    lines(w,f11hat[iw],col="red")
+  }
+  else{
+    f11hat = funhat[,j0]
+    plot(w,f11hat[iw],type = "l",col = "red")
+  }
 }
 
 
