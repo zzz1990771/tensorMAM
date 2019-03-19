@@ -111,12 +111,12 @@ plotfuns <- function(fit,funTrueID,true.curve=FALSE){
     if(qj1<=s0) f11 = f0[,j0]
     
     f11hat = funhat[,j0]
-    plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.2,max(f11[iw])+0.2))
-    lines(w,f11hat[iw],col="red")
+    plot(w,f11[iw],type = "l",col = "blue",ylim=c(min(f11[iw])-0.2,max(f11[iw])+0.2),ylab="f(x)",xlab="x",main="",lwd=3,cex=3)
+    lines(w,f11hat[iw],col="red",lwd=3,cex=3)
   }
   else{
     f11hat = funhat[,j0]
-    plot(w,f11hat[iw],type = "l",col = "red")
+    plot(w,f11hat[iw],type = "l",col = "red",ylab="f(x)",xlab="x",main="",lwd=3,cex=3)
   }
 }
 
