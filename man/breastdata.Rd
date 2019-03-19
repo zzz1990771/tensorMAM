@@ -50,7 +50,7 @@ Chen, K., Dong, H., and Chan, K. S. (2013). Reduced rank regression via adaptive
 nuclear norm penalization. Biometrika, {\bold{100(4)}}, 901-920.
 }
 \examples{
-  data(breastdata.rda)
+  data(breastdata)
   Y = t(breastdata$dna[breastdata$chrom==21,]) 
   Xt = t(breastdata$rna[which(breastdata$genechr==21),])
   n = nrow(Y)

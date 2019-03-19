@@ -58,11 +58,11 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=1e4){
   if(p<1) stop("p must be not smaller than 1")
   if(s<1) stop("s must be not smaller than 1")
   pq <- dim(D2)
-  if(is.null(np)|(np[1]<=1)|(np[2]<=1))stop("D2 should be a matrix with 2 or more rows and columns")
+  if(is.null(pq)|(pq[1]<=1)|(pq[2]<=1))stop("D2 should be a matrix with 2 or more rows and columns")
   if(is.null(t)) t = 0
   if(is.null(sigma2)) sigma2 = 0.1
   if(sigma2<=0){
-    warning("alpha<0; set to 0")
+    warning("sigma2 <= 0; set to 0.1")
     sigma2=0.1
   }
   set.seed(seed_id)
