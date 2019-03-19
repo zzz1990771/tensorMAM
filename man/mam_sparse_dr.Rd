@@ -140,12 +140,28 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 }
 
 \examples{
-     D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
-     mydata <- generateData(200, 5, 10, 5, D2)
-     
-     fit <- mam_sparse_dr(mydata$Y, mydata$X)
-     D3hat <- fit$Dnew
-     D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
-     opt <- fit$rk_opt
+  #Example 1
 
+  D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
+  mydata <- generateData(200, 5, 10, 5, D2)
+  
+  fit <- mam_sparse_dr(mydata$Y, mydata$X)
+  D3hat <- fit$Dnew
+  D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
+  opt <- fit$rk_opt
+
+  #Example 2
+
+  data(breastdata.rda)
+  Y = t(breastdata$dna[breastdata$chrom==21,]) 
+  Xt = t(breastdata$rna[which(breastdata$genechr==21),])
+  n = nrow(Y)
+
+  minX = apply(Xt,2,min)
+  maxX = apply(Xt,2,max)
+  X = (Xt - matrix(rep(minX,each = n),n))/matrix(rep(maxX-minX,each = n),n)
+  Y = scale(Y)
+  fit <- mam_sparse_dr(Y, X)
+  D3hat <- fit$Dnew
+  opt <- fit$rk_opt
 }

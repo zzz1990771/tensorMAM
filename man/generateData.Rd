@@ -54,6 +54,7 @@ generateData(n, q, p, s, D2, sigma2=NULL)
 }
 \examples{
   # Example 1
+  
   D2 <- matrix(runif(30, 0.7, 1), 2, 15)
   mydata <- generateData(200, 3, 5, 5, D2)
     
