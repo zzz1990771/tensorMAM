@@ -33,7 +33,6 @@ trans <- function(X,D3,p,q,K,degr,s0){
   fjl = assig(c(s0,q))
   funhat = NULL
   for(j0 in 1:(q*s0)){
-    cat("j0=",j0,"\n")
     qj1 = fjl[1,j0]
     qj = fjl[2,j0]
     funhat = cbind(funhat,Z[,id+qj1-1]%*%D3[qj,id+qj1-1])

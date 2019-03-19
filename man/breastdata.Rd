@@ -60,7 +60,7 @@ nuclear norm penalization. Biometrika, {\bold{100 (4)}}, 901-920.
   maxX = apply(Xt,2,max)
   X = (Xt - matrix(rep(minX,each = n),n))/matrix(rep(maxX-minX,each = n),n)
   Y = scale(Y)
-  fit <- mam_sparse_dr(Y, X)
+  fit <- mam_sparse_dr(Y[,1:5], X[,1:10])
   D3hat <- fit$Dnew
   opt <- fit$rk_opt
   detach(breastData)
