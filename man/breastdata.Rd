@@ -1,5 +1,5 @@
-\name{breastdata}
-\alias{breastdata}
+\name{breastData}
+\alias{breastData}
 \docType{data}
 \title{
 Breast cancer gene expression and DNA copy number dataset 
@@ -10,10 +10,10 @@ hybridization measurements for 89 subjects, which is from Chin et al. (2006). Th
 as the responses and gene expressions as the predictors.
 }
 \usage{
-data(breastdata)
+data(breastData)
 }
 \details{
-The "breastdata" is formated as a list with elements:
+The "breastData" is formated as a list with elements:
 
 \tabular{ll}{
 dna: \tab the CGH spots , a matrix with size \eqn{2149\times 89} and the smaple size 89\cr
@@ -50,9 +50,9 @@ Chen, K., Dong, H., and Chan, K. S. (2013). Reduced rank regression via adaptive
 nuclear norm penalization. Biometrika, {\bold{100(4)}}, 901-920.
 }
 \examples{
-  data(breastdata)
-  Y = t(breastdata$dna[breastdata$chrom==21,]) 
-  Xt = t(breastdata$rna[which(breastdata$genechr==21),])
+  data(breastData)
+  Y = t(breastData$dna[breastData$chrom==21,]) 
+  Xt = t(breastData$rna[which(breastData$genechr==21),])
   n = nrow(Y)
 
   minX = apply(Xt,2,min)
