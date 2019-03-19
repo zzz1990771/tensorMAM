@@ -37,11 +37,12 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   \item{r1_index}{A user-specified sequence of \eqn{r_1} values, where 
                   \eqn{r_1} is the first dimension of single value matrix of the  
                   tensor. Default is 
-                  \code{r1_index}\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,p)}.}
+                  \code{r1_index}\eqn{=1,\cdots,\min(\lceil\log(n)\rceil,p)}.
+                  }
             
   \item{r2_index}{A user-specified sequence of \eqn{r_2} values, where 
-                  \code{\eqn{r_2}}is the second dimension of single value matrix of the
-                  tensor. Default is \code{r2_index}\eqn{=1,\cdots},\code{max{K_index}.}
+                  \eqn{r_2} is the second dimension of single value matrix of the
+                  tensor. Default is \code{r2_index}\eqn{=1,\cdots},\code{max{K_index}}.
                   }
                   
   \item{r3_index}{A user-specified sequence of \eqn{r_3} values, where 
@@ -103,7 +104,7 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
 %%  ~Describe the value returned
 %%  If it is a LIST, use
 
-  \item{Dnew}{Estimator of \code{\eqn{D_{(3)}}}.}
+  \item{Dnew}{Estimator of \eqn{D_{(3)}}.}
   
   \item{rss}{Residual sum of squares (RSS).}
   

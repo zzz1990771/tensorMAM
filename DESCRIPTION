@@ -3,7 +3,7 @@ Type: Package
 Title: tensorMam
 Version: 1.0
 Date: 2018-10-25
-Authors@R: c(person(given = "Xu", family = "Liu", role = c("aut","cre")),
+Authors@R: c(person(given = "Xu", family = "Liu", role = c("aut","cre"), email = "liu.xu@sufe.edu.cn"),
              person(given = "Jian", family = "Huang", role = "aut"),
              person(given = "Heng", family = "Lian", role = "aut"),
              person(given = "Xiangyong", family = "Tan", role = "ctb"))

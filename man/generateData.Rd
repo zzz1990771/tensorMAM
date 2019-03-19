@@ -21,7 +21,7 @@ generateData(n, q, p, s, D2, sigma2=NULL)
   
   \item{s}{The true covariates associating to response, \eqn{s\geq1}.}
   
-  \item{D2}{The mode of unfolding \code{\eqn{D_{(2)}}}.}
+  \item{D2}{The mode of unfolding \eqn{D_{(2)}}.}
   
   \item{sigma2}{err variance. Default is 0.1.}
 }

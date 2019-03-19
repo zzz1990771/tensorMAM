@@ -52,14 +52,13 @@ truefuns <- function(n,q,p,s,D2,seed_id){
   
 }
 ##--------------generate data----------------------##
-generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=NULL){
+generateData <- function(n,q,p,s,D2, sigma2=NULL,seed_id=NULL){
   if(n<2) stop("n must be not smaller than 2")
   if(q<1) stop("q must be not smaller than 1")
   if(p<1) stop("p must be not smaller than 1")
   if(s<1) stop("s must be not smaller than 1")
   pq <- dim(D2)
   if(is.null(pq)|(pq[1]<=1)|(pq[2]<=1))stop("D2 should be a matrix with 2 or more rows and columns")
-  if(is.null(t)) t = 0
   if(is.null(sigma2)) sigma2 = 0.1
   if(sigma2<=0){
     warning("sigma2 <= 0; set to 0.1")
@@ -68,9 +67,7 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL, t=NULL,seed_id=NULL){
   if(is.null(seed_id)) seed_id=1000
   set.seed(seed_id)
   rho = 0.0
-  W <- matrix(runif(n*p), nrow = n)
-  U <- runif(n)
-  X <- (W+t*matrix(rep(U,p),nrow = n))/(1+t)
+  X <- matrix(runif(n*p), nrow = n)
   X1 <- X[,1:s]
   basefuns1 <- sin(2*pi*X1)
   basefuns2 <- cos(pi*X1)
