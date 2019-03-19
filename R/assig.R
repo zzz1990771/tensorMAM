@@ -82,7 +82,7 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL,seed_id=NULL){
 }
 
 ##--------------plot curve of function f_{jl} ----------------------##
-plotfuns <- function(fit,funTrueID,true.curve){
+plotfuns <- function(fit,funTrueID,true.curve=FALSE){
   # funTrueID = c(j,l) is the index of the f_{jl}th function
   qj1 = funTrueID[1]
   qj = funTrueID[2]
