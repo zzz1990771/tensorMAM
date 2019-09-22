@@ -8,7 +8,6 @@ mam_sparse_bic <-
   p <- dim(X)[2]
   
   RSS = NULL
-  activeA = NULL
   for(K in K_index){
     Z = bsbasefun(X,K,degr)
     for(r3 in r3_index){
@@ -31,7 +30,6 @@ mam_sparse_bic <-
           }
           bic = fit$likhd + log(n)*df
           RSS = cbind(RSS,bic)
-          activeA = cbind(activeA,fit$activeXpath)
         }
       }
     }
