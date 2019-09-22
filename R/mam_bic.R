@@ -12,7 +12,7 @@ mam_bic <- function(Y,X,K_index,r1_index,r2_index,r3_index,S,A,B,C,degr=3,eps=1e
         for(r1 in r1_index){
           fit = Estimation(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),eps,max_step)
           df = r1*r2*r3+p*r1+K*r2+q*r3-r1^2-r2^2-r3^2
-          RSS = c(RSS,2*log(fit$likhd)+log(n)*df/n)
+          RSS = c(RSS,fit$likhd+log(n)*df)
         }
       }
     }

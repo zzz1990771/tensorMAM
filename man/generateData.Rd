@@ -9,7 +9,7 @@
 }
 
 \usage{
-generateData(n, q, p, s, D2, sigma2=NULL)
+generateData(n, q, p, s, D2, sigma2=NULL, indexF=NULL, seed_id=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +24,11 @@ generateData(n, q, p, s, D2, sigma2=NULL)
   \item{D2}{The mode of unfolding \eqn{D_{(2)}}.}
   
   \item{sigma2}{err variance. Default is 0.1.}
+  
+  \item{indexF}{A \eqn{q\times s} matrix. The index of significant predictors corresponding to response \eqn{y_l}. 
+  Default is the matrix with each row being \eqn{(1,2,\cdots,s)}.}
+  
+  \item{seed_id}{A positive integer, the seed for generating the random numbers.}
 }
 
 \details{This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 

@@ -1,6 +1,6 @@
 mam_sparse <- 
-  function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,penalty="LASSO",lambda=NULL,SABC=NULL,degr=3,nlam=20, 
-           lam_min=1e-3, eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
+  function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,SABC=NULL,
+           degr=3,nlam=20,lam_min=1e-3, eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- dim(Y)[1]
     q <- dim(Y)[2]
     p <- dim(X)[2]
@@ -18,18 +18,6 @@ mam_sparse <-
     if (gamma <= 2 & penalty=="SCAD") stop("gamma must be greater than 2 for the SCAD penalty")
     
     if (is.null(dfmax)) dfmax = p + 1
-    if (is.null(lambda)) {
-      is_setlam = 1
-      if (nlam < 1) stop("nlambda must be at least 1")
-      if (n<=p) lam_min = 1e-2
-      lambda = 0
-    }
-    else {
-      is_setlam = 0
-      nlam = length(lambda)
-    }
-    setlam = c(1,lam_min,alpha,nlam)
-    
     # initial A,B,C,S
     if(is.null(SABC)){
       set.seed(1)
@@ -44,35 +32,115 @@ mam_sparse <-
       C = SABC$C
       S = SABC$S
     }
+    if (is.null(lambda)) {
+      is_setlam = 1
+      if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
+      if (n<=p) lam_min = 1e-1
+      setlam = c(1,lam_min,alpha,nlam)
+      Z = bsbasefun(X,K,degr)
+      lambda = setuplambda(Y,Z,A,B,C,S,nlam,setlam)
+    }
+    else {
+      is_setlam = 0
+      nlam = length(lambda)
+      setlam = c(1,lam_min,alpha,nlam)
+    }
+    #---------------- The selection by BIC or CV  ---------------------# 
     Z = bsbasefun(X,K,degr)
-    fit = Estimation_penalty(Y,Z,A,B,C,S,lambda,alpha, gamma, pen, dfmax, 
-                             eps1, eps2, maxstep1, maxstep2,is_setlam,setlam) 
-    
-    if(nlam>1){
-      df = fit$df*r1
-      bic = 2*log(fit$likhd) + log(n)*df/n
+    if(method=="BIC"){
+      if(isPenColumn){
+        fit = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                           lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        df = fit$df*r1
+        bic = fit$likhd + log(n)*df/n
+      }
+      else{
+        fit = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                           lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        df1 = NULL
+        for(k in 1:nlam){
+          activeF1 = matrix(fit$betapath[,k],nrow=q)
+          df1 = c(df1,median(rowSums(activeF1)))
+        }
+        df = df1*r1
+        bic = fit$likhd + log(n)*df
+      }
       selected = which.min(bic)
-      lambda_opt = fit$lambda[selected]
-      activeA = fit$betapath[,selected]
-      fit_opt = Estimation_penalty(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),lambda[1:selected],alpha, gamma, pen, dfmax,
-                                   eps1, eps2, maxstep1, maxstep2,is_setlam,setlam)
+      lambda_opt = lambda[selected]
       
+      if(isPenColumn){
+        fit_opt = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                               lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        activeF = activeX = fit_opt$betapath[,selected]
+      }
+      else{
+        fit_opt = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                               lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        activeF = matrix(fit_opt$betapath[,selected],q,p)
+        activeX = fit_opt$activeXpath[,selected]
+        
+      }
       Dnew = fit_opt$Dnew
     }
-    else{ 
-      selected = 1
-      Dnew = fit$Dnew
-      lambda_opt = lambda
-      activeA = fit$betapath
+    if(method=="CV"&&nlam>1){
+      len_cv = ceiling(n/ncv)
+      RSS = rep(0,nlam)
+      for(jj in 1:ncv){
+        cv.id = ((jj-1)*len_cv+1):(jj*len_cv)
+        if(jj==ncv) cv.id = ((jj-1)*len_cv+1):n
+        Ytrain = Y[-cv.id,]
+        Xtrain = X[-cv.id,]
+        Ytest = Y[cv.id,]
+        Xtest = X[cv.id,]
+        Ztrain = bsbasefun(Xtrain,K,degr) 
+        Ztest = bsbasefun(Xtest,K,degr)
+        if(isPenColumn)
+          fit = EstPenColumnCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                             lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
+        else
+          fit = EstPenSingleCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                               lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
+        RSS = RSS + fit$likhd
+      } 
+      selected = which.min(RSS)
+      lambda_opt = lambda[selected]
+      if(isPenColumn){
+        fit_opt = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                               lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        activeF = activeX = fit_opt$betapath[,selected]
+      }
+      else{
+        fit_opt = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                               lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+        activeF = matrix(fit_opt$betapath[,selected],q,p)
+        activeX = fit_opt$activeXpath[,selected]
+        
+      }
+      Dnew = fit_opt$Dnew
+     
     }
-    return(list(betapath=fit$betapath, 
+    if(method=="CV"&&nlam==1){
+      if(isPenColumn)
+        fit = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                           lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+      else
+        fit = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
+                           lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+      selected = 1
+      lambda_opt = lambda
+      activeX = activeF = fit$betapath
+      Dnew = fit$Dnew
+    }
+
+    return(list(Dnew=Dnew,
+                betapath=fit$betapath, 
                 rss=fit$likhd[selected],
                 df = fit$df,
-                lambda = fit$lambda,
+                lambda = lambda,
                 lambda_opt=lambda_opt,
                 selectedID = selected,
-                activeA = activeA,
-                Dnew=Dnew,
+                activeF = activeF,
+                activeX = activeX,
                 Y = Y,
                 X = X,
                 Z = Z,

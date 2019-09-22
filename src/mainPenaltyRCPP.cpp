@@ -13,7 +13,6 @@ using namespace Eigen;
 
 //----------------------------------------------------------------**
 //***----------------------------sequece--------------------------**
-// [[Rcpp::export]]
 VectorXd SEQ(double min, double max, double by)
 {
 	int leng = static_cast<int>(floor((max - min) / by + pow(3, -12)) + 1);
@@ -59,6 +58,7 @@ double uppertriangleNorm1(MatrixXd A)
 	}
 	return norm1;
 }
+
 //----------------------------------------------------------------**
 //***----------------------UpTriangularInv------------------------**
 MatrixXd UpTriangularInv(MatrixXd A)
@@ -117,7 +117,7 @@ MatrixXd QbyR(MatrixXd Q, MatrixXd R, int isQR)
 		for (k = 0; k < n; k++)
 			for (j = 0; j < p; j++) {
 				temp1 = 0;
-				for (i = j; i < p; i++) temp1 += Q(i, k) * R(j, i);
+				for (i = j; i < p; i++) temp1 += R(j, i) * Q(i, k);
 				A(j,k) = temp1;
 			}
 	}
@@ -166,6 +166,7 @@ MatrixXd rbind_rcpp(MatrixXd A, MatrixXd B)
 	C.block(n1, 0, n2, p) = B;
 	return C;
 }
+
 //----------------------------------------------------------------**
 //***----------------------extract columns------------------------**
 MatrixXd extractRows(MatrixXd A, VectorXd b)
@@ -201,6 +202,7 @@ double condition_numberQRSym(MatrixXd R)
 {
   return uppertriangleNorm1(R) * uppertriangleNorm1(UpTriangularInv(R));
 }
+
 //----------------------------------------------------------------**
 //***----------------solve linear system by QR--------------------**
 VectorXd solveEquationQR(MatrixXd A, VectorXd b)
@@ -222,6 +224,7 @@ VectorXd solveEquationQR(MatrixXd A, VectorXd b)
   else X = QbyR(Q.transpose(),UpTriangularInv(R),0)*b;
   return X;
 }
+
 //----------------------------------------------------------------**
 //***--------------------transfer modal of unfoldings-------------**
 // [[Rcpp::export]]
@@ -290,70 +293,6 @@ MatrixXd TransferModalUnfoldings(MatrixXd S, int d1, int d2, int r1, int r2, int
   return S1;
 }
 
-MatrixXd TransferModalUnfoldings1(MatrixXd S, int d1, int d2, int r1, int r2, int r3)
-{
-	//From S_(d1) to S_(d2)
-	int j;
-	MatrixXd S1, S_3, S_1;
-	if (d1 == 3) {
-		if (d2 == 1) {
-			S1 = S.row(0).transpose();
-			S1.resize(r1, r2);
-			for (j = 1; j < r3; j++) {
-				S_3 = S.row(j).transpose();
-				S_3.resize(r1, r2);
-				S1 = cbind_rcpp(S1, S_3);// S3 is r3 *(r2r1) matrix
-			}
-		}
-		if (d2 == 2) {
-			S_1 = S.row(0);
-			S_1.resize(r1, r2);
-			S1 = S_1.transpose();
-			for (j = 1; j < r3; j++) {
-				S_3 = S.row(j);
-				S_3.resize(r1, r2);
-				S1 = cbind_rcpp(S1, S_3.transpose());
-			}
-		}
-	}
-
-	if (d1 == 2) {
-		if (d2 == 1) {
-			S1 = S.block(0, 0, r2, r1).transpose();
-			for (j = 1; j < r3; j++) {
-				S1 = cbind_rcpp(S1, S.block(0, j*r1, r2, r1).transpose());
-			}
-		}
-		if (d2 == 3) {
-			S1 = S.block(0, 0, r2, r1).transpose();
-			S1.resize(1, r2*r1);
-			for (j = 1; j < r3; j++) {
-				S_3 = S.block(0, j*r1, r2, r1).transpose();
-				S_3.resize(1, r2*r1);
-				S1 = rbind_rcpp(S1, S_3);
-			}
-		}
-	}
-
-	if (d1 == 1) {
-		if (d2 == 2) {
-			S1 = S.block(0, 0, r1, r2).transpose();
-			for (j = 1; j < r3; j++) {
-				S1 = cbind_rcpp(S1, S.block(0, j*r2, r1, r2).transpose());
-			}
-		}
-		if (d2 == 3) {
-			S1 = S.block(0, 0, r1, r2);
-			S1.resize(1, r1*r2);
-			for (j = 1; j < r3; j++) {
-				S_3 = S.block(0, j*r2, r1, r2);
-				S_3.resize(1, r1*r2);
-				S1 = rbind_rcpp(S1, S_3);
-			}
-		}
-	}
-	return S1;
-}
 //----------------------------------------------------------------**
 //***----------------------reassign columns of a matrix-----------**
 MatrixXd submatrix_col(MatrixXd A, VectorXd b)
@@ -404,10 +343,11 @@ MatrixXd updateS(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C)
 			}
 		}
 	}
-	vectorS = solveEquationQR(V,U);
+	vectorS = V.colPivHouseholderQr().solve(U);
 	vectorS.resize(r3, r1*r2);
 	return vectorS;
 }
+
 //----------------------------------------------------------------**
 //***--------------------updateC----------------------------------**
 MatrixXd updateC(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S)
@@ -435,7 +375,6 @@ MatrixXd updateC(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Mat
 }
 //----------------------------------------------------------------**
 //***--------------------updateA----------------------------------**
-// [[Rcpp::export]]
 MatrixXd updateA(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S)
 {
 	int r1 = A.cols();
@@ -470,54 +409,11 @@ MatrixXd updateA(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Mat
 			}
 		}
 	}
-	vectorA = solveEquationQR(tV, tU);
+	vectorA = tV.colPivHouseholderQr().solve(tU);
 	vectorA.resize(r1, p);
 	return vectorA.transpose();
 }
 
-//----------------------------------------------------------------**
-//***--------------------updateA----------------------------------**
-// [[Rcpp::export]]
-	MatrixXd updateA1(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S)
-	{
-	  int r1 = A.cols(),n = Y.rows(), q = Y.cols();
-	  int r2 = B.cols();
-	  int p = A.rows();
-	  int k = B.rows();
-	  int d = r1 * p;
-	  int t1,t2,t3,t4,j;
-	  MatrixXd W = C * S, Wt1, Zt2, Wt3, Zt4, zbw1, zbw2, vectorA, W1, Z1;
-	  VectorXd tU;
-	  tU.setZero(d);
-	  MatrixXd tV = MatrixXd::Constant(d, d, 0);
-	  VectorXd id;
-	  id = SEQ(1, p*k, p);
-	  Z1 = submatrix_col(Z,id);	  
-	  for (j = 1; j < p; j++)  Z1 = cbind_rcpp(Z1,submatrix_col(Z,id.array()+j));
-	  id = SEQ(1, r1*r2, r1);
-	  W1 = submatrix_col(W,id);
-	  for (j = 1; j < r1; j++)  W1 = cbind_rcpp(W1,submatrix_col(W,id.array()+j));
-	  
-	  for (t2 = 0; t2<p; t2++) {
-		for (t1 = 0; t1<r1; t1++) {
-			Wt1 = W1.block(0, t1*r2, q, r2);
-			Zt2 = Z1.block(0, t2*k, n, k);  //#n*k
-			zbw1 = Zt2 * B*(Wt1.transpose());
-			tU[t2*r1 + t1] = (Y.array()*zbw1.array()).sum();
-			for (t4 = 0; t4<p; t4++) {
-				for (t3 = 0; t3<r1; t3++) {
-					Wt3 = W1.block(0, t3*r2, q, r2); //q*r2
-					Zt4 = Z1.block(0, t4*k, n, k); //#n*k
-					zbw2 = Zt4 * B*(Wt3.transpose());
-					tV(t2*r1 + t1, t4*r1 + t3) = (zbw1.array()*zbw2.array()).sum();
-				}
-			}
-		}
-	  }
-	  vectorA = solveEquationQR(tV, tU);
-	  vectorA.resize(r1, p);
-	  return vectorA.transpose();
-	}
 //----------------------------------------------------------------**
 //***--------------------updateB----------------------------------**
 MatrixXd updateB(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S)
@@ -616,7 +512,7 @@ VectorXd setuplambda(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C,
 
 	double lam_max, lam_min, alpha;
 	VectorXd lambda, lambda1, tmp, id,tmp1;
-	MatrixXd S1, cbs, V, V_1, Y1 = Y, Gammaj, Gamma_sqrt, svdu, svdd;
+	MatrixXd S1, cbs, V, V_1, Y1 = Y, Gammaj, Gamma_sqrt, svdu, svdd, U;
 	Y1.resize(n*q, 1);
 	S1 = TransferModalUnfoldings(S, 3, 1, r1, r2, r3);
 	cbs = kroneckerProduct(C, B)*(S1.transpose());
@@ -630,10 +526,16 @@ VectorXd setuplambda(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C,
 			V = rbind_rcpp(V, V_1);
 		}
 		Gammaj = ((V.transpose()*V).array() / n).matrix();
+		
+		
 		JacobiSVD<MatrixXd> svd(Gammaj, ComputeThinU | ComputeThinV);
 		svdu = svd.matrixU();
 		svdd = (svd.singularValues()).asDiagonal();
 		Gamma_sqrt = svdu * ((1 / (svdd.diagonal().array().sqrt())).matrix().asDiagonal())*(svdu.transpose());
+		
+		
+		//U = Gammaj.llt().matrixU(); 
+		//Gamma_sqrt = UpTriangularInv(U);		
 		tmp1 = Y1.transpose()*V * Gamma_sqrt;
 		tmp[j]=tmp1.array().abs().sum();
 	}
@@ -698,94 +600,10 @@ VectorXd updateAj(VectorXd z, int n, int r1, double lambda, double alpha, double
 	VectorXd b = VectorXd::Constant(r1, 0);
 	znorm = z.norm();
 	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
-	for (j = 0; j<r1; j++) b[j] = znorm * z[j];
+	for (j = 0; j<r1; j++) b[j] = znorm * z[j]/n;
 	return b;
 }
-//----------------------------------------------------------------**
-MatrixXd updateA_CD(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int max_iter, double eps)
-{
-	/*
-	Input:
-	Y is n*q matrix
-	Z is n*(K*p) matrix
-	A is p*r1 matrix
-	B is K*r2 matrix
-	C is q*r3 matrix
-	S is r3*(r1*r2) matrix
-	penalty= 1(lasso),2(mcp), and 3(scad)
-	lambda is preset tuning parameters, a L-vector
-	alpha is tuning parameter being in (0,1) to control elasnet
-	eps is error to control convergence
-	nlam is the number of preset tuning parameters
-	max_iter is the maxixum number of iteration
-	*/
-	int r1 = A.cols();
-	int r2 = B.cols();
-	int r3 = C.cols();
-	int p = A.rows();
-	int k = B.rows();
-	int n = Y.rows();
-	int q = C.rows();
-	int j, jj;
-	MatrixXd S1, S_3;
-	VectorXd aj, ajnew, zj;
 
-	S1 = S.row(0).transpose();
-	S1.resize(r1, r2);
-	for (j = 1; j < r3; j++) {
-		S_3 = S.row(j).transpose();
-		S_3.resize(r1, r2);
-		S1 = cbind_rcpp(S1, S_3);
-	}
-	VectorXd id;
-	id = SEQ(1, p*k, p);
-	MatrixXd Vnew;
-	Vnew = MatrixXd::Constant(n*q, r1*p, 0);
-	MatrixXd Gamma_sqrtn;
-	Gamma_sqrtn = MatrixXd::Constant(r1, r1*p, 0);
-	MatrixXd cbs;
-	cbs = kroneckerProduct(C, B)*(S1.transpose());
-	MatrixXd A1 = A, V, Gammaj, svdu, svdd, Gamma_sqrt, V_1, D3;
-	D3 = C * S*kroneckerProduct(B.transpose(), A.transpose());
-
-	for (j = 0; j < p; j++) {
-		V = submatrix_col(Z, id.array() + j)*(cbs.block(0, 0, k, r1));
-		for (jj = 1; jj < q; jj++) {
-			V_1 = submatrix_col(Z, id.array() + j)*(cbs.block(jj*k, 0, k, r1));
-			V = rbind_rcpp(V, V_1);
-		}
-		Gammaj = ((V.transpose()*V).array() / n).matrix();
-		JacobiSVD<MatrixXd> svd(Gammaj, ComputeThinU | ComputeThinV);
-		svdu = svd.matrixU();
-		svdd = (svd.singularValues()).asDiagonal();
-		Gamma_sqrtn.block(0, j*r1, r1, r1) = svdu * ((1 / (svdd.diagonal().array().sqrt())).matrix().asDiagonal())*(svdu.transpose());
-		Gamma_sqrt = svdu * ((svdd.diagonal().array().sqrt()).matrix().asDiagonal())*(svdu.transpose());
-		Vnew.block(0, j*r1, n*q, r1) = V * Gamma_sqrtn.block(0, j*r1, r1, r1);
-		A1.row(j) = Gamma_sqrt * (A.row(j).transpose());
-	}
-	MatrixXd Anew = A1;
-	MatrixXd r = Y - Z * (D3.transpose());
-	r.resize(n*q, 1);
-	int step = 0;
-	double Norm1=100,Norm2;
-	while (step<max_iter)
-	{
-		step += 1;
-		for (j = 0; j < p; j++) {
-			aj = Anew.row(j).transpose();
-		  ajnew = Vnew.block(0, j*r1, n*q, r1).transpose()*r + n * aj;
-			ajnew = (ajnew.array() / n).matrix();
-			r = r - Vnew.block(0, j*r1, n*q, r1)*(ajnew - aj);
-			Anew.row(j) = ajnew.transpose();
-		}
-		Norm2 = r.norm();
-		if (abs(Norm2 - Norm1)/Norm1 < eps)	break;
-		else Norm1 = Norm2;
-	}
-	for (j = 0; j<p; j++)
-		Anew.row(j) = (Gamma_sqrtn.block(0, j*r1, r1, r1)* (Anew.row(j).transpose())).transpose();
-	return Anew;
-}
 //***-------------------------------------------------------------**
 //***-------update the jth row of matrix A with penalty-----------**
 MatrixXd updateA_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, MatrixXd beta,
@@ -860,9 +678,7 @@ MatrixXd updateA_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixX
 	int step = 0;
 	while (step<max_iter) 
 	{
-		//converge = 0;
 		step++;
-		// Check dfmax
 		active = 0;
 		for (j = 0; j < p; j++)
 			if (ajnorm[j] != 0) active = active + 1;
@@ -874,7 +690,6 @@ MatrixXd updateA_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixX
 			aj = Anew.row(j).transpose();
 			zj = Vnew.block(0, j*r1, n*q, r1).transpose()*r + n*aj;
 			ajnew = updateAj(zj, n, r1, lambda1, alpha, gamma, penalty);
-			ajnew = (ajnew.array() / n).matrix();
 			r = r - Vnew.block(0, j*r1, n*q, r1)*(ajnew-aj);
 			Anew.row(j) = ajnew.transpose();
 			ajnorm[j] = ajnew.norm();
@@ -893,23 +708,22 @@ MatrixXd updateA_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixX
 					converged1 = 0; break;
 				}
 			}
-		if (converged1) { break; }
+		if (converged1) break;
 		A1 = Anew;
 		ajnorm_old = ajnorm;
     }//end while
-	//int counter=0;
 	for (j = 0; j<p; j++) {
 		Anew.row(j) = (QbyR(Anew.row(j).transpose(),Gamma_sqrtn.block(0, j*r1, r1, r1),0)).transpose();
 		if (ajnorm[j]) activeA[j] = 1;
 	}
 	return Anew;
 }
+
 //***-------------------------------------------------------------**
-//***------main function: Estimation with penalty-----------------**
+//***------Old main function: Estimation with penalizing functions in a whole column -----------------**
 // [[Rcpp::export]]
-List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
-	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter,
-	int is_setlam, VectorXd setlam)
+List EstPenColumn(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
+	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter)
 {
 	/*
 	Input:
@@ -939,11 +753,7 @@ List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd
 	double  likhd0 = pow(10, 6), lambda1, likhd1 = 0;
 	MatrixXd Dnew, Anew, Bnew, Snew, Cnew, Z1, A1, Z2, A2;
 	VectorXd activeA, convergence1;
-	if (is_setlam) {
-		nlam = static_cast<int>(setlam[3]);
-		lambda = setuplambda(Y, Z, A, B, C, S, nlam, setlam);
-	}
-	else nlam = lambda.size();
+	nlam = lambda.size();
 	VectorXd likhd = VectorXd::Constant(nlam, 0);
 	VectorXd df = VectorXd::Constant(nlam, 0);
 	MatrixXd betapath;
@@ -964,7 +774,6 @@ List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd
 				likhd0 = likhd1;
 			}
 			else convergence1[0]=0;
-
 			Cnew = updateC(Y, Z1, A1, B, C, S);
 			Dnew = Cnew * S * kroneckerProduct(B.transpose(), A1.transpose());
 			likhd1 = pow((Y - Z1 * Dnew.transpose()).norm(),2);
@@ -985,7 +794,6 @@ List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd
 				A2 = extractRows(Anew, activeA);
 				Dnew = C * S * kroneckerProduct(B.transpose(), A2.transpose());
 				likhd1 = pow((Y - Z2 * Dnew.transpose()).norm(),2);
-				
 				if (likhd1<likhd0) {
 					A = Anew;
 					Z1 = Z2;
@@ -1006,7 +814,7 @@ List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd
 			else convergence1[3]=0;
 		
 			if(convergence1.sum()==0) break;
-		} //end while
+		} //end while		
 		activeA = VectorXd::Constant(p, 0);
 		for(j=0;j<p;j++) if(A.row(j).norm()) activeA[j] = 1;
 		df[l] = activeA.sum();
@@ -1016,12 +824,252 @@ List Estimation_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd
 	Dnew = C * S * kroneckerProduct(B.transpose(), A.transpose());
 	return List::create(Named("likhd") = likhd, Named("betapath") = betapath, Named("df") = df, Named("Dnew") = Dnew, Named("lambda")=lambda);
 }
-//***--------------------------------------------------------------**
-//***----------- Estimation with penalty by CV---------------------**
+
+void updateA_penaltyl(VectorXd r, MatrixXd Ztilde, MatrixXd &Dl, MatrixXd beta, MatrixXd &activeA, int K, int p,
+	int l, int r1, double lambda1, int nlam, int max_iter, double alpha, double gamma, double penalty, int dfmax, double eps)
+{
+	/*
+	Input:
+	r is n-vector, which is the lth column of residual Y - Z * (D3.transpose())
+	Ztilde is n*Kp matrix, which is (\tilde{z}_1^{new},..., \tilde{z}_p^{new})
+	Dl is K*p matrix, which is reshaped from lth row of D_{(3)}
+	activeX is q*p matrix, which saves the active variables
+	penalty= 1(lasso),2(mcp), and 3(scad)
+	lambda is preset tuning parameters, a L-vector
+	alpha is tuning parameter being in (0,1) to control elasnet
+	eps is error to control convergence
+	nlam is the number of preset tuning parameters
+	max_iter is the maxixum number of iteration
+
+	output:
+	Dl is K*p matrix
+*/
+	int n = Ztilde.rows();
+	int j, active;
+	VectorXd djnorm_old, djnorm, dj, djnew, gj;
+	MatrixXd Dlnew = Dl, Zj;
+	djnorm_old = djnorm = VectorXd::Constant(p, 0);
+	double converged1;
+	int step = 0;
+	
+	while (step < max_iter)
+	{
+		step++;
+		active = 0;
+		for (j = 0; j < p; j++)
+			if (djnorm[j] != 0) active = active + 1;
+		if (active > dfmax) {
+			beta = MatrixXd::Constant(p * r1, nlam, -9);
+			break; 
+		}
+		for (j = 0; j < p; j++) {
+			Zj = Ztilde.block(0, j * K, n, K);
+			dj = Dlnew.col(j);
+			gj = Zj.transpose() * r + n * dj;
+			djnew = updateAj(gj, n, K, lambda1, alpha, gamma, penalty);
+			r = r - Zj * (djnew - dj);
+			Dlnew.col(j) = djnew;
+			djnorm[j] = djnew.norm();
+		}
+
+		converged1 = 1;
+		for (j = 0; j < p; j++) {
+			if (djnorm[j] != 0 && djnorm_old[j] != 0) {
+				if ((Dl.col(j) - Dlnew.col(j)).norm() / djnorm_old[j] > eps) {
+					converged1 = 0; break;
+				}
+			}
+			else if (djnorm[j] == 0 && djnorm_old[j] != 0) {
+				converged1 = 0; break;
+			}
+			else if (djnorm[j] != 0 && djnorm_old[j] == 0) {
+				converged1 = 0; break;
+			}
+		}
+		if (converged1)  break;
+		Dl = Dlnew;
+		djnorm_old = djnorm;
+	}//end while
+	for (j = 0; j < p; j++) if (djnorm[j]) activeA(l, j) = 1;
+}
+
+MatrixXd updateA_penalty_single(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, MatrixXd beta,
+	MatrixXd &activeA, double lambda1, int nlam, int max_iter, double alpha, double gamma, double penalty, int dfmax, double eps)
+{
+	/*
+		Input:
+		Y is n*q matrix
+		Z is n*(K*p) matrix
+		A is p*r1 matrix
+		B is K*r2 matrix
+		C is q*r3 matrix
+		S is r3*(r1*r2) matrix
+		activeA is q*p matrix
+		penalty= 1(lasso),2(mcp), and 3(scad)
+		lambda is preset tuning parameters, a L-vector
+		alpha is tuning parameter being in (0,1) to control elasnet
+		eps is error to control convergence
+		nlam is the number of preset tuning parameters
+		max_iter is the maxixum number of iteration
+	*/
+
+	int i,j,r1 = A.cols(), r2 = B.cols(), r3 = C.cols(), p = A.rows(), K = B.rows(), n = Y.rows(), q = C.rows();
+	MatrixXd S1, V, V_inv, Anew = A, R, Q;
+	S1 = TransferModalUnfoldings(S, 3, 1, r1, r2, r3);
+	V = kroneckerProduct(C, B) * (S1.transpose());
+	HouseholderQR<MatrixXd> qr;
+	qr.compute(V);
+	Q = qr.householderQ();
+	R = qr.matrixQR().triangularView<Upper>();
+	V_inv = QbyR(Q.transpose(), UpTriangularInv(R), 0);
+
+
+	VectorXd id, Rl;
+	id = SEQ(1, p * K, p);
+	MatrixXd Dl, Gamma_sqrtn, D3, Ztildej, D3tildej, Gammaj, r;
+	Gamma_sqrtn = MatrixXd::Constant(K, K * p, 0);
+	
+	D3 = C * S * kroneckerProduct(B.transpose(), A.transpose());
+	r = Y - Z * (D3.transpose());
+
+	MatrixXd D3tilde_new_hat, ditilde, D3tilde_new, Ztilde_new, U;
+	D3tilde_new_hat = D3tilde_new= MatrixXd::Constant(q, p * K, 0);
+	Ztilde_new = MatrixXd::Constant(n, p * K, 0);	
+	
+	for (j = 0; j < p; j++) {
+		Ztildej = submatrix_col(Z, id.array() + j);
+		Gammaj = ((Ztildej.transpose() * Ztildej).array() / n).matrix();
+		U = Gammaj.llt().matrixU();
+		Gamma_sqrtn.block(0, j * K, K, K) = UpTriangularInv(U);
+		
+		D3tildej = submatrix_col(D3, id.array() + j);
+		D3tilde_new.block(0, j * K, q, K) = QbyR(D3tildej.transpose(), U, 0).transpose();
+		Ztilde_new.block(0, j * K, n, K) = QbyR(Ztildej, Gamma_sqrtn.block(0, j * K, K, K), 1);
+	}
+	for (i = 0; i < q; i++) {
+		Rl = r.col(i);
+		Dl = D3tilde_new.row(i).transpose();
+		Dl.resize(K, p);
+		updateA_penaltyl(Rl, Ztilde_new, Dl, beta, activeA, K, p, i, r1, lambda1, nlam, max_iter, alpha, gamma, penalty, dfmax, eps);
+		Dl.resize(K * p, 1);
+		D3tilde_new_hat.row(i) = Dl.transpose();	
+	}	
+	for (j = 0; j < p; j++) {
+		ditilde = QbyR(D3tilde_new_hat.block(0, j * K, q, K).transpose(), Gamma_sqrtn.block(0, j * K, K, K), 0);
+		ditilde.resize(K * q, 1);
+		Anew.row(j) = (V_inv * ditilde).transpose();
+	}
+	return(Anew);
+}
+
+//***-------------------------------------------------------------**
+//***------main function: Estimation with penalizing single function -----------------**
 // [[Rcpp::export]]
-List Estimation_penalty_cv(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
-	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter,
-	int is_setlam, VectorXd setlam)
+List EstPenSingle(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
+	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter)
+{
+	/*
+	Input:
+	Y is n*q matrix
+	Z is n*(K*p) matrix
+	A is p*r1 matrix
+	B is K*r2 matrix
+	C is q*r3 matrix
+	S is r3*(r1*r2) matrix
+	lambda is preset tuning parameters, a L-vector
+	alpha is tuning parameter being in (0,1) to control elasnet
+	gamma is another tuning parameter for MCP and SCAD
+	penalty= 1(lasso),2(mcp), and 3(scad)
+	dfmax is the preset maximum digrees of freedom
+	threshold is the error to control convergence for outer iteration
+	eps is the error to control convergence for inner iteration
+	max_step is the max step to control convergence for outer iteration
+	max_iter is the max step to control convergence for inner iteration
+	is_setlam is logical, 1 for set lambda by data; 0 for given lambda
+	setlam is a vector saving preseting lam_max,lam_min,alpha,nlam
+	nlam is the number of tuning parameters
+
+	Output:
+	Dnew is a estimator of D(3) = C%*%S%*%kronecker(t(B),t(A))
+	*/
+	int l, j, step, nlam, p = A.rows(), r1 = A.cols(), n = Y.rows(), q = C.rows();
+	double  likhd0 = pow(10, 6), lambda1, likhd1 = 0;
+	MatrixXd Dnew, Anew, Bnew, Snew, Cnew;
+	VectorXd convergence1, activeX;
+	MatrixXd activeA;
+	nlam = lambda.size();
+	VectorXd df, likhd;
+	likhd = df = VectorXd::Constant(nlam, 0);
+	MatrixXd betapath, activeXpath;
+	betapath = MatrixXd::Constant(q*p, nlam, 0);
+	activeXpath = MatrixXd::Constant(p, nlam, 0);
+	Anew = A;
+	for (l = 0; l < nlam; l++) {
+		lambda1 = n * lambda[l];
+		step = 0;
+		while (step<max_step) {
+		  convergence1 = VectorXd::Constant(4, 1);
+			step ++;
+			Snew = updateS(Y, Z, A, B, C);
+			Dnew = C * Snew * kroneckerProduct(B.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				S = Snew;
+				likhd0 = likhd1;
+			}
+			else convergence1[0]=0;
+
+			Cnew = updateC(Y, Z, A, B, C, S);
+			Dnew = Cnew * S * kroneckerProduct(B.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				C = Cnew;
+				likhd0 = likhd1;
+			}
+			else convergence1[1]=0;
+			activeA = MatrixXd::Constant(q, p, 0);
+			Anew = updateA_penalty_single(Y, Z, A, B, C, S, betapath, activeA, lambda1, nlam, max_iter, alpha, gamma, penalty, dfmax, eps);
+			activeX = VectorXd::Constant(p, 0);
+			for(j=0;j<p;j++) if(Anew.row(j).norm()) activeX[j]= 1;
+			if(activeX.sum()<r1)	break;
+			else{
+				Dnew = C * S * kroneckerProduct(B.transpose(), Anew.transpose());
+				likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+				if (likhd1<likhd0) {
+					A = Anew;
+					likhd0 = likhd1;
+				}
+				else convergence1[2]=0;
+			}
+			Bnew = updateB(Y, Z, A, B, C, S);
+			Dnew = C * S * kroneckerProduct(Bnew.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				B = Bnew;
+				if ((likhd0 - likhd1) / likhd0<threshold) break;
+				else  likhd0 = likhd1;	
+			}
+			else convergence1[3]=0;
+		
+			if(convergence1.sum()==0) break;
+		} //end while
+		activeX = VectorXd::Constant(p, 0);
+		for(j=0;j<p;j++) if(A.row(j).norm()) activeX[j]= 1;		
+		df[l] = activeX.sum();
+		likhd[l] = likhd0;
+		activeA.resize(q*p,1);
+		betapath.col(l) = activeA;
+		activeXpath.col(l) = activeX;
+	}// end for		
+	Dnew = C * S * kroneckerProduct(B.transpose(), A.transpose());	
+	return List::create(Named("likhd") = likhd, Named("betapath") = betapath, Named("df") = df, Named("Dnew") = Dnew, Named("lambda")=lambda, Named("activeXpath") = activeXpath);
+}
+
+//***--------------------------------------------------------------**
+//***----------- Estimation with penalizing functions in a whole column by CV---------------------**
+// [[Rcpp::export]]
+List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
+	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter)
 {
 	/*
 	Input:
@@ -1051,15 +1099,10 @@ List Estimation_penalty_cv(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztes
 	double  likhd0 = pow(10, 6), lambda1, likhd1 = 0;
 	MatrixXd Dnew, Anew, Bnew, Snew, Cnew, Z1, A1, Z2, A2;
 	VectorXd activeA, convergence1;
-	if (is_setlam) {
-		nlam = static_cast<int>(setlam[3]);
-		lambda = setuplambda(Y, Z, A, B, C, S, nlam, setlam);
-	}
-	else nlam = lambda.size();
+	nlam = lambda.size();
 	VectorXd likhd = VectorXd::Constant(nlam, 0);
 	VectorXd df = VectorXd::Constant(nlam, 0);
-	MatrixXd betapath;
-	betapath = MatrixXd::Constant(p*r1, nlam, 0);
+	MatrixXd betapath = MatrixXd::Constant(p*r1, nlam, 0);
 	Anew = A1 = A;
 	Z1 = Z;
 	for (l = 0; l < nlam; l++) {
@@ -1124,11 +1167,110 @@ List Estimation_penalty_cv(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztes
 		A2 = extractRows(A, activeA);
 		Dnew = C * S * kroneckerProduct(B.transpose(), A2.transpose());
 		likhd[l] = pow((Ytest - Z2 * Dnew.transpose()).norm(),2);
-		//Dnew = C * S * kroneckerProduct(B.transpose(), A.transpose());
-		//likhd[l] = pow((Ytest - Ztest * Dnew.transpose()).norm(),2);
 		betapath.col(l) = activeA;
 	}// end for
 	return List::create(Named("likhd") = likhd, Named("df") = df, Named("betapath")=betapath);
+}
+
+//***--------------------------------------------------------------**
+//***----------- Estimation with penalizing single function by CV---------------------**
+// [[Rcpp::export]]
+List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda,
+	double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter)
+{
+	/*
+	Input:
+	Y is n*q matrix
+	Z is n*(K*p) matrix
+	A is p*r1 matrix
+	B is K*r2 matrix
+	C is q*r3 matrix
+	S is r3*(r1*r2) matrix
+	lambda is preset tuning parameters, a L-vector
+	alpha is tuning parameter being in (0,1) to control elasnet
+	gamma is another tuning parameter for MCP and SCAD
+	penalty= 1(lasso),2(mcp), and 3(scad)
+	dfmax is the preset maximum digrees of freedom
+	threshold is the error to control convergence for outer iteration
+	eps is the error to control convergence for inner iteration
+	max_step is the max step to control convergence for outer iteration
+	max_iter is the max step to control convergence for inner iteration
+	is_setlam is logical, 1 for set lambda by data; 0 for given lambda
+	setlam is a vector saving preseting lam_max,lam_min,alpha,nlam
+	nlam is the number of tuning parameters
+
+	Output:
+	Dnew is a estimator of D(3) = C%*%S%*%kronecker(t(B),t(A))
+	*/
+	int l,j, step, nlam, p = A.rows(), r1 = A.cols(), n = Y.rows(), q = C.rows();
+	double  likhd0 = pow(10, 6), lambda1, likhd1 = 0;
+	MatrixXd Dnew, Anew, Bnew, Snew, Cnew, activeA;
+	VectorXd convergence1, activeX, likhd, df;
+	nlam = lambda.size();
+	likhd = df = VectorXd::Constant(nlam, 0);	
+	MatrixXd betapath, activeXpath;
+	betapath = MatrixXd::Constant(q*p, nlam, 0);
+	activeXpath = MatrixXd::Constant(p, nlam, 0);	
+	Anew = A;
+	for (l = 0; l < nlam; l++) {
+		lambda1 = n * lambda[l];
+		step = 0;
+		while (step<max_step) {
+		  convergence1 = VectorXd::Constant(4, 1);
+			step ++;
+			Snew = updateS(Y, Z, A, B, C);
+			Dnew = C * Snew * kroneckerProduct(B.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				S = Snew;
+				likhd0 = likhd1;
+			}
+			else convergence1[0]=0;
+
+			Cnew = updateC(Y, Z, A, B, C, S);
+			Dnew = Cnew * S * kroneckerProduct(B.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				C = Cnew;
+				likhd0 = likhd1;
+			}
+			else convergence1[1]=0;
+			activeA = MatrixXd::Constant(q, p, 0);
+			Anew = updateA_penalty_single(Y, Z, A, B, C, S, betapath, activeA, lambda1, nlam, max_iter, alpha, gamma, penalty, dfmax, eps);
+			activeX = VectorXd::Constant(p, 0);
+			for(j=0;j<p;j++) if(Anew.row(j).norm()) activeX[j]= 1;			
+			if(activeX.sum()<r1)  break;
+			else{
+				Dnew = C * S * kroneckerProduct(B.transpose(), Anew.transpose());
+				likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+				if (likhd1<likhd0) {
+					A = Anew;
+					likhd0 = likhd1;
+				}
+				else convergence1[2]=0;
+			}
+
+			Bnew = updateB(Y, Z, A, B, C, S);
+			Dnew = C * S * kroneckerProduct(Bnew.transpose(), A.transpose());
+			likhd1 = pow((Y - Z * Dnew.transpose()).norm(),2);
+			if (likhd1<likhd0) {
+				B = Bnew;
+				if ((likhd0 - likhd1) / likhd0<threshold) break;
+				else  likhd0 = likhd1;				
+			}
+			else convergence1[3]=0;		
+			if(convergence1.sum()==0) break;
+		} //end while		
+		activeX = VectorXd::Constant(p, 0);
+		for(j=0;j<p;j++) if(A.row(j).norm()) activeX[j]= 1;		
+		df[l] = activeX.sum();		
+		Dnew = C * S * kroneckerProduct(B.transpose(), A.transpose());
+		likhd[l] = pow((Ytest - Ztest * Dnew.transpose()).norm(),2);				
+		activeA.resize(q*p,1);
+		betapath.col(l) = activeA;
+		activeXpath.col(l) = activeX;		
+	}// end for
+	return List::create(Named("likhd") = likhd, Named("df") = df, Named("betapath")=betapath, Named("activeXpath") = activeXpath);
 }
 
 //----------------------------------------------------------------**

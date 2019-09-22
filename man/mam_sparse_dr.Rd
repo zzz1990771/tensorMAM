@@ -11,9 +11,9 @@
 }
 
 \usage{
-mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
-              r1_index = NULL, r2_index = NULL, r3_index = NULL, lambda = NULL,
-              SABC = NULL, nlam = 50, degr = 3, lam_min = 0.01,
+mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
+              K_index = NULL, r1_index = NULL, r2_index = NULL, r3_index = NULL, 
+              lambda = NULL, SABC = NULL, nlam = 50, degr = 3, lam_min = 0.01,
               eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, maxstep2 = 20, gamma = 2,
               dfmax = NULL, alpha = 1)
 }
@@ -30,6 +30,12 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", K_index = NULL,
   
   \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default), 
                  "SCAD", or "MCP".}
+  
+  \item{isPenColumn}{A logical value indicating whether the coefficients associating with \eqn{X_j} that affects whole response 
+                    \eqn{y} is penalized.  Default is \code{TRUE}. If \code{isPenColumn} is \code{TRUE}, the coefficients associating with
+                    \eqn{X_j} that affects simultaneously whole response \eqn{y} is penalized for each \eqn{j\in \{1,\cdots,p\}}. 
+                    If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
+                    \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.}
                  
   \item{K_index}{A user-specified sequence of \code{K} values, where \code{K} is he number 
                  of B-spline base function. Default is \code{k_index=6}.}

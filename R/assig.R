@@ -51,7 +51,7 @@ truefuns <- function(n,q,p,s,D2,seed_id){
   
 }
 ##--------------generate data----------------------##
-generateData <- function(n,q,p,s,D2, sigma2=NULL,seed_id=NULL){
+generateData <- function(n,q,p,s,D2,sigma2=NULL,indexF=NULL,seed_id=NULL){
   if(n<2) stop("n must be not smaller than 2")
   if(q<1) stop("q must be not smaller than 1")
   if(p<1) stop("p must be not smaller than 1")
@@ -65,19 +65,28 @@ generateData <- function(n,q,p,s,D2, sigma2=NULL,seed_id=NULL){
   }
   if(is.null(seed_id)) seed_id=1000
   set.seed(seed_id)
-  rho = 0.0
   X <- matrix(runif(n*p), nrow = n)
-  X1 <- X[,1:s]
-  basefuns1 <- sin(2*pi*X1)
-  basefuns2 <- cos(pi*X1)
-  
-  fl <- basefuns1%*%matrix(D2[1,],nrow=s)+basefuns2%*%matrix(D2[2,],nrow=s)
-  f0 <- matrix(rep(basefuns1,q),nrow=n)*matrix(rep(D2[1,],each=n),n) + matrix(rep(basefuns2,q),nrow=n)*matrix(rep(D2[2,],each=n),n)
-  
-  Sigma = matrix(rho,q,q)+diag(1-rho,q,q)
-  A = chol(Sigma) 
+  if(is.null(indexF)){
+    X1 <- X[,1:s]
+    basefuns1 <- sin(2*pi*X1)
+    basefuns2 <- cos(pi*X1)
+    fl <- basefuns1%*%matrix(D2[1,],nrow=s)+basefuns2%*%matrix(D2[2,],nrow=s)
+    f0 <- matrix(rep(basefuns1,q),nrow=n)*matrix(rep(D2[1,],each=n),n) + matrix(rep(basefuns2,q),nrow=n)*matrix(rep(D2[2,],each=n),n)
+  }
+  else{
+    fl = matrix(0,n,q)
+    D21 = matrix(D2[1,],nrow=s)
+    D22 = matrix(D2[2,],nrow=s)
+    for(j in 1:q){
+      X1 <- X[,indexF[j,]]
+      basefuns1 <- sin(2*pi*X1)
+      basefuns2 <- cos(pi*X1)
+      fl[,j] <- basefuns1%*%D21[,j] + basefuns2%*%D22[,j]
+    }
+    f0 <- matrix(rep(basefuns1,q),nrow=n)*matrix(rep(D2[1,],each=n),n) + matrix(rep(basefuns2,q),nrow=n)*matrix(rep(D2[2,],each=n),n)
+  }
   eps <- matrix(rnorm(n*q),n,q)
-  Y <- fl + sqrt(sigma2)*eps%*%A
+  Y <- fl + sigma2*eps
   return(list(Y=Y,X=X,f0=f0))
 }
 

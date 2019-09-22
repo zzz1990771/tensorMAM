@@ -10,10 +10,10 @@
 }
 
 \usage{
-mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
-           lambda = NULL, SABC = NULL, degr = 3, nlam = 20, lam_min = 1e-3, 
-           eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, maxstep2 = 20, gamma = 2,
-           dfmax = NULL, alpha = 1)
+mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
+           penalty="LASSO", isPenColumn=TRUE, lambda = NULL, SABC = NULL, degr = 3, 
+           nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, 
+           maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -32,8 +32,19 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
   
   \item{r3}{The third dimension of single value matrix of the tensor. Default is 2.}
   
+  \item{method}{The method to be applied to select parameters.  Either "BIC"
+                (the default), or "CV".}
+    
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is \code{BIC}, \code{ncv} is useless.}  
+  
   \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default),  
                  "SCAD", or "MCP".}
+ 
+  \item{isPenColumn}{A logical value indicating whether the coefficients associating with \eqn{X_j} that affects whole response 
+                    \eqn{y} is penalized.  Default is \code{TRUE}. If \code{isPenColumn} is \code{TRUE}, the coefficients associating with
+                    \eqn{X_j} that affects simultaneously whole response \eqn{y} is penalized for each \eqn{j\in \{1,\cdots,p\}}. 
+                    If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
+                    \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.} 
         
   \item{lambda}{A user-specified sequence of lambda values.  By default,
         a sequence of values of length \code{nlam} is computed, equally
@@ -78,8 +89,8 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, penalty = "LASSO",
 
 \details{
   This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
-  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2} 
-  and \eqn{r_3}  by \code{BIC} or \code{CV}.
+  tensor is a \eqn{r_1\times r_2\times r_3}-tensor. \eqn{r_1}, \eqn{r_2} 
+  and \eqn{r_3}  are fixed.
 }
 
 \value{

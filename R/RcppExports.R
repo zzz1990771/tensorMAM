@@ -13,12 +13,23 @@ setuplambda <- function(Y, Z, A, B, C, S, nlam, setlam) {
     .Call(`_tensorMam_setuplambda`, Y, Z, A, B, C, S, nlam, setlam)
 }
 
-Estimation_penalty <- function(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter, is_setlam, setlam) {
-    .Call(`_tensorMam_Estimation_penalty`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter, is_setlam, setlam)
+EstPenColumn <- function(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
+    .Call(`_tensorMam_EstPenColumn`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
-Estimation_penalty_cv <- function(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter, is_setlam, setlam) {
-    .Call(`_tensorMam_Estimation_penalty_cv`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter, is_setlam, setlam)
+EstPenSingle <- function(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
+    .Call(`_tensorMam_EstPenSingle`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
+EstPenColumnCV <- function(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
+    .Call(`_tensorMam_EstPenColumnCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+}
+
+EstPenSingleCV <- function(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
+    .Call(`_tensorMam_EstPenSingleCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+}
+
+EstimationD3 <- function(Y, Z) {
+    .Call(`_tensorMam_EstimationD3`, Y, Z)
+}
 
