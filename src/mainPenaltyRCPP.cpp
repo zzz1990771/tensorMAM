@@ -600,7 +600,7 @@ VectorXd updateAj(VectorXd z, int n, int r1, double lambda, double alpha, double
 	VectorXd b = VectorXd::Constant(r1, 0);
 	znorm = z.norm();
 	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
-	for (j = 0; j<r1; j++) b[j] = znorm * z[j]/n;
+	for (j = 0; j<r1; j++) b[j] = znorm * z[j];
 	return b;
 }
 
@@ -688,7 +688,7 @@ MatrixXd updateA_penalty(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixX
 		}
 		for (j = 0; j < p;j++) {
 			aj = Anew.row(j).transpose();
-			zj = Vnew.block(0, j*r1, n*q, r1).transpose()*r + n*aj;
+			zj = Vnew.block(0, j*r1, n*q, r1).transpose()*r/n + aj;
 			ajnew = updateAj(zj, n, r1, lambda1, alpha, gamma, penalty);
 			r = r - Vnew.block(0, j*r1, n*q, r1)*(ajnew-aj);
 			Anew.row(j) = ajnew.transpose();
@@ -761,7 +761,7 @@ List EstPenColumn(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Ma
 	Anew = A1 = A;
 	Z1 = Z;
 	for (l = 0; l < nlam; l++) {
-		lambda1 = n * lambda[l];
+		lambda1 = lambda[l];
 		step = 0;
 		while (step<max_step) {
 		  convergence1 = VectorXd::Constant(4, 1);
@@ -865,7 +865,7 @@ void updateA_penaltyl(VectorXd r, MatrixXd Ztilde, MatrixXd &Dl, MatrixXd beta, 
 		for (j = 0; j < p; j++) {
 			Zj = Ztilde.block(0, j * K, n, K);
 			dj = Dlnew.col(j);
-			gj = Zj.transpose() * r + n * dj;
+			gj = Zj.transpose() * r/n + dj;
 			djnew = updateAj(gj, n, K, lambda1, alpha, gamma, penalty);
 			r = r - Zj * (djnew - dj);
 			Dlnew.col(j) = djnew;
@@ -1005,7 +1005,7 @@ List EstPenSingle(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Ma
 	activeXpath = MatrixXd::Constant(p, nlam, 0);
 	Anew = A;
 	for (l = 0; l < nlam; l++) {
-		lambda1 = n * lambda[l];
+		lambda1 = lambda[l];
 		step = 0;
 		while (step<max_step) {
 		  convergence1 = VectorXd::Constant(4, 1);
@@ -1106,7 +1106,7 @@ List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 	Anew = A1 = A;
 	Z1 = Z;
 	for (l = 0; l < nlam; l++) {
-		lambda1 = n * lambda[l];
+		lambda1 = lambda[l];
 		step = 0;
 		while (step<max_step) {
 		  convergence1 = VectorXd::Constant(4, 1);
@@ -1213,7 +1213,7 @@ List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 	activeXpath = MatrixXd::Constant(p, nlam, 0);	
 	Anew = A;
 	for (l = 0; l < nlam; l++) {
-		lambda1 = n * lambda[l];
+		lambda1 = lambda[l];
 		step = 0;
 		while (step<max_step) {
 		  convergence1 = VectorXd::Constant(4, 1);
