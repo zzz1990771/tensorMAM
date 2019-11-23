@@ -28,7 +28,7 @@ mam_sparse_bic <-
             }
             df = r1*r2*r3+df1*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           }
-          bic = fit$likhd + log(n)*df
+          bic = log(fit$likhd/(n*q)) + log(n*q)*df/(n*q)
           RSS = cbind(RSS,bic)
         }
       }
