@@ -30,7 +30,7 @@ mam_dr <- function(Y,X,method="BIC",ncv=10,K_index=NULL,r1_index=NULL,r2_index=N
     C = SABC$C
     S = SABC$S
   }
-  if(intercept & is.null(mu)) mu = as.vector(rep(0,q))
+  if(is.null(mu)) mu = as.vector(rep(0,q))
   
   if((max(r1_index)>dim(A)[2])|(max(r2_index)>dim(B)[2])|(max(r3_index)>dim(C)[2]))
     stop("maximum number of index sequence of r1, r2, and r3 must not be larger than A, B, and C, respectively !")

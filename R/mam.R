@@ -23,7 +23,7 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,mu=NULL
     C = SABC$C
     S = SABC$S
   }
-  if(intercept & is.null(mu)) mu = as.vector(rep(0,q))
+  if(is.null(mu)) mu = as.vector(rep(0,q))
   
   Z = bsbasefun(X,K,degr)
   fit = Estimation(Y,Z,A,B,C,S,intercept,mu,eps,max_step)
