@@ -11,7 +11,7 @@ mam_bic <- function(Y,X,method,K_index,r1_index,r2_index,r3_index,S,A,B,C,interc
       for(r2 in r2_index){
         for(r1 in r1_index){
           fit = Estimation(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                           as.numeric(intercept),mu,eps,max_step)
+                           intercept,mu,eps,max_step)
           df = r1*r2*r3+p*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           loglikelih =  -n*q * (log(2*pi) + log(fit$likhd))
           if(method=="BIC"){
@@ -38,7 +38,7 @@ mam_bic <- function(Y,X,method,K_index,r1_index,r2_index,r3_index,S,A,B,C,interc
   #---------------- The estimation after selection ---------------------#
   Z = bsbasefun(X,K_opt,degr)
   fit = Estimation(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                   as.numeric(intercept),mu,eps,max_step)  
+                   intercept,mu,eps,max_step)  
   return(list(Dnew=fit$Dnew, 
               rss=fit$likhd,
               mu = fit$mu,

@@ -51,13 +51,13 @@ mam_sparse <-
     if(method=="BIC"){
       if(isPenColumn){
         fit = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                           as.numeric(intercept),mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                           intercept,mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         df = fit$df*r1
         bic = fit$likhd + log(n)*df/n
       }
       else{
         fit = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                           as.numeric(intercept),mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                           intercept,mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         df1 = NULL
         for(k in 1:nlam){
           activeF1 = matrix(fit$betapath[,k],nrow=q)
@@ -71,12 +71,12 @@ mam_sparse <-
       
       if(isPenColumn){
         fit_opt = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu, lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                               intercept,mu, lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         activeF = activeX = fit_opt$betapath[,selected]
       }
       else{
         fit_opt = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                               intercept,mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         activeF = matrix(fit_opt$betapath[,selected],q,p)
         activeX = fit_opt$activeXpath[,selected]
         
@@ -98,22 +98,22 @@ mam_sparse <-
         Ztest = bsbasefun(Xtest,K,degr)
         if(isPenColumn)
           fit = EstPenColumnCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
+                               intercept,mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
         else
           fit = EstPenSingleCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
+                               intercept,mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
         RSS = RSS + fit$likhd
       } 
       selected = which.min(RSS)
       lambda_opt = lambda[selected]
       if(isPenColumn){
         fit_opt = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                               intercept,mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         activeF = activeX = fit_opt$betapath[,selected]
       }
       else{
         fit_opt = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                               as.numeric(intercept),mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                               intercept,mu,lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         activeF = matrix(fit_opt$betapath[,selected],q,p)
         activeX = fit_opt$activeXpath[,selected]
         
@@ -125,10 +125,10 @@ mam_sparse <-
     if(method=="CV"&&nlam==1){
       if(isPenColumn)
         fit = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                           as.numeric(intercept),mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                           intercept,mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
       else
         fit = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
-                           as.numeric(intercept),mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
+                           intercept,mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
       selected = 1
       lambda_opt = lambda
       activeX = activeF = fit$betapath

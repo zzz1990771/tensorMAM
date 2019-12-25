@@ -26,7 +26,7 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,mu=NULL
   if(intercept & is.null(mu)) mu = as.vector(rep(0,q))
   
   Z = bsbasefun(X,K,degr)
-  fit = Estimation(Y,Z,A,B,C,S,as.numeric(intercept),mu,eps,max_step)
+  fit = Estimation(Y,Z,A,B,C,S,intercept,mu,eps,max_step)
   return(list(Dnew=fit$Dnew, 
               rss=fit$likhd,
               mu = fit$mu,
