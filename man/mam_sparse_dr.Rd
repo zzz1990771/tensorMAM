@@ -13,9 +13,9 @@
 \usage{
 mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
               K_index = NULL, r1_index = NULL, r2_index = NULL, r3_index = NULL, 
-              lambda = NULL, SABC = NULL, nlam = 50, degr = 3, lam_min = 0.01,
-              eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, maxstep2 = 20, gamma = 2,
-              dfmax = NULL, alpha = 1)
+              lambda = NULL, SABC = NULL, intercept = TRUE, mu = NULL, nlam = 50, 
+              degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, 
+              maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -65,6 +65,10 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
               \eqn{A}, \eqn{B}, \eqn{C}. By default,
               initial matrices are provided by random.}
               
+  \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
+  
+  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
+  
   \item{nlam}{The number of lambda values.  Default is 50.}
   
   \item{degr}{The number of knots of B-spline base function. Default is \code{degr = 3}.}
@@ -111,6 +115,8 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
 %%  If it is a LIST, use
 
   \item{Dnew}{Estimator of \eqn{D_{(3)}}.}
+  
+  \item{mu}{Estimator of intercept \eqn{\mu}.}
   
   \item{rss}{Residual sum of squares (RSS).}
   

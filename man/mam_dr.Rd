@@ -10,8 +10,8 @@
 } 
 
 \usage{mam_dr(Y, X, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
-       r2_index = NULL, r3_index = NULL, SABC = NULL, degr = 3, eps = 1e-4,
-       max_step = 20)
+       r2_index = NULL, r3_index = NULL, SABC = NULL, intercept = TRUE, mu = NULL,
+       degr = 3, eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,7 +48,11 @@
               \eqn{A}, \eqn{B}, \eqn{C}, which is a list with values \eqn{S},
               \eqn{A}, \eqn{B}, \eqn{C}. By default,
               initial matrices are provided by random.}
-               
+        
+  \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
+  
+  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
+  
   \item{degr}{ the number of knots of B-spline base function. Default is \code{3}.}
   
   \item{eps}{Convergence threshhold.  The algorithm iterates until the
@@ -67,6 +71,8 @@
 %%  ~Describe the value returned
 %%  If it is a LIST, use
   \item{Dnew}{Estimator of \eqn{D_{(3)}}.}
+  
+  \item{mu}{Estimator of intercept \eqn{\mu}.}
   
   \item{rss}{Residual sum of squares (RSS).}
   

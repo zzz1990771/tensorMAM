@@ -1,6 +1,6 @@
 
 ##--------------without sparsity----------------------##
-mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,degr=3,eps=1e-4,max_step=20){
+mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,mu=NULL,degr=3,eps=1e-4,max_step=20){
   n <- dim(Y)[1]
   q <- dim(Y)[2]
   p <- dim(X)[2]
@@ -23,11 +23,13 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,degr=3,eps=1e-4,max_st
     C = SABC$C
     S = SABC$S
   }
+  if(intercept & is.null(mu)) mu = as.vector(rep(0,q))
   
   Z = bsbasefun(X,K,degr)
-  fit = Estimation(Y,Z,A,B,C,S,eps,max_step)
+  fit = Estimation(Y,Z,A,B,C,S,as.numeric(intercept),mu,eps,max_step)
   return(list(Dnew=fit$Dnew, 
               rss=fit$likhd,
+              mu = fit$mu,
               Y = Y,
               X = X,
               Z = Z,

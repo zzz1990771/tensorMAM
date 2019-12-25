@@ -2,7 +2,7 @@
 ##--------------Estimation with Penalty by CV----------------------##
 mam_sparse_dr <- 
   function(Y,X,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,K_index=NULL,r1_index=NULL,r2_index=NULL,r3_index=NULL,lambda=NULL,
-           SABC=NULL,nlam=50,degr=3,lam_min=0.01,eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
+           SABC=NULL,intercept=TRUE,mu=NULL,nlam=50,degr=3,lam_min=0.01,eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- dim(Y)[1]
     q <- dim(Y)[2]
     p <- dim(X)[2]
@@ -40,6 +40,7 @@ mam_sparse_dr <-
       C = SABC$C
       S = SABC$S
     }
+    if(intercept & is.null(mu)) mu = as.vector(rep(0,q))
     if (is.null(lambda)) {
       is_setlam = 1
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
@@ -57,10 +58,11 @@ mam_sparse_dr <-
     if((max(r1_index)>dim(A)[2])|(max(r2_index)>dim(B)[2])|(max(r3_index)>dim(C)[2]))
       stop("maximum number of index sequence of r1, r2, and r3 must not be larger than A, B, and C, respectively !")
     
-    if(method=="BIC") fit_dr = mam_sparse_bic(Y,X,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                             nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
     if(method=="CV") fit_dr = mam_sparse_cv(Y,X,ncv,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                           nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+                                            intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+    else fit_dr = mam_sparse_bic(Y,X,method,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
+                                 intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+
     
     return(fit_dr)
   }

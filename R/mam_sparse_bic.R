@@ -1,8 +1,8 @@
 
 ##--------------Estimation with Penalty by BIC----------------------##
 mam_sparse_bic <- 
-  function(Y,X,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda=lambda,A,B,C,S,
-           nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
+  function(Y,X,method,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda=lambda,A,B,C,S,
+           intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
   n <- dim(Y)[1]
   q <- dim(Y)[2]
   p <- dim(X)[2]
@@ -15,12 +15,12 @@ mam_sparse_bic <-
         for(r1 in r1_index){
           if(isPenColumn){
             fit = EstPenColumn(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                               lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
+                               as.numeric(intercept),mu,lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
             df = r1*r2*r3+fit$df*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           }
           else{
             fit = EstPenSingle(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                               lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
+                               as.numeric(intercept),mu,lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
             df1 = NULL
             for(k in 1:nlam){
               activeF1 = matrix(fit$betapath[,k],nrow=q)
@@ -28,7 +28,17 @@ mam_sparse_bic <-
             }
             df = r1*r2*r3+df1*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           }
-          bic = log(fit$likhd/(n*q)) + log(n*q)*df/(n*q)
+          loglikelih =  -n*q * (log(2*pi) + log(fit$likhd))
+          if(method=="BIC"){
+            #bic = log(fit$likhd/(n*q)) + log(n*q)*df/(n*q)          
+            bic = loglikelih + log(n*q)*df
+          }
+          if(method=="AIC") bic = loglikelih + 2*df
+          if(method=="EBIC"){
+            bic = loglikelih + log(n*q)*df
+            bic = bic + 2*(lgamma(p+1) - lgamma(df+1) - lgamma(p-df+1))
+          }
+          if(method=="GCV") bic = loglikelih/(1-df/n)^2
           RSS = cbind(RSS,bic)
         }
       }
@@ -50,18 +60,19 @@ mam_sparse_bic <-
   Z = bsbasefun(X,K_opt,degr)
   if(isPenColumn){
     fit_opt = EstPenColumn(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                           lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
+                           as.numeric(intercept),mu,lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
     activeF = activeX = fit_opt$betapath[,qj1]
   }
   else{
     fit_opt = EstPenSingle(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                           lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
+                           as.numeric(intercept),mu,lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
     activeF = matrix(fit_opt$betapath[,qj1],q,p)
     activeX = fit_opt$activeXpath[,qj1]
   }
   return(list(Dnew=fit_opt$Dnew, 
               rss=fit_opt$likhd[qj1],
               df = fit_opt$df,
+              mu = fit_opt$mu,
               activeF = activeF,
               activeX = activeX,
               lambda = lambda,
