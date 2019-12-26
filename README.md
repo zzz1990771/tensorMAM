@@ -24,9 +24,11 @@
     mydata <- generateData(200, 5, 5, 5, D2)    
     fit <- mam(mydata$Y, mydata$X)
     coeff <- fit$Dnew
+	mu <- fit$mu
     
     fit_dr <- mam_dr(mydata$Y, mydata$X)
-    opt <- fit_dr$rk_opt
+	mu <- fit$mu
+    opt <- fit_dr$rk_opt	
  
  # References
 A tensor estimation approach to multivariate additive models. Manuscript.

@@ -53,12 +53,12 @@ mam_sparse_cv <-
     Z = bsbasefun(X,K_opt,degr)
     if(isPenColumn){
       fit_opt = EstPenColumn(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                             intercept,mu,lambda_opt,alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
+                             intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
       activeF = activeX = fit_opt$betapath[,qj1]
     }
     else{
       fit_opt = EstPenSingle(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                             intercept,mu,lambda_opt,alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
+                             intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
       activeF = matrix(fit_opt$betapath[,qj1],q,p)
       activeX = fit_opt$activeXpath[,qj1]
     }
