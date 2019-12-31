@@ -41,6 +41,8 @@ mam_sparse_dr <-
       S = SABC$S
     }
     if(is.null(mu)) mu = as.vector(rep(0,q))
+    if(!intercept) mu = as.vector(rep(0,q))
+    
     if (is.null(lambda)) {
       is_setlam = 1
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
