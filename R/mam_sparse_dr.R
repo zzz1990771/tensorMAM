@@ -40,8 +40,7 @@ mam_sparse_dr <-
       C = SABC$C
       S = SABC$S
     }
-    if(is.null(mu)) mu = as.vector(rep(0,q))
-    if(!intercept) mu = as.vector(rep(0,q))
+    if(!intercept | is.null(mu)) mu = as.vector(rep(0,q))
     
     if (is.null(lambda)) {
       is_setlam = 1
