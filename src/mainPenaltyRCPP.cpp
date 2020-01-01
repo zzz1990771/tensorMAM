@@ -815,9 +815,9 @@ List EstPenColumn(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Ma
 			if (likhd1<likhd0) {
 				B = Bnew;
 				if(intercept){
-				mu = (Y - Z1 * Dnew.transpose()).colwise().sum()/n;
-				Y1 = Y - kroneckerProduct(Ones,mu);
-				Y1.resize(n,q);	
+					mu = (Y - Z1 * Dnew.transpose()).colwise().sum()/n;
+					Y1 = Y - kroneckerProduct(Ones,mu);
+					Y1.resize(n,q);	
 				}
 				if ((likhd0 - likhd1) / likhd0<threshold) break;
 				else  likhd0 = likhd1;	
@@ -1060,9 +1060,9 @@ List EstPenSingle(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Ma
 			if (likhd1<likhd0) {
 				B = Bnew;
 				if(intercept){
-				mu = (Y - Z * Dnew.transpose()).colwise().sum()/n;				
-				Y1 = Y - kroneckerProduct(Ones,mu);
-				Y1.resize(n,q);			
+					mu = (Y - Z * Dnew.transpose()).colwise().sum()/n;	
+					Y1 = Y - kroneckerProduct(Ones,mu);
+					Y1.resize(n,q);			
 				}				
 				if ((likhd0 - likhd1) / likhd0<threshold) break;
 				else  likhd0 = likhd1;	
@@ -1140,7 +1140,6 @@ List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 				likhd0 = likhd1;
 			}
 			else convergence1[0]=0;
-
 			Cnew = updateC(Y1, Z1, A1, B, C, S);
 			Dnew = Cnew * S * kroneckerProduct(B.transpose(), A1.transpose());
 			likhd1 = (Y1 - Z1 * Dnew.transpose()).squaredNorm();
@@ -1175,9 +1174,9 @@ List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 			if (likhd1<likhd0) {
 				B = Bnew;
 				if(intercept){
-				mu = (Y - Z1 * Dnew.transpose()).colwise().sum()/n;
-				Y1 = Y - kroneckerProduct(Ones,mu);
-				Y1.resize(n,q);	
+					mu = (Y - Z1 * Dnew.transpose()).colwise().sum()/n;
+					Y1 = Y - kroneckerProduct(Ones,mu);
+					Y1.resize(n,q);	
 				}				
 				if ((likhd0 - likhd1) / likhd0<threshold) break;
 				else  likhd0 = likhd1;				
@@ -1256,7 +1255,6 @@ List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 				likhd0 = likhd1;
 			}
 			else convergence1[0]=0;
-
 			Cnew = updateC(Y1, Z, A, B, C, S);
 			Dnew = Cnew * S * kroneckerProduct(B.transpose(), A.transpose());
 			likhd1 = (Y1 - Z * Dnew.transpose()).squaredNorm();
@@ -1281,15 +1279,13 @@ List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 			}
 			Bnew = updateB(Y1, Z, A, B, C, S);
 			Dnew = C * S * kroneckerProduct(Bnew.transpose(), A.transpose());
-			likhd1 = (Y1 - Z * Dnew.transpose()).squaredNorm();
-			Rcout << "mu = "<< mu.transpose()<< "   intercept = "<<intercept << std::endl;
-			//stop("stop here!");			
+			likhd1 = (Y1 - Z * Dnew.transpose()).squaredNorm();		
 			if (likhd1<likhd0) {
 				B = Bnew;
 				if(intercept){
-				mu = (Y - Z * Dnew.transpose()).colwise().sum()/n;
-				Y1 = Y - kroneckerProduct(Ones,mu);
-				Y1.resize(n,q);					
+					mu = (Y - Z * Dnew.transpose()).colwise().sum()/n;
+					Y1 = Y - kroneckerProduct(Ones,mu);
+					Y1.resize(n,q);					
 				}				
 				if ((likhd0 - likhd1) / likhd0<threshold) break;
 				else  likhd0 = likhd1;				
