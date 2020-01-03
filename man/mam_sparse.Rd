@@ -22,7 +22,7 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
   \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
   
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
-          functioin and the number of knots. Default is \code{7}.}
+          functioin and the number of knots. Default is \code{6}.}
           
   \item{degr}{The number of knots of B-spline base function. Default is \code{3}.}
   
@@ -32,10 +32,10 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
   
   \item{r3}{The third dimension of single value matrix of the tensor. Default is 2.}
   
-  \item{method}{The method to be applied to select parameters.  Either "BIC"
-                (the default), or "CV".}
+  \item{method}{The method to be applied to select parameters.  Either \code{BIC}
+                (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is \code{BIC}, \code{ncv} is useless.}  
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}  
   
   \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default),  
                  "SCAD", or "MCP".}

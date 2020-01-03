@@ -3,11 +3,11 @@
 \alias{mam_sparse_dr}
 \docType{package}
 \title{
-  Fit MAM with sparsity assumption and ranks selected by \code{BIC} or \code{CV}.
+  Fit MAM with sparsity assumption and ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 }
 \description{
-  Fit a high-dimensional multivariate additive model using B-splines, with or with aparsity assumptions and ranks selected by \code{BIC} or \code{CV}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate
-  functions for sparsity situation. The tuning parameter is selected by \code{BIC} or \code{CV}, which matchs the method of rank selection.
+  Fit a high-dimensional multivariate additive model using B-splines, with or with aparsity assumptions and ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate
+  functions for sparsity situation. The tuning parameter is selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}, which matchs the method of rank selection.
 }
 
 \usage{
@@ -23,10 +23,10 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
   
   \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
   
-  \item{method}{The method to be applied to select parameters.  Either "BIC"
-                (the default), or "CV".}
+  \item{method}{The method to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
+                or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is \code{BIC}, \code{ncv} is useless.}
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}
   
   \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default), 
                  "SCAD", or "MCP".}
@@ -128,11 +128,11 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
   
   \item{selectedID }{The index of \code{lambda} corresponding to \code{lambda_opt}.}
   
-  \item{lambda_opt }{The value of \code{lambda} with the minimum \code{BIC} or \code{CV} value.}
+  \item{lambda_opt }{The value of \code{lambda} with the minimum \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV} value.}
   
   \item{RSS}{The values of \code{BIC} or \code{CV}, which is a vector.}
   
-  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \eqn{r_1},  \eqn{r_2}, \eqn{r_3}, and \eqn{K}.}
+  \item{rk_opt}{The optimal parametres that slected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}. It is a vector with length 4, which are selected \eqn{r_1},  \eqn{r_2}, \eqn{r_3}, and \eqn{K}.}
   
   \item{Y}{Response \eqn{Y}.}
   

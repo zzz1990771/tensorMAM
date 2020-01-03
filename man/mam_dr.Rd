@@ -3,10 +3,10 @@
 \alias{mam_dr}
 \docType{package}
 \title{
-  Fit MAM without sparsity assumption, and with ranks selected by \code{BIC} or \code{CV}.
+  Fit MAM without sparsity assumption, and with ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 }
 \description{
-  Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and with ranks \eqn{r_1, r_2, r_3} selected by \code{BIC} or \code{CV}.
+  Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and with ranks \eqn{r_1, r_2, r_3} selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 } 
 
 \usage{mam_dr(Y, X, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
@@ -19,11 +19,11 @@
   
   \item{X}{A \eqn{n\times p} numeric design matrix for the model.}
 
-  \item{method}{The method to be applied to select parameters.  Either "BIC"
-                (the default), or "CV".}
+  \item{method}{The method to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
+                or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is  
-             \code{"BIC"}, \code{ncv} is useless.}
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not  
+             \code{"CV"}, \code{ncv} is useless.}
   
   \item{K_index}{A user-specified sequence of \code{K} values, where \code{K} is he number of B-spline base function. Default is \code{k_index=6}.}
     
@@ -76,7 +76,7 @@
   
   \item{rss}{Residual sum of squares (RSS).}
   
-  \item{rk_opt}{The optimal parametres that slected by \code{BIC} or \code{CV}. It is a vector with length 4, which are selected \eqn{r_1},  \eqn{r_2}, \eqn{r_3}, and \eqn{K}.}
+  \item{rk_opt}{The optimal parametres that slected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}. It is a vector with length 4, which are selected \eqn{r_1},  \eqn{r_2}, \eqn{r_3}, and \eqn{K}.}
   
   \item{selected}{Which \eqn{\lambda} is selection.}
   
