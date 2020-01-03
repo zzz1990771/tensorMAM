@@ -6,7 +6,7 @@
   Fit MAM with sparsity assumption and fixed ranks.
 }
 \description{
-  Fit a high-dimensional multivariate additive model using B-splines, with or without aparsity assumptions, and given ranks given ranks \eqn{r_1, r_2, r_3}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate functions for sparsity situation.
+  Fit a high-dimensional multivariate additive model using B-splines, with or without aparsity assumptions, and given ranks \eqn{r_1, r_2, r_3}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate functions for sparsity situation.
 }
 
 \usage{

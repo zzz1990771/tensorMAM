@@ -6,7 +6,7 @@
   Fit MAM without sparsity assumption and with fixed ranks.
 }
 \description{
-  Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and given ranks given ranks \eqn{r_1, r_2, r_3}.
+  Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and given ranks \eqn{r_1, r_2, r_3}.
 }
 
 \usage{mam(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, 
