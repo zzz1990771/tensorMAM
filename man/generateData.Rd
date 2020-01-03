@@ -33,7 +33,7 @@ generateData(n, q, p, s, D2, sigma2=NULL, indexF=NULL, seed_id=NULL)
 
 \details{This function gives \code{pq} functional coefficients' estimators of MAM. The singular value matrix of 
   tensor is a \eqn{r_1\times r_2\times r_3}-tensor. We choose \eqn{r_1}, \eqn{r_2} 
-  and \eqn{r_3}  by \code{BIC} or \code{CV}.
+  and \eqn{r_3}  by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 }
 
 \value{
