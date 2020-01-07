@@ -389,20 +389,19 @@ MatrixXd updateA(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Mat
 	MatrixXd tV = MatrixXd::Constant(d, d, 0);
 
 	for (t2 = 0; t2<p; t2++) {
+		Zt2 = Z.col(t2);
+		for (j = 1; j<k; j++)	Zt2 = cbind_rcpp(Zt2, Z.col(j*p + t2));
 		for (t1 = 0; t1<r1; t1++) {
 			Wt1 = W.col(t1);
-			for (j = 1; j<r2; j++) Wt1 = cbind_rcpp(Wt1, W.col(j*r1 + t1));
-			Zt2 = Z.col(t2);
-			for (j = 1; j<k; j++)	Zt2 = cbind_rcpp(Zt2, Z.col(j*p + t2));
+			for (j = 1; j<r2; j++) Wt1 = cbind_rcpp(Wt1, W.col(j*r1 + t1));			
 			zbw1 = Zt2 * B*(Wt1.transpose());
 			tU[t2*r1 + t1] = (Y.array()*zbw1.array()).sum();
-
 			for (t4 = 0; t4<p; t4++) {
+				Zt4 = Z.col(t4);
+				for (j = 1; j<k; j++) Zt4 = cbind_rcpp(Zt4, Z.col(j*p + t4));
 				for (t3 = 0; t3<r1; t3++) {
 					Wt3 = W.col(t3);
-					for (j = 1; j<r2; j++)	Wt3 = cbind_rcpp(Wt3, W.col(j*r1 + t3));
-					Zt4 = Z.col(t4);
-					for (j = 1; j<k; j++) Zt4 = cbind_rcpp(Zt4, Z.col(j*p + t4));
+					for (j = 1; j<r2; j++)	Wt3 = cbind_rcpp(Wt3, W.col(j*r1 + t3));					
 					zbw2 = Zt4 * B*(Wt3.transpose());
 					tV(t2*r1 + t1, t4*r1 + t3) = (zbw1.array()*zbw2.array()).sum();
 				}
@@ -432,15 +431,15 @@ MatrixXd updateB(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, Mat
 	MatrixXd tV = MatrixXd::Constant(d, d, 0);
 
 	for (t2 = 0; t2<k; t2++) {
+		Zt2 = Z.block(0, t2*p, n, p);  
 		for (t1 = 0; t1<r2; t1++) {
-			Wt1 = W.block(0, t1*r1, q, r1);    
-			Zt2 = Z.block(0, t2*p, n, p);  
+			Wt1 = W.block(0, t1*r1, q, r1);  			
 			zaw1 = Zt2 * A*(Wt1.transpose()); 
 			tU[t2*r2 + t1] = (Y.array()*zaw1.array()).sum();
 			for (t4 = 0; t4<k; t4++) {
+				Zt4 = Z.block(0, t4*p, n, p); 
 				for (t3 = 0; t3<r2; t3++) {
-					Wt3 = W.block(0, t3*r1, q, r1); 
-					Zt4 = Z.block(0, t4*p, n, p); 
+					Wt3 = W.block(0, t3*r1, q, r1); 					
 					zaw2 = Zt4 * A*(Wt3.transpose());
 					tV(t2*r2 + t1, t4*r2 + t3) = (zaw1.array()*zaw2.array()).sum();
 				}
