@@ -53,7 +53,14 @@ mam_sparse <-
         fit = EstPenColumn(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
                            intercept,mu,lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         df = fit$df*r1
-        bic = fit$likhd + log(n)*df/n
+        loglikelih = (n*q)*log(fit$likhd/(n*q))
+        bic <- switch (method,
+                       BIC = loglikelih + log(n*q)*df,
+                       AIC = loglikelih + 2*df,
+                       GCV = fit$likhd*(n*q)/(n*q-df)^2,
+                       EBIC = loglikelih + log(n*q)*df + 2*(lgamma(q*p*(p+1)/2+1) 
+                                                            - lgamma(df+1) - lgamma(q*p*(p+1)/2-df+1))
+        )
       }
       else{
         fit = EstPenSingle(Y,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
@@ -64,7 +71,14 @@ mam_sparse <-
           df1 = c(df1,median(rowSums(activeF1)))
         }
         df = df1*r1
-        bic = fit$likhd + log(n)*df
+        loglikelih = (n*q)*log(fit$likhd/(n*q))
+        bic <- switch (method,
+                       BIC = loglikelih + log(n*q)*df,
+                       AIC = loglikelih + 2*df,
+                       GCV = fit$likhd*(n*q)/(n*q-df)^2,
+                       EBIC = loglikelih + log(n*q)*df + 2*(lgamma(q*p*(p+1)/2+1) 
+                                                            - lgamma(df+1) - lgamma(q*p*(p+1)/2-df+1))
+        )
       }
       selected = which.min(bic)
       lambda_opt = lambda[selected]

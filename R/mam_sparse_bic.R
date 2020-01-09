@@ -28,17 +28,14 @@ mam_sparse_bic <-
             }
             df = r1*r2*r3+df1*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           }
-          loglikelih =  -n*q * (log(2*pi) + log(fit$likhd))
-          if(method=="BIC"){
-            #bic = log(fit$likhd/(n*q)) + log(n*q)*df/(n*q)          
-            bic = loglikelih + log(n*q)*df
-          }
-          if(method=="AIC") bic = loglikelih + 2*df
-          if(method=="EBIC"){
-            bic = loglikelih + log(n*q)*df
-            bic = bic + 2*(lgamma(p+1) - lgamma(df+1) - lgamma(p-df+1))
-          }
-          if(method=="GCV") bic = loglikelih/(1-df/n)^2
+          loglikelih = (n*q)*log(fit$likhd/(n*q))
+          bic <- switch (method,
+                         BIC = loglikelih + log(n*q)*df,
+                         AIC = loglikelih + 2*df,
+                         GCV = fit$likhd*(n*q)/(n*q-df)^2,
+                         EBIC = loglikelih + log(n*q)*df + 2*(lgamma(q*p*(p+1)/2+1) 
+                                                              - lgamma(df+1) - lgamma(q*p*(p+1)/2-df+1))
+          )
           RSS = cbind(RSS,bic)
         }
       }
