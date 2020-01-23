@@ -1,7 +1,7 @@
 
 ##--------------main by BIC without sparsity----------------------##
 mam_dr <- function(Y,X,method="BIC",ncv=10,K_index=NULL,r1_index=NULL,r2_index=NULL,r3_index=NULL,SABC=NULL,
-                   intercept=TRUE,mu=NULL,degr=3,eps=1e-4,max_step=20){
+                   intercept=TRUE,degr=3,eps=1e-4,max_step=20){
 
   n <- dim(Y)[1]
   q <- dim(Y)[2]
@@ -30,13 +30,11 @@ mam_dr <- function(Y,X,method="BIC",ncv=10,K_index=NULL,r1_index=NULL,r2_index=N
     C = SABC$C
     S = SABC$S
   }
-  if(!intercept | is.null(mu)) mu = as.vector(rep(0,q))
-  
   if((max(r1_index)>dim(A)[2])|(max(r2_index)>dim(B)[2])|(max(r3_index)>dim(C)[2]))
     stop("maximum number of index sequence of r1, r2, and r3 must not be larger than A, B, and C, respectively !")
 
-  if(method=="CV") fit_dr = mam_cv(Y,X,ncv,K_index,r1_index,r2_index,r3_index,S,A,B,C,intercept,mu,degr,eps,max_step)
-  else fit_dr = mam_bic(Y,X,method,K_index,r1_index,r2_index,r3_index,S,A,B,C,intercept,mu,degr,eps,max_step)
+  if(method=="CV") fit_dr = mam_cv(Y,X,ncv,K_index,r1_index,r2_index,r3_index,S,A,B,C,intercept,degr,eps,max_step)
+  else fit_dr = mam_bic(Y,X,method,K_index,r1_index,r2_index,r3_index,S,A,B,C,intercept,degr,eps,max_step)
   
   return(fit_dr)
 }

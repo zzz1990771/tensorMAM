@@ -26,7 +26,7 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,degr=3,
   Z = bsbasefun(X,K,degr)
   Zbar = colMeans(Z)
   Ybar = colMeans(Y)
-  Z = Z - matrix(rep(X2bar,each=n),n)
+  Z = Z - matrix(rep(Zbar,each=n),n)
   Y1 = Y - matrix(rep(Ybar,each=n),n)
   fit = Estimation(Y1,Z,A,B,C,S,eps,max_step)
   if(intercept){
