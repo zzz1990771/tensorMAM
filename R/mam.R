@@ -29,7 +29,7 @@ mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,degr=3,
   Z = Z - matrix(rep(Zbar,each=n),n)
   Y1 = Y - matrix(rep(Ybar,each=n),n)
   fit = Estimation(Y1,Z,A,B,C,S,eps,max_step)
-  if(intercept)  mu = Ybar-Dnew%*%Zbar
+  if(intercept)  mu = Ybar-fit$Dnew%*%Zbar
   else mu = rep(0,q)
   return(list(Dnew=fit$Dnew, 
               rss=fit$likhd,
