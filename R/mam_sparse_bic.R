@@ -2,25 +2,29 @@
 ##--------------Estimation with Penalty by BIC----------------------##
 mam_sparse_bic <- 
   function(Y,X,method,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda=lambda,A,B,C,S,
-           intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
+           intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
   n <- dim(Y)[1]
   q <- dim(Y)[2]
   p <- dim(X)[2]
   
+  Ybar = colMeans(Y)
+  Y1 = Y - matrix(rep(Ybar,each=n),n)
   RSS = NULL
   for(K in K_index){
     Z = bsbasefun(X,K,degr)
+    Zbar = colMeans(Z)
+    Z = Z - matrix(rep(Zbar,each=n),n)
     for(r3 in r3_index){
       for(r2 in r2_index){
         for(r1 in r1_index){
           if(isPenColumn){
-            fit = EstPenColumn(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                               intercept,mu,lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
+            fit = EstPenColumn(Y1,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
+                               lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
             df = r1*r2*r3+fit$df*r1+K*r2+q*r3-r1^2-r2^2-r3^2
           }
           else{
-            fit = EstPenSingle(Y,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                               intercept,mu,lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
+            fit = EstPenSingle(Y1,Z,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
+                               lambda,alpha,gamma,pen,dfmax,eps1,eps2,maxstep1,maxstep2) 
             df1 = NULL
             for(k in 1:nlam){
               activeF1 = matrix(fit$betapath[,k],nrow=q)
@@ -55,21 +59,28 @@ mam_sparse_bic <-
   
   #---------------- The estimation after selection ---------------------#
   Z = bsbasefun(X,K_opt,degr)
+  Zbar = colMeans(Z)
+  Z = Z - matrix(rep(Zbar,each=n),n)
   if(isPenColumn){
-    fit_opt = EstPenColumn(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                           intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
+    fit_opt = EstPenColumn(Y1,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
+                           lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
     activeF = activeX = fit_opt$betapath[,qj1]
   }
   else{
-    fit_opt = EstPenSingle(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                           intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
+    fit_opt = EstPenSingle(Y1,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
+                           lambda[1:qj1],alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2) 
     activeF = matrix(fit_opt$betapath[,qj1],q,p)
     activeX = fit_opt$activeXpath[,qj1]
   }
+  if(intercept){
+    mu = Ybar-fit_opt$Dnew%*%Zbar
+    fit_opt$Dnew = cbind(as.vector(mu),fit_opt$Dnew)
+  }
+  else mu = rep(0,q)
   return(list(Dnew=fit_opt$Dnew, 
               rss=fit_opt$likhd[qj1],
               df = fit_opt$df,
-              mu = fit_opt$mu,
+              mu = mu,
               activeF = activeF,
               activeX = activeX,
               lambda = lambda,

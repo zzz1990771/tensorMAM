@@ -10,7 +10,7 @@
 } 
 
 \usage{mam_dr(Y, X, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
-       r2_index = NULL, r3_index = NULL, SABC = NULL, intercept = TRUE, mu = NULL,
+       r2_index = NULL, r3_index = NULL, SABC = NULL, intercept = TRUE,
        degr = 3, eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -50,8 +50,6 @@
               initial matrices are provided by random.}
         
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
-  
-  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
   
   \item{degr}{ the number of knots of B-spline base function. Default is \code{3}.}
   

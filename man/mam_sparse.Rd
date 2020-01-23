@@ -12,7 +12,7 @@
 \usage{
 mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
            penalty="LASSO", isPenColumn=TRUE, lambda = NULL, SABC = NULL, intercept = TRUE,
-           mu = NULL, degr = 3, nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, 
+           degr = 3, nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, 
            eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -55,8 +55,6 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
               initial matrices are provided by random.}
    
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
-  
-  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
   
   \item{nlam}{The number of lambda values. Default is 20.}
    

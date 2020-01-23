@@ -2,21 +2,22 @@
 ##--------------Estimation with Penalty by CV----------------------##
 mam_sparse_cv <- 
   function(Y,X,ncv,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda=lambda,A,B,C,S,
-           intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
+           intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha){
     n <- dim(Y)[1]
     q <- dim(Y)[2]
     p <- dim(X)[2]
+    Ybar = colMeans(Y)
+    Y1 = Y - matrix(rep(Ybar,each=n),n)
     
     len_cv = ceiling(n/ncv)
     RSS = matrix(0,nlam,length(r1_index)*length(r2_index)*length(r3_index)*length(K_index))
     for(jj in 1:ncv){ # start CV
       cv.id = ((jj-1)*len_cv+1):(jj*len_cv)
       if(jj==ncv) cv.id = ((jj-1)*len_cv+1):n
-      Ytrain = Y[-cv.id,]
+      Ytrain = Y1[-cv.id,]
       Xtrain = X[-cv.id,]
-      Ytest = Y[cv.id,]
+      Ytest = Y1[cv.id,]
       Xtest = X[cv.id,]
-      
       RSS0 = NULL
       for(K in K_index){
         Ztrain = bsbasefun(Xtrain,K,degr) 
@@ -26,10 +27,10 @@ mam_sparse_cv <-
             for(r1 in r1_index){
               if(isPenColumn)
                 fit = EstPenColumnCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                                     intercept,mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2) 
+                                     lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2) 
               else
                 fit = EstPenSingleCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A[,1:r1]),as.matrix(B[1:K,1:r2]),as.matrix(C[,1:r3]),as.matrix(S[1:r3,1:(r1*r2)]),
-                                     intercept,mu,lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2) 
+                                     lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2) 
               RSS0 = cbind(RSS0,fit$likhd)
             }
           }
@@ -51,22 +52,28 @@ mam_sparse_cv <-
     
     #---------------- The estimation after selection ---------------------#
     Z = bsbasefun(X,K_opt,degr)
+    Zbar = colMeans(Z)
+    Z = Z - matrix(rep(Zbar,each=n),n)
     if(isPenColumn){
-      fit_opt = EstPenColumn(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                             intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
+      fit_opt = EstPenColumn(Y1,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
+                             lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
       activeF = activeX = fit_opt$betapath[,qj1]
     }
-    else{
-      fit_opt = EstPenSingle(Y,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
-                             intercept,mu,lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
+    else{ 
+      fit_opt = EstPenSingle(Y1,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),
+                             lambda[1:qj1],alpha, gamma, pen, dfmax,eps1, eps2, maxstep1, maxstep2) 
       activeF = matrix(fit_opt$betapath[,qj1],q,p)
       activeX = fit_opt$activeXpath[,qj1]
     }
-    
+    if(intercept){
+      mu = Ybar-fit_opt$Dnew%*%Zbar
+      fit_opt$Dnew = cbind(as.vector(mu),fit_opt$Dnew)
+    }
+    else mu = rep(0,q)
     return(list(Dnew=fit_opt$Dnew, 
                 rss=fit_opt$likhd,
                 df = fit_opt$df,
-                mu = fit_opt$mu,
+                mu = mu,
                 activeF = activeF,
                 activeX = activeX,
                 lambda = lambda,

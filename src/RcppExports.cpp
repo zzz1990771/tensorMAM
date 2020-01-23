@@ -24,8 +24,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // Estimation
-List Estimation(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int intercept, VectorXd mu, double threshold, int max_step);
-RcppExport SEXP _tensorMam_Estimation(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP interceptSEXP, SEXP muSEXP, SEXP thresholdSEXP, SEXP max_stepSEXP) {
+List Estimation(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, double threshold, int max_step);
+RcppExport SEXP _tensorMam_Estimation(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP thresholdSEXP, SEXP max_stepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -35,11 +35,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MatrixXd >::type B(BSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type C(CSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< VectorXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
     Rcpp::traits::input_parameter< int >::type max_step(max_stepSEXP);
-    rcpp_result_gen = Rcpp::wrap(Estimation(Y, Z, A, B, C, S, intercept, mu, threshold, max_step));
+    rcpp_result_gen = Rcpp::wrap(Estimation(Y, Z, A, B, C, S, threshold, max_step));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -62,8 +60,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // EstPenColumn
-List EstPenColumn(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int intercept, VectorXd mu, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
-RcppExport SEXP _tensorMam_EstPenColumn(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP interceptSEXP, SEXP muSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
+List EstPenColumn(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
+RcppExport SEXP _tensorMam_EstPenColumn(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -73,8 +71,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MatrixXd >::type B(BSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type C(CSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< VectorXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< VectorXd >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
@@ -84,13 +80,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< int >::type max_step(max_stepSEXP);
     Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(EstPenColumn(Y, Z, A, B, C, S, intercept, mu, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
+    rcpp_result_gen = Rcpp::wrap(EstPenColumn(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
     return rcpp_result_gen;
 END_RCPP
 }
 // EstPenSingle
-List EstPenSingle(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int intercept, VectorXd mu, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
-RcppExport SEXP _tensorMam_EstPenSingle(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP interceptSEXP, SEXP muSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
+List EstPenSingle(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
+RcppExport SEXP _tensorMam_EstPenSingle(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -100,8 +96,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MatrixXd >::type B(BSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type C(CSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< VectorXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< VectorXd >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
@@ -111,13 +105,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< int >::type max_step(max_stepSEXP);
     Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(EstPenSingle(Y, Z, A, B, C, S, intercept, mu, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
+    rcpp_result_gen = Rcpp::wrap(EstPenSingle(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
     return rcpp_result_gen;
 END_RCPP
 }
 // EstPenColumnCV
-List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int intercept, VectorXd mu, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
-RcppExport SEXP _tensorMam_EstPenColumnCV(SEXP YSEXP, SEXP ZSEXP, SEXP YtestSEXP, SEXP ZtestSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP interceptSEXP, SEXP muSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
+List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
+RcppExport SEXP _tensorMam_EstPenColumnCV(SEXP YSEXP, SEXP ZSEXP, SEXP YtestSEXP, SEXP ZtestSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -129,8 +123,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MatrixXd >::type B(BSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type C(CSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< VectorXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< VectorXd >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
@@ -140,13 +132,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< int >::type max_step(max_stepSEXP);
     Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(EstPenColumnCV(Y, Z, Ytest, Ztest, A, B, C, S, intercept, mu, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
+    rcpp_result_gen = Rcpp::wrap(EstPenColumnCV(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
     return rcpp_result_gen;
 END_RCPP
 }
 // EstPenSingleCV
-List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, int intercept, VectorXd mu, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
-RcppExport SEXP _tensorMam_EstPenSingleCV(SEXP YSEXP, SEXP ZSEXP, SEXP YtestSEXP, SEXP ZtestSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP interceptSEXP, SEXP muSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
+List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, VectorXd lambda, double alpha, double gamma, double penalty, int dfmax, double threshold, double eps, int max_step, int max_iter);
+RcppExport SEXP _tensorMam_EstPenSingleCV(SEXP YSEXP, SEXP ZSEXP, SEXP YtestSEXP, SEXP ZtestSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP lambdaSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP penaltySEXP, SEXP dfmaxSEXP, SEXP thresholdSEXP, SEXP epsSEXP, SEXP max_stepSEXP, SEXP max_iterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -158,8 +150,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MatrixXd >::type B(BSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type C(CSEXP);
     Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type intercept(interceptSEXP);
-    Rcpp::traits::input_parameter< VectorXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< VectorXd >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
@@ -169,7 +159,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
     Rcpp::traits::input_parameter< int >::type max_step(max_stepSEXP);
     Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
-    rcpp_result_gen = Rcpp::wrap(EstPenSingleCV(Y, Z, Ytest, Ztest, A, B, C, S, intercept, mu, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
+    rcpp_result_gen = Rcpp::wrap(EstPenSingleCV(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -188,12 +178,12 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_tensorMam_TransferModalUnfoldings", (DL_FUNC) &_tensorMam_TransferModalUnfoldings, 6},
-    {"_tensorMam_Estimation", (DL_FUNC) &_tensorMam_Estimation, 10},
+    {"_tensorMam_Estimation", (DL_FUNC) &_tensorMam_Estimation, 8},
     {"_tensorMam_setuplambda", (DL_FUNC) &_tensorMam_setuplambda, 8},
-    {"_tensorMam_EstPenColumn", (DL_FUNC) &_tensorMam_EstPenColumn, 17},
-    {"_tensorMam_EstPenSingle", (DL_FUNC) &_tensorMam_EstPenSingle, 17},
-    {"_tensorMam_EstPenColumnCV", (DL_FUNC) &_tensorMam_EstPenColumnCV, 19},
-    {"_tensorMam_EstPenSingleCV", (DL_FUNC) &_tensorMam_EstPenSingleCV, 19},
+    {"_tensorMam_EstPenColumn", (DL_FUNC) &_tensorMam_EstPenColumn, 15},
+    {"_tensorMam_EstPenSingle", (DL_FUNC) &_tensorMam_EstPenSingle, 15},
+    {"_tensorMam_EstPenColumnCV", (DL_FUNC) &_tensorMam_EstPenColumnCV, 17},
+    {"_tensorMam_EstPenSingleCV", (DL_FUNC) &_tensorMam_EstPenSingleCV, 17},
     {"_tensorMam_EstimationD3", (DL_FUNC) &_tensorMam_EstimationD3, 2},
     {NULL, NULL, 0}
 };

@@ -13,7 +13,7 @@
 \usage{
 mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
               K_index = NULL, r1_index = NULL, r2_index = NULL, r3_index = NULL, 
-              lambda = NULL, SABC = NULL, intercept = TRUE, mu = NULL, nlam = 50, 
+              lambda = NULL, SABC = NULL, intercept = TRUE, nlam = 50, 
               degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, 
               maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
@@ -66,8 +66,6 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
               initial matrices are provided by random.}
               
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
-  
-  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
   
   \item{nlam}{The number of lambda values.  Default is 50.}
   

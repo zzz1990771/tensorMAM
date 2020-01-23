@@ -10,7 +10,7 @@
 }
 
 \usage{mam(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, 
-           intercept = TRUE, mu = NULL, degr = 3, eps = 1e-4, max_step = 20)
+           intercept = TRUE, degr = 3, eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,8 +33,6 @@
               initial matrices are provided by random.}
 
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
-  
-  \item{mu}{A user-specified initial of intercept(s), a \eqn{q}-vector. Default is \code{0}.}
     
   \item{eps}{Convergence threshhold.  The algorithm iterates until the
     relative change in any coefficient is less than \code{eps}.  Default

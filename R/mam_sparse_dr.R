@@ -2,7 +2,7 @@
 ##--------------Estimation with Penalty by CV----------------------##
 mam_sparse_dr <- 
   function(Y,X,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,K_index=NULL,r1_index=NULL,r2_index=NULL,r3_index=NULL,lambda=NULL,
-           SABC=NULL,intercept=TRUE,mu=NULL,nlam=50,degr=3,lam_min=0.01,eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
+           SABC=NULL,intercept=TRUE,nlam=50,degr=3,lam_min=0.01,eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- dim(Y)[1]
     q <- dim(Y)[2]
     p <- dim(X)[2]
@@ -40,15 +40,17 @@ mam_sparse_dr <-
       C = SABC$C
       S = SABC$S
     }
-    if(!intercept | is.null(mu)) mu = as.vector(rep(0,q))
-    
     if (is.null(lambda)) {
       is_setlam = 1
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
       if (n<=p) lam_min = 1e-1
       setlam = c(1,lam_min,alpha,nlam)
       Z = bsbasefun(X,max(K_index),degr)
-      lambda = setuplambda(Y,Z,A,B,C,S,nlam,setlam)
+      Zbar = colMeans(Z)
+      Z = Z - matrix(rep(Zbar,each=n),n)
+      Ybar = colMeans(Y)
+      Y1 = Y - matrix(rep(Ybar,each=n),n)
+      lambda = setuplambda(Y1,Z,A,B,C,S,nlam,setlam)
     }
     else {
       is_setlam = 0
@@ -60,9 +62,9 @@ mam_sparse_dr <-
       stop("maximum number of index sequence of r1, r2, and r3 must not be larger than A, B, and C, respectively !")
     
     if(method=="CV") fit_dr = mam_sparse_cv(Y,X,ncv,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                            intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+                                            intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
     else fit_dr = mam_sparse_bic(Y,X,method,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                 intercept,mu,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+                                 intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
 
     
     return(fit_dr)
