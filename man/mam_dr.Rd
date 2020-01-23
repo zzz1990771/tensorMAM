@@ -95,11 +95,14 @@
   mam, mam_sparse_dr
 }
 \examples{ 
-  D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
-  mydata <- generateData(200, 5, 5, 5, D2)
+  p <- 5
+  q <- 5
+  D2 <- matrix(runif(2*p*q, 0.7, 1), 2, p*q) # tensor with size 5*2*5
+  mydata <- generateData(200, q, p, p, D2)
   
   fit <- mam_dr(mydata$Y, mydata$X)
-  D3hat <- fit$Dnew
-  D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
+  K <- fit$K
+  D3hat <- fit$Dnew  # A q*(Kp) matrix with (p,K,q)=(5,6,5)
+  D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
   opt <- fit$rk_opt
 }

@@ -120,7 +120,9 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
   
   \item{df}{Degrees of freedom.}
   
-  \item{activeA}{The active set.}
+  \item{activeX}{The active set of \eqn{X}. It is a \eqn{p} dimensional vector.}
+  
+  \item{activeF}{The active set of functions. It is a \eqn{q\times p} matrix.}
   
   \item{lambda}{The sequence of regularization parameter values in the path.}
   
@@ -154,13 +156,20 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
 \examples{
   #Example 1
 
-  D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
-  mydata <- generateData(200, 5, 10, 5, D2)
+  p <- 10
+  q <- 5
+  s <- 5
+  D2 <- matrix(runif(2*s*q, 0.7, 1), 2, s*q) # tensor with size 5*2*5
+  mydata <- generateData(200, q, p, s, D2)
   
   fit <- mam_sparse_dr(mydata$Y, mydata$X)
-  D3hat <- fit$Dnew
-  D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
+  K <- fit$K
+  D3hat <- fit$Dnew  # A q*(Kp) matrix with (p,K,q)=(5,6,5)
+  D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
+  D1hat <- TransferModalUnfoldings(D3hat,3,1,p,K,q)
   opt <- fit$rk_opt
+  which(rowSums(D1hat^2)>0)
+  fit$activeX
 
   #Example 2
 
@@ -175,7 +184,11 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
   X = (Xt - matrix(rep(minX,each = n),n))/matrix(rep(maxX-minX,each = n),n)
   Y = scale(Y)
   fit <- mam_sparse_dr(Y[,1:5], X[,1:10])
-  D3hat <- fit$Dnew
+  K <- fit$K
+  D3hat <- fit$Dnew  # A q*(Kp) matrix with (p,K,q)=(10,6,5)
+  D1hat <- TransferModalUnfoldings(D3hat,3,1,10,K,5)
   opt <- fit$rk_opt
+  which(rowSums(D1hat^2)>0)
+  fit$activeX
   detach(breastData)
 }

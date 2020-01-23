@@ -19,14 +19,20 @@
 # Example
 
     library(tensorMam)
-
-    D2 <- matrix(runif(50, 0.7, 1), 2, 25)
-    mydata <- generateData(200, 5, 5, 5, D2)    
+    p <- 5
+    q <- 5
+    D2 <- matrix(runif(2*p*q, 0.7, 1), 2, p*q) 
+    mydata <- generateData(200, q, p, p, D2) 
     fit <- mam(mydata$Y, mydata$X)
-    coeff <- fit$Dnew
+	K <- fit$K
+    D3hat <- fit$Dnew
+	D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
 	mu <- fit$mu
     
     fit_dr <- mam_dr(mydata$Y, mydata$X)
+	K <- fit_dr$K
+    D3hat <- fit$Dnew
+	D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)	
 	mu <- fit$mu
     opt <- fit_dr$rk_opt	
  

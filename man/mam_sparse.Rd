@@ -112,7 +112,9 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
   \item{selectedID}{The index of \code{lambda} corresponding to
                     \code{lambda_opt}.}
   
-  \item{activeA}{The active set.}
+  \item{activeX}{The active set of \eqn{X}. It is a \eqn{p} dimensional vector.}
+  
+  \item{activeF}{The active set of functions. It is a \eqn{q\times p} matrix.}
   
   \item{Dnew}{Estimator of \eqn{D_{(3)}}.}
   
@@ -139,11 +141,17 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
 }
 
 \examples{
-  D2 <- matrix(runif(50, 0.7, 1), 2, 25) # tensor with size 5*2*5
-  mydata <- generateData(200, 5, 10, 5, D2)
+  p <- 10
+  q <- 5
+  s <- 5
+  D2 <- matrix(runif(2*s*q, 0.7, 1), 2, s*q) # tensor with size 5*2*5
+  mydata <- generateData(200, q, p, s, D2)
    
   fit <- mam_sparse(mydata$Y, mydata$X)
-  D3hat <- fit$Dnew
-  D2hat <- TransferModalUnfoldings(D3hat,3,2,5,2,5)
-
+  K <- fit$K
+  D3hat <- fit$Dnew  # A q*(Kp) matrix with (p,K,q)=(10,6,5)
+  D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
+  D1hat <- TransferModalUnfoldings(D3hat,3,1,p,K,q)
+  which(rowSums(D1hat^2)>0)
+  fit$activeX
 }
