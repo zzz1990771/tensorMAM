@@ -103,10 +103,7 @@ mam_sparse <-
         
       }
       Dnew = fit_opt$Dnew
-      if(intercept){
-        mu = Ybar-Dnew%*%Zbar
-        Dnew = cbind(as.vector(mu),fit$Dnew)
-      }
+      if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
     if(method=="CV"&&nlam>1){
@@ -150,10 +147,7 @@ mam_sparse <-
         
       }
       Dnew = fit_opt$Dnew
-      if(intercept){
-        mu = Ybar-Dnew%*%Zbar
-        Dnew = cbind(as.vector(mu),fit$Dnew)
-      }
+      if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
     if(method=="CV"&&nlam==1){
@@ -171,10 +165,7 @@ mam_sparse <-
       lambda_opt = lambda
       activeX = activeF = fit$betapath
       Dnew = fit$Dnew
-      if(intercept){
-        mu = Ybar-Dnew%*%Zbar
-        Dnew = cbind(as.vector(mu),fit$Dnew)
-      }
+      if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
 

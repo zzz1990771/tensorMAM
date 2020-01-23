@@ -46,10 +46,7 @@ mam_cv <- function(Y,X,ncv,K_index,r1_index,r2_index,r3_index,S,A,B,C,intercept,
   Z = Z - matrix(rep(Zbar,each=n),n)
   fit = Estimation(Y1,Z,as.matrix(A[,1:r1_opt]),as.matrix(B[1:K_opt,1:r2_opt]),as.matrix(C[,1:r3_opt]),
                    as.matrix(S[1:r3_opt,1:(r1_opt*r2_opt)]),eps,max_step)
-  if(intercept){
-    mu = Ybar-fit$Dnew%*%Zbar
-    fit$Dnew = cbind(as.vector(mu),fit$Dnew)
-  }
+  if(intercept)  mu = Ybar-Dnew%*%Zbar
   else mu = rep(0,q)
   return(list(Dnew=fit$Dnew, 
               rss=fit$likhd,

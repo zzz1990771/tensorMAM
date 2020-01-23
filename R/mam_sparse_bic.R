@@ -72,10 +72,7 @@ mam_sparse_bic <-
     activeF = matrix(fit_opt$betapath[,qj1],q,p)
     activeX = fit_opt$activeXpath[,qj1]
   }
-  if(intercept){
-    mu = Ybar-fit_opt$Dnew%*%Zbar
-    fit_opt$Dnew = cbind(as.vector(mu),fit_opt$Dnew)
-  }
+  if(intercept)  mu = Ybar-Dnew%*%Zbar
   else mu = rep(0,q)
   return(list(Dnew=fit_opt$Dnew, 
               rss=fit_opt$likhd[qj1],
