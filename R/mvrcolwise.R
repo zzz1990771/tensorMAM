@@ -1,5 +1,5 @@
 mvrcolwise <- 
-  function(Y,X,Z=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,nlam=20,
+  function(Y,X,Z=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,nlam=50,
            intercept=TRUE,lam_min=1e-4,eps=1e-6,max_step=20,gamma_pen=2,dfmax=NULL,alpha=1){
     n <- dim(Y)[1]
     q <- dim(Y)[2]

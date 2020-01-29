@@ -378,7 +378,7 @@ double penalties(double z, double v, double lambda, double alpha, double gamma, 
 }
 //----------------------------------------------------------------**
 //***----update the jth row of matrix A with penalty--------------**
-VectorXd updateAj(VectorXd z, int n, int r1, double lambda, double alpha, double gamma, int penalty)
+VectorXd updateAj(VectorXd z, int n, int r1, double lambda, double alpha, double gamma, double penalty)
 {
 	double znorm = 0;
 	int j;

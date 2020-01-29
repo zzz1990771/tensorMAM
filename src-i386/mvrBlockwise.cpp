@@ -1,4 +1,5 @@
 //[[Rcpp::depends(RcppEigen)]]
+#include "mam.h"
 
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
