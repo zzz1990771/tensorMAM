@@ -1,4 +1,15 @@
 //[[Rcpp::depends(RcppEigen)]]
+#include <Rcpp.h>
+#include <RcppEigen.h>
+#include <cmath>
+#include <Eigen/Dense>
+#include <iostream>
+#include <Eigen/SVD>
+#include <Eigen/Cholesky>
+#include <Eigen/LU>
+#include <list>
+using namespace Rcpp;
+using namespace Eigen;
 
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
