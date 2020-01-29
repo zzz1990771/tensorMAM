@@ -7,22 +7,6 @@
 using namespace Rcpp;
 using namespace Eigen;
 
-// TransferModalUnfoldings
-MatrixXd TransferModalUnfoldings(MatrixXd S, int d1, int d2, int r1, int r2, int r3);
-RcppExport SEXP _tensorMam_TransferModalUnfoldings(SEXP SSEXP, SEXP d1SEXP, SEXP d2SEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP r3SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
-    Rcpp::traits::input_parameter< int >::type d1(d1SEXP);
-    Rcpp::traits::input_parameter< int >::type d2(d2SEXP);
-    Rcpp::traits::input_parameter< int >::type r1(r1SEXP);
-    Rcpp::traits::input_parameter< int >::type r2(r2SEXP);
-    Rcpp::traits::input_parameter< int >::type r3(r3SEXP);
-    rcpp_result_gen = Rcpp::wrap(TransferModalUnfoldings(S, d1, d2, r1, r2, r3));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Estimation
 List Estimation(MatrixXd Y, MatrixXd Z, MatrixXd A, MatrixXd B, MatrixXd C, MatrixXd S, double threshold, int max_step);
 RcppExport SEXP _tensorMam_Estimation(SEXP YSEXP, SEXP ZSEXP, SEXP ASEXP, SEXP BSEXP, SEXP CSEXP, SEXP SSEXP, SEXP thresholdSEXP, SEXP max_stepSEXP) {
@@ -175,6 +159,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// TransferModalUnfoldings
+MatrixXd TransferModalUnfoldings(MatrixXd S, int d1, int d2, int r1, int r2, int r3);
+RcppExport SEXP _tensorMam_TransferModalUnfoldings(SEXP SSEXP, SEXP d1SEXP, SEXP d2SEXP, SEXP r1SEXP, SEXP r2SEXP, SEXP r3SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MatrixXd >::type S(SSEXP);
+    Rcpp::traits::input_parameter< int >::type d1(d1SEXP);
+    Rcpp::traits::input_parameter< int >::type d2(d2SEXP);
+    Rcpp::traits::input_parameter< int >::type r1(r1SEXP);
+    Rcpp::traits::input_parameter< int >::type r2(r2SEXP);
+    Rcpp::traits::input_parameter< int >::type r3(r3SEXP);
+    rcpp_result_gen = Rcpp::wrap(TransferModalUnfoldings(S, d1, d2, r1, r2, r3));
+    return rcpp_result_gen;
+END_RCPP
+}
 // setuplambdaMVR_colwise
 VectorXd setuplambdaMVR_colwise(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam);
 RcppExport SEXP _tensorMam_setuplambdaMVR_colwise(SEXP YSEXP, SEXP ZSEXP, SEXP nlamSEXP, SEXP setlamSEXP) {
@@ -301,7 +301,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_tensorMam_TransferModalUnfoldings", (DL_FUNC) &_tensorMam_TransferModalUnfoldings, 6},
     {"_tensorMam_Estimation", (DL_FUNC) &_tensorMam_Estimation, 8},
     {"_tensorMam_setuplambda", (DL_FUNC) &_tensorMam_setuplambda, 8},
     {"_tensorMam_EstPenColumn", (DL_FUNC) &_tensorMam_EstPenColumn, 15},
@@ -309,6 +308,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_tensorMam_EstPenColumnCV", (DL_FUNC) &_tensorMam_EstPenColumnCV, 17},
     {"_tensorMam_EstPenSingleCV", (DL_FUNC) &_tensorMam_EstPenSingleCV, 17},
     {"_tensorMam_EstimationD3", (DL_FUNC) &_tensorMam_EstimationD3, 2},
+    {"_tensorMam_TransferModalUnfoldings", (DL_FUNC) &_tensorMam_TransferModalUnfoldings, 6},
     {"_tensorMam_setuplambdaMVR_colwise", (DL_FUNC) &_tensorMam_setuplambdaMVR_colwise, 4},
     {"_tensorMam_setuplambdaMVR_lasso", (DL_FUNC) &_tensorMam_setuplambdaMVR_lasso, 4},
     {"_tensorMam_setuplambdaMVR_blockwise", (DL_FUNC) &_tensorMam_setuplambdaMVR_blockwise, 5},

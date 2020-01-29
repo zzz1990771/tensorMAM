@@ -6,17 +6,19 @@ mam_sparse <-
     q <- ncol(Y)
     p <- ncol(X)
     K1 <- 6
+    
     isblockwise = TRUE
     if(!is.null(initMethod)){
       Z <- bsbasefun1(X,K1,degr)
       group <- rep(1:p,each=K1)
-      fit_mvr <- mvrblockwise(Y,Z,W,method="CV",penalty=initMethod,isPenColumn=isblockwise,group=group)
+      fit_mvr <- mvrblockwise(Y,Z,W,method="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
       selectX <- fit_mvr$activeX[-1]
       X1 <- X[,which(selectX==1)]
       p <- sum(selectX)
       SABC <- NULL
     }
     else X1 = X
+    
     if(degr>K-1) stop("K must be larger than degree+1 !")
     if(is.null(r1)) r1 <- 2 
     if(is.null(r2)) r2 <- 2

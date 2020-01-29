@@ -1,139 +1,6 @@
 //[[Rcpp::depends(RcppEigen)]]
-#include <Rcpp.h>
-#include <RcppEigen.h>
-#include <cmath>
-#include <Eigen/Dense>
-#include <iostream>
-#include <Eigen/SVD>
-#include <Eigen/Cholesky>
-#include <Eigen/LU>
-#include <list>
-#define MIN(a, b) (a<b?a:b)
-#define MAX(a, b) (a>b?a:b) 
-#define IDEX(a, b) (a>b?1:0) 
-using namespace Rcpp;
-using namespace Eigen;
+#include <mam.h>
 
-//----------------------------------------------------------------**
-//***----------------------parameters for penalization---------------**
-struct Options
-{
-	int p;
-	int q;
-	int n;
-	int pz;
-	double eps;
-	int max_step;
-}opts;
-
-struct Options_pen
-{
-	int pen; 
-	int nlam;
-	int dfmax;
-	int isPenColumn;
-	double lam_max;
-	double lam_min;
-	double alpha;
-	double gamma_pen;
-	double eps;
-	double max_step;
-}opts_pen;
-//----------------------------------------------------------------**
-//***--------------------penalty----------------------------------**
-double penalties(double z, double v, double lambda, double alpha, double gamma, int penalty) {
-	double beta=0,l1,l2;
-	l1 = lambda*alpha; 
-	l2 = lambda*(1-alpha);
-	if (penalty==1){			  
-		if (z > l1) beta = (z-l1)/(v*(1+l2));
-		if (z < -l1) beta = (z+l1)/(v*(1+l2));
-	}
-	if (penalty==2){
-		double s = 0;
-		if (z > 0) s = 1;
-		else if (z < 0) s = -1;
-		if (fabs(z) <= l1) beta = 0;
-		else if (fabs(z) <= gamma*l1*(1+l2)) beta = s*(fabs(z)-l1)/(v*(1+l2-1/gamma));
-		else beta = z/(v*(1+l2));
-	}
-	if (penalty==3){
-		double s = 0;
-		if (z > 0) s = 1;
-		else if (z < 0) s = -1;
-		if (fabs(z) <= l1) beta = 0;
-		else if (fabs(z) <= (l1*(1+l2)+l1)) beta = s*(fabs(z)-l1)/(v*(1+l2));
-		else if (fabs(z) <= gamma*l1*(1+l2)) beta = s*(fabs(z)-gamma*l1/(gamma-1))/(v*(1-1/(gamma-1)+l2));
-		else beta = z/(v*(1+l2));
-	}
-	return(beta);
-}
-
-//----------------------------------------------------------------**
-//***----update the jth row of matrix A with penalty--------------**
-VectorXd updateAj(VectorXd z, double lambda, double alpha, double gamma, int penalty)
-{
-	double znorm = z.norm();
-	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
-	return znorm * z;
-}
-//----------------------------------------------------------------**
-//***----update the jth row of matrix A with penalty--------------**
-MatrixXd update_blockj(MatrixXd z, double lambda, double alpha, double gamma, int penalty)
-{
-	double znorm = z.norm();
-	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
-	return znorm * z;
-}
-//----------------------------------------------------------------**
-//***----------------------UpTriangularInv------------------------**
-MatrixXd UpTriangularInv(MatrixXd A)
-{
-	int i, j, k,n=A.cols();
-	MatrixXd B = MatrixXd::Constant(n, n, 0);
-	for (i = 0; i < n; i++) B(i, i) = 1;
-	for (i = n - 1; i >= 0; i--)
-	{
-		if (A(i, i) != 1)
-			for (j = i; j<n; j++)
-				B(i, j) = B(i, j) / A(i, i);
-		if (i>0)
-		{
-			for (j = i; j<n; j++)
-				for (k = 0; k<i; k++)
-					B(k, j) = B(k, j) - A(k, i) * B(i, j);
-		}
-	}
-	return B;
-}
-//----------------------------------------------------------------**
-//***---------------------- Q*R of qr decomposition --------------**
-MatrixXd QbyR(MatrixXd Q, MatrixXd R, int isQR)
-{
-	//isQR=1 denotes Q*R; otherwise R*Q
-	int i, j, k, p = R.cols(),n;
-	double temp1;
-	MatrixXd A = Q;
-	if(isQR){
-		n = Q.rows();
-		for (k = 0; k < p; k++)
-			for (j = 0; j < n; j++) {
-				temp1 = 0;
-				for (i = 0; i <= k; i++) temp1 += Q(j, i)*R(i, k);
-				A(j,k) = temp1;
-			}
-	}
-	else{
-		n = Q.cols();
-		for (k = 0; k < n; k++)
-			for (j = 0; j < p; j++) {
-				temp1 = 0;
-				for (i = j; i < p; i++) temp1 += R(j, i) * Q(i, k);
-				A(j,k) = temp1;
-			}
-	}
-	return A;
-}
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]
@@ -320,7 +187,7 @@ List MVR_colwise(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXi &activeA, VectorX
 			}		
 			for (j = 0; j < p; j++) {
 				gj = r.transpose()*Z.col(j)/n + Anew.col(j);			
-				ajnew = updateAj(gj, lambda1, alpha, gamma, penalty);
+				ajnew = update_colj(gj, lambda1, alpha, gamma, penalty);
 				diff = ajnew-Anew.col(j);
 				diffnorm = diff.norm();
 				if(diffnorm!=0){
@@ -572,7 +439,7 @@ List MVR_glasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd 
 				dj = lengths[j];
                 Vnorm = Z.middleCols(d,dj);				
 				gj = Vnorm.transpose()*r/n + Anew.segment(d,dj);
-				ajnew = updateAj(gj, lambda1, alpha, gamma, penalty);
+				ajnew = update_colj(gj, lambda1, alpha, gamma, penalty);
 				diff = ajnew - Anew.segment(d,dj);
 				diffnorm = diff.norm();			
 				if(diffnorm!=0){ 

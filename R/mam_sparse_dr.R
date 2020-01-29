@@ -8,7 +8,8 @@ mam_sparse_dr <-
     q <- ncol(Y)
     p <- ncol(X)
     K1 <- 6
-    isblockwise = T
+    
+    isblockwise = TRUE
     if(!is.null(initMethod)){
       Z <- bsbasefun1(X,K1,degr)
       group <- rep(1:p,each=K1)
@@ -19,6 +20,7 @@ mam_sparse_dr <-
       SABC <- NULL
     }
     else X1 = X
+    
     if(degr>min(6,K1-1)-1) stop("K must be larger than degree+1 !")
     if(is.null(K_index)) K_index = min(6,K1-1):max(8,K1+1)
     if(is.null(r1_index)) r1_index = 1:min(floor(log(n)),p)
