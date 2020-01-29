@@ -6,13 +6,13 @@
   Fit MAM with sparsity assumption and fixed ranks.
 }
 \description{
-  Fit a high-dimensional multivariate additive model using B-splines, with or without aparsity assumptions, and given ranks \eqn{r_1, r_2, r_3}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate functions for sparsity situation.
+  Fit a high-dimensional multivariate additive model using B-splines, with or without aparsity assumptions, and given ranks \eqn{r_1, r_2, r_3}. The multivariate sparse group \code{LASSO}, \code{MCP} or \code{SCAD}) and the coordinate descent algorithm are used to estimate functions for sparsity situation.
 }
 
 \usage{
-mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
+mam_sparse(Y, X, method="BIC",ncv=10, K = 6, r1 = NULL, r2 = NULL, r3 = NULL,
            penalty="LASSO", isPenColumn=TRUE, lambda = NULL, SABC = NULL, intercept = TRUE,
-           degr = 3, nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, 
+           initMethod="LASSO", degr = 3, nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, 
            eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -21,6 +21,20 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
   
   \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
   
+  \item{method}{The method to be applied to select parameters.  Either \code{BIC}
+                (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.}
+    
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}  
+  
+  \item{penalty}{The penalty to be applied to the model. Either \code{LASSO} (the default),  
+                \code{MCP} or \code{SCAD}.}
+ 
+  \item{isPenColumn}{A logical value indicating whether the coefficients associating with \eqn{X_j} that affects whole response 
+                    \eqn{y} is penalized.  Default is \code{TRUE}. If \code{isPenColumn} is \code{TRUE}, the coefficients associating with
+                    \eqn{X_j} that affects simultaneously whole response \eqn{y} is penalized for each \eqn{j\in \{1,\cdots,p\}}. 
+                    If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
+                    \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.} 
+ 
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
           functioin and the number of knots. Default is \code{6}.}
           
@@ -32,20 +46,6 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
   
   \item{r3}{The third dimension of single value matrix of the tensor. Default is 2.}
   
-  \item{method}{The method to be applied to select parameters.  Either \code{BIC}
-                (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.}
-    
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}  
-  
-  \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default),  
-                 "SCAD", or "MCP".}
- 
-  \item{isPenColumn}{A logical value indicating whether the coefficients associating with \eqn{X_j} that affects whole response 
-                    \eqn{y} is penalized.  Default is \code{TRUE}. If \code{isPenColumn} is \code{TRUE}, the coefficients associating with
-                    \eqn{X_j} that affects simultaneously whole response \eqn{y} is penalized for each \eqn{j\in \{1,\cdots,p\}}. 
-                    If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
-                    \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.} 
-        
   \item{lambda}{A user-specified sequence of lambda values.  By default,
         a sequence of values of length \code{nlam} is computed, equally
         spaced on the log scale.}
@@ -55,6 +55,9 @@ mam_sparse(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, method="BIC",ncv=10,
               initial matrices are provided by random.}
    
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
+  
+  \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initMethod}
+                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{LASSO}}
   
   \item{nlam}{The number of lambda values. Default is 20.}
    

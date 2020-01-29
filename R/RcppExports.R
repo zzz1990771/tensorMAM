@@ -33,3 +33,35 @@ EstimationD3 <- function(Y, Z) {
     .Call(`_tensorMam_EstimationD3`, Y, Z)
 }
 
+setuplambdaMVR_colwise <- function(Y, Z, nlam, setlam) {
+    .Call(`_tensorMam_setuplambdaMVR_colwise`, Y, Z, nlam, setlam)
+}
+
+setuplambdaMVR_lasso <- function(Y, Z, nlam, setlam) {
+    .Call(`_tensorMam_setuplambdaMVR_lasso`, Y, Z, nlam, setlam)
+}
+
+setuplambdaMVR_blockwise <- function(Y, Z, nlam, setlam, lengths) {
+    .Call(`_tensorMam_setuplambdaMVR_blockwise`, Y, Z, nlam, setlam, lengths)
+}
+
+setuplambdaMVR_glasso <- function(Y, Z, nlam, setlam, lengths) {
+    .Call(`_tensorMam_setuplambdaMVR_glasso`, Y, Z, nlam, setlam, lengths)
+}
+
+EstMVR_colwise <- function(Y, Z, W, lambda, optsList, optsList_pen) {
+    .Call(`_tensorMam_EstMVR_colwise`, Y, Z, W, lambda, optsList, optsList_pen)
+}
+
+EstMVR_lasso <- function(Y, Z1, W, lambda, optsList, optsList_pen) {
+    .Call(`_tensorMam_EstMVR_lasso`, Y, Z1, W, lambda, optsList, optsList_pen)
+}
+
+EstMVR_blockwise <- function(Y, Z, W, lambda, lengths, optsList, optsList_pen) {
+    .Call(`_tensorMam_EstMVR_blockwise`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
+}
+
+EstMVR_glasso <- function(Y, Z, W, lambda, lengths, optsList, optsList_pen) {
+    .Call(`_tensorMam_EstMVR_glasso`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
+}
+

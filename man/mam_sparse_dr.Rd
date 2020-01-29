@@ -6,16 +6,16 @@
   Fit MAM with sparsity assumption and ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 }
 \description{
-  Fit a high-dimensional multivariate additive model using B-splines, with or with aparsity assumptions and ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}. The multivariate sparse group \code{lasso} (\code{mcp} or \code{scad}) and the coordinate descent algorithm are used to estimate
+  Fit a high-dimensional multivariate additive model using B-splines, with or with aparsity assumptions and ranks selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}. The multivariate sparse group \code{LASSO}, \code{MCP} or \code{SCAD}) and the coordinate descent algorithm are used to estimate
   functions for sparsity situation. The tuning parameter is selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}, which matchs the method of rank selection.
 }
 
 \usage{
 mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
               K_index = NULL, r1_index = NULL, r2_index = NULL, r3_index = NULL, 
-              lambda = NULL, SABC = NULL, intercept = TRUE, nlam = 50, 
-              degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, 
-              maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
+              lambda = NULL, SABC = NULL, intercept = TRUE, initMethod="LASSO", 
+              nlam = 50, degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, 
+              eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,8 +28,7 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
     
   \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}
   
-  \item{penalty}{The penalty to be applied to the model. Either "LASSO" (the default), 
-                 "SCAD", or "MCP".}
+  \item{penalty}{The penalty to be applied to the model. Either \code{LASSO} (the default), \code{MCP} or \code{SCAD}.}
   
   \item{isPenColumn}{A logical value indicating whether the coefficients associating with \eqn{X_j} that affects whole response 
                     \eqn{y} is penalized.  Default is \code{TRUE}. If \code{isPenColumn} is \code{TRUE}, the coefficients associating with
@@ -67,6 +66,9 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
               
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
   
+  \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initMethod}
+                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{LASSO}}
+                    
   \item{nlam}{The number of lambda values.  Default is 50.}
   
   \item{degr}{The number of knots of B-spline base function. Default is \code{degr = 3}.}

@@ -1,9 +1,22 @@
 mam_sparse <- 
-  function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,SABC=NULL,
-           intercept=TRUE,degr=3,nlam=20,lam_min=1e-3, eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
-    n <- dim(Y)[1]
-    q <- dim(Y)[2]
-    p <- dim(X)[2]
+  function(Y,X,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,K=6,r1=NULL,r2=NULL,r3=NULL,
+           lambda=NULL,SABC=NULL,intercept=TRUE,initMethod="LASSO",degr=3,nlam=20,lam_min=1e-3,
+           eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
+    n <- nrow(Y)
+    q <- ncol(Y)
+    p <- ncol(X)
+    K1 <- 6
+    isblockwise = TRUE
+    if(!is.null(initMethod)){
+      Z <- bsbasefun1(X,K1,degr)
+      group <- rep(1:p,each=K1)
+      fit_mvr <- mvrblockwise(Y,Z,W,method="CV",penalty=initMethod,isPenColumn=isblockwise,group=group)
+      selectX <- fit_mvr$activeX[-1]
+      X1 <- X[,which(selectX==1)]
+      p <- sum(selectX)
+      SABC <- NULL
+    }
+    else X1 = X
     if(degr>K-1) stop("K must be larger than degree+1 !")
     if(is.null(r1)) r1 <- 2 
     if(is.null(r2)) r2 <- 2
@@ -11,7 +24,7 @@ mam_sparse <-
     if (penalty == "LASSO") pen <- 1
     if (penalty == "MCP")   pen <- 2 
     if (penalty=="SCAD"){    
-      gamma <- 3
+      gamma <- 3.7
       pen <- 3;
     }  
     if (gamma <= 1 & penalty=="MCP") stop("gamma must be greater than 1 for the MC penalty")
@@ -37,7 +50,7 @@ mam_sparse <-
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
       if (n<=p) lam_min = 1e-1
       setlam = c(1,lam_min,alpha,nlam)
-      Z = bsbasefun(X,K,degr)
+      Z = bsbasefun(X1,K,degr)
       Zbar = colMeans(Z)
       Z = Z - matrix(rep(Zbar,each=n),n)
       Ybar = colMeans(Y)
@@ -50,7 +63,7 @@ mam_sparse <-
       setlam = c(1,lam_min,alpha,nlam)
     }
     #---------------- The selection by BIC or CV  ---------------------# 
-    Z = bsbasefun(X,K,degr)
+    Z = bsbasefun(X1,K,degr)
     if(method=="BIC"){
       Ybar = colMeans(Y)
       Y1 = Y - matrix(rep(Ybar,each=n),n)
@@ -113,9 +126,9 @@ mam_sparse <-
         cv.id = ((jj-1)*len_cv+1):(jj*len_cv)
         if(jj==ncv) cv.id = ((jj-1)*len_cv+1):n
         Ytrain = Y1[-cv.id,]
-        Xtrain = X[-cv.id,]
+        Xtrain = X1[-cv.id,]
         Ytest = Y1[cv.id,]
-        Xtest = X[cv.id,]
+        Xtest = X1[cv.id,]
         
         Ztrain = bsbasefun(Xtrain,K,degr) 
         Ztest = bsbasefun(Xtest,K,degr)
@@ -168,7 +181,24 @@ mam_sparse <-
       if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
-
+    
+    if(!is.null(initMethod)){
+      if(isPenColumn){
+        id = which(selectX==1)
+        idn = id[which(activeX==1)]
+        selectX[-idn] = 0
+        activeX = selectX
+      }
+      else{
+        id = which(selectX==1)
+        for(j in 1:q){
+          idn = id[which(activeF[j,]==1)]
+          selectX[-idn] = 0
+          activeF[j,] = selectX
+        }
+      }
+    }
+    
     return(list(Dnew=Dnew,
                 betapath=fit$betapath, 
                 rss=fit$likhd[selected],

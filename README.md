@@ -17,24 +17,59 @@
 
    - [x] [tensorMam-manual](https://github.com/xliusufe/tensorMam/blob/master/inst/tensorMam-manual.pdf) ------------ Details of the usage of the package.
 # Example
-
+    
     library(tensorMam)
+    # Example 1
+    # The usage of function "mam()"
     p <- 5
     q <- 5
     D2 <- matrix(runif(2*p*q, 0.7, 1), 2, p*q) 
     mydata <- generateData(200, q, p, p, D2) 
     fit <- mam(mydata$Y, mydata$X)
-	K <- fit$K
+    K <- fit$K
     D3hat <- fit$Dnew
-	D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
-	mu <- fit$mu
+    D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)
+    mu <- fit$mu
     
+    # Example 2
+    # The usage of function "mam_dr()"
     fit_dr <- mam_dr(mydata$Y, mydata$X)
-	K <- fit_dr$K
+    K <- fit_dr$K
     D3hat <- fit$Dnew
-	D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)	
-	mu <- fit$mu
+    D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)	
+    mu <- fit$mu
     opt <- fit_dr$rk_opt	
+    
+    # Example 3 
+    # The usage of function "mvrblockwise()"
+    n <- 200
+    q <- 5
+    s <- 3
+    p <- 100
+    B <- matrix(runif(q*s, 2,3), s)
+    X <- matrix(rnorm(n*p),n,p)
+    Y <- X[,1:s]%*%B + rnorm(n)
+    fit <- mvrblockwise(Y,X) #See details in the function "mvrblockwise"
+    fit$activeX
+    fit$Bhat
+    which(rowSums(fit$Bhat^2)>0)
+    fit$muhat
+    
+    # Example 4
+    # The usage of function "mvrcolwise()"
+    n <- 200
+    q <- 5
+    s <- 3
+    p <- 100
+    B <- matrix(runif(q*s, 2,3), s)
+    X <- matrix(rnorm(n*p),n,p)
+    Y <- X[,1:s]\%*\%B + rnorm(n)
+    fit <- mvrcolwise(Y,X) #See details in the function "mvrcolwise"
+    fit$activeX
+    fit$Bhat
+    which(rowSums(fit$Bhat^2)>0)
+    fit$muhat
+    
  
  # References
 A tensor estimation approach to multivariate additive models. Manuscript.
