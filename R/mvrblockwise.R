@@ -10,7 +10,7 @@ mvrblockwise <-
     G = length(gunique)
     if(G==p){
       eps = eps/sqrt(q)
-      fit_mvr <- mvrcolwise(Y,X,Z,method,ncv,penalty,isPenColumn,lambda,nlam,intercept,lam_min,eps,max_step,gamma_pen,dfmaxL,alpha)
+      fit_mvr <- mvrcolwise(Y,X,Z,method,ncv,penalty,isPenColumn,lambda,nlam,intercept,lam_min,eps,max_step,gamma_pen,dfmax,alpha)
       fit_mvr$group = rep(1,p)
       return(fit_mvr)
     }
