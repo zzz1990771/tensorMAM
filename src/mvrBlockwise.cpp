@@ -1,16 +1,49 @@
 //[[Rcpp::depends(RcppEigen)]]
-#include <Rcpp.h>
-#include <RcppEigen.h>
-#include <cmath>
-#include <Eigen/Dense>
-#include <iostream>
-#include <Eigen/SVD>
-#include <Eigen/Cholesky>
-#include <Eigen/LU>
-#include <list>
-using namespace Rcpp;
-using namespace Eigen;
+#include "mam.h"
 
+//----------------------------------------------------------------**
+//***----------------------parameters for penalization---------------**
+
+struct Options
+{
+	int p;
+	int q;
+	int n;
+	int pz;
+	double eps;
+	int max_step;
+}opts;
+
+struct Options_pen
+{
+	int pen; 
+	int nlam;
+	int dfmax;
+	int isPenColumn;
+	double lam_max;
+	double lam_min;
+	double alpha;
+	double gamma_pen;
+	double eps;
+	double max_step;
+}opts_pen;
+
+//----------------------------------------------------------------**
+//***----update the jth row of matrix A with penalty--------------**
+VectorXd update_colj(VectorXd z, double lambda, double alpha, double gamma, int penalty)
+{
+	double znorm = z.norm();
+	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
+	return znorm * z;
+}
+//----------------------------------------------------------------**
+//***----update the jth row of matrix A with penalty--------------**
+MatrixXd update_blockj(MatrixXd z, double lambda, double alpha, double gamma, int penalty)
+{
+	double znorm = z.norm();
+	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
+	return znorm * z;
+}
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]

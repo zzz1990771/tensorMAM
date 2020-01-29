@@ -26,6 +26,20 @@ bsbasefun <- function(X,K,degr){
   return(Z)
 }
 
+bsbasefun1 <- function(X,K,degr){
+  n = dim(X)[1]
+  p = dim(X)[2]
+  nk = K - degr - 1
+  u.k = seq(0, 1, length=nk+2)[-c(1,nk+2)]
+  BS = NULL
+  for(j in 1:p){
+    Knots = as.numeric(quantile(X[,j], u.k))  
+    BS0 = bs(X[,j], knots=Knots, intercept=TRUE, degree=degr)
+    BS = cbind(BS,BS0)
+  }
+  Z = scale(BS,center = T, scale = F)
+  return(Z)
+}
 ##--------------produce p*q estimated functions----------------------##
 trans <- function(X,D3,p,q,K,degr,s0){
   Z = bsbasefun(X,K,degr)
