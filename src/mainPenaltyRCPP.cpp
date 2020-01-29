@@ -1,5 +1,5 @@
 //[[Rcpp::depends(RcppEigen)]]
-#include <mam.h>
+#include "mam.h"
 
 //----------------------------------------------------------------**
 //***--------------------Estimation without penalty---------------**
