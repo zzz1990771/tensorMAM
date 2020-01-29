@@ -48,7 +48,7 @@
     p <- 100
     B <- matrix(runif(q*s, 2,3), s)
     X <- matrix(rnorm(n*p),n,p)
-    Y <- X[,1:s]%*%B + rnorm(n)
+    Y <- X[,1:s]%*%B + matrix(rnorm(n*q),n)
     fit <- mvrblockwise(Y,X) #See details in the function "mvrblockwise"
     fit$activeX
     fit$Bhat
@@ -63,7 +63,7 @@
     p <- 100
     B <- matrix(runif(q*s, 2,3), s)
     X <- matrix(rnorm(n*p),n,p)
-    Y <- X[,1:s]\%*\%B + rnorm(n)
+    Y <- X[,1:s]%*%B + matrix(rnorm(n*q),n)
     fit <- mvrcolwise(Y,X) #See details in the function "mvrcolwise"
     fit$activeX
     fit$Bhat

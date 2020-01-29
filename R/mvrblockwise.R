@@ -87,14 +87,11 @@ mvrblockwise <-
     else fit_mvr$muhat = rep(0,q)
     
     Bhat = fit_mvr$Bhat
-    muhat = fit_mvr$muhat 
     d = 0
     for(g in 1:G){
       Bhat[which(gunique[g]==group),] = fit_mvr$Bhat[(d+1):(d+lens[g]),]
-      muhat[which(gunique[g]==group)] = fit_mvr$muhat[(d+1):(d+lens[g])]
       d = d+lens[g]
     }
-    fit_mvr$muhat = muhat
     fit_mvr$Bhat = Bhat
     fit_mvr$group = group
     return(fit_mvr)

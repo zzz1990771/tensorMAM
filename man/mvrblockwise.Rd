@@ -115,7 +115,7 @@ A tensor estimation approach to multivariate additive models. Manuscript.
 	p <- 100
 	B <- matrix(runif(q*s, 2,3), s)
 	X <- matrix(rnorm(n*p),n,p)
-	Y <- X[,1:s]\%*\%B + rnorm(n)
+	Y <- X[,1:s]\%*\%B + matrix(rnorm(n*q),n)
 	fit <- mvrblockwise(Y,X)
 	fit$activeX
 	fit$Bhat
@@ -133,7 +133,7 @@ A tensor estimation approach to multivariate additive models. Manuscript.
 	B3 <- matrix(runif(q*(s-1)*K, 2,3), (s-1)*K)
 	B <- rbind(B1,B2,B3)
 	X <- matrix(rnorm(n*p*K),n)
-	Y <- X[,1:((s+2)*K)]\%*\%B + rnorm(n)
+	Y <- X[,1:((s+2)*K)]\%*\%B + matrix(rnorm(n*q),n)
 	group <- rep(1:p,each=K)
 	fit <- mvrblockwise(Y,X,group=group,isPenColumn=TRUE)
 	which(fit$activeX==1)
@@ -155,7 +155,7 @@ A tensor estimation approach to multivariate additive models. Manuscript.
 	C <- matrix(runif(q*d, 1,2), d)
 	X <- matrix(rnorm(n*p*K),n)
 	Z <- matrix(rnorm(n*d),n)
-	Y <- X[,1:((s+2)*K)]\%*\%B + Z\%*\%C + rnorm(n)
+	Y <- X[,1:((s+2)*K)]\%*\%B + Z\%*\%C + matrix(rnorm(n*q),n)
 	group <- rep(1:p,each=K)
 	fit <- mvrblockwise(Y,X,Z,group=group,isPenColumn=TRUE)
 	which(fit$activeX==1)
