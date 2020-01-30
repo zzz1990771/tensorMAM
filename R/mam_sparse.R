@@ -12,7 +12,7 @@ mam_sparse <-
       Z <- bsbasefun1(X,K1,degr)
       group <- rep(1:p,each=K1)
       fit_mvr <- mvrblockwise(Y,Z,W,method="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
-      selectX <- fit_mvr$activeX[-1]
+      selectX <- fit_mvr$activeX
       X1 <- X[,which(selectX==1)]
       p <- sum(selectX)
       SABC <- NULL

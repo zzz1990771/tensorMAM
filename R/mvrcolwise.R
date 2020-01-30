@@ -64,8 +64,6 @@ mvrcolwise <-
     else fit_mvr = mvrcolwise_bic(Y1,X2,Z1,method,lambda,opts,opts_pen)
     if(pz) fit_mvr$Chat = L%*%fit_mvr$Chat
     if(intercept){
-      if(isPenColumn) fit_mvr$activeX = c(1,fit_mvr$activeX)
-      else fit_mvr$activeX = cbind(1,fit_mvr$activeX)
       if(pz) fit_mvr$muhat = Ybar-t(fit_mvr$Bhat)%*%X2bar-t(fit_mvr$Chat)%*%Zbar
       else  fit_mvr$muhat = Ybar-t(fit_mvr$Bhat)%*%X2bar
     }

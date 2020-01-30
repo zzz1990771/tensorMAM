@@ -41,7 +41,7 @@ mvrblockwise_cv <- function(Y,X,Z,ncv,lambda,lens,opts,opts_pen){
       bic = bic + likhd
     }
     selected = which.min(bic)
-    lambda_opt = lambda[1:selected]
+    lambda_opt = lambda[selected]
   }
   else{
     lambda_opt = rep(0,q)
