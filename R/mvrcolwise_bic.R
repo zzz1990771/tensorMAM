@@ -23,14 +23,12 @@ mvrcolwise_bic <- function(Y,X,Z,method,lambda,opts,opts_pen){
     Bhat = matrix(fit$betapath[,selected],p)
     if(pz) Chat = matrix(fit$Cpath[,selected],pz)
     else Chat = NULL
-    df_opt = c(1, df_opt)
   }
   else{
     lambda_opt = rep(0,q)
     likhd_opt = rep(0,q)
     selected = rep(0,q)
     df_opt = matrix(0,q,p)
-    mu_opt = rep(0,q)
     bic = matrix(0,q,nlam)
     Bhat = matrix(0,p,q)
     if(pz) Chat = matrix(0,pz,q)
@@ -57,7 +55,6 @@ mvrcolwise_bic <- function(Y,X,Z,method,lambda,opts,opts_pen){
       if(pz) Chat[,j] = fit$Cpath[((j-1)*pz+1):(j*pz),selected1]
       selected[j] = selected1
     }
-    df_opt = cbind(1, df_opt)
   }
   return(list(rss = likhd_opt,
               activeX = df_opt,

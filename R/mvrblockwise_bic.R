@@ -25,7 +25,6 @@ mvrblockwise_bic <- function(Y,X,Z,method,lambda,lens,opts,opts_pen){
     Bhat = matrix(fit$betapath[,selected],p)
     if(pz) Chat = matrix(fit$Cpath[,selected],pz)
     else Chat = NULL
-    df_opt = c(1, df_opt)
   }
   else{
     lambda_opt = rep(0,q)
@@ -54,12 +53,11 @@ mvrblockwise_bic <- function(Y,X,Z,method,lambda,lens,opts,opts_pen){
       selected1 = which.min(bic0)
       lambda_opt[j] = lambda[selected1,j]
       likhd_opt[j] = likhd[selected1]
-      df_opt[j,] = df0[,selected1]
+      df_opt[j,] = t(df0[,selected1])
       Bhat[,j] = fit$betapath[((j-1)*p+1):(j*p),selected1]
       if(pz) Chat[,j] = fit$Cpath[((j-1)*pz+1):(j*pz),selected1]
       selected[j] = selected1
     }
-    df_opt = cbind(1, df_opt)
   }
   return(list(rss = likhd_opt,
               activeX = df_opt,
