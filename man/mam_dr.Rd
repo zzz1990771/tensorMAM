@@ -9,9 +9,9 @@
   Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and with ranks \eqn{r_1, r_2, r_3} selected by \code{BIC}, \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 } 
 
-\usage{mam_dr(Y, X, method = "BIC", ncv = 10, K_index = NULL, r1_index = NULL,
-       r2_index = NULL, r3_index = NULL, SABC = NULL, intercept = TRUE,
-       degr = 3, eps = 1e-4, max_step = 20)
+\usage{mam_dr(Y, X, criteria = "BIC", ncv = 10, r1_index = NULL, r2_index = NULL, 
+       r3_index = NULL, SABC = NULL, intercept = TRUE, K = 6, degr = 3, 
+       eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,13 +19,12 @@
   
   \item{X}{A \eqn{n\times p} numeric design matrix for the model.}
 
-  \item{method}{The method to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
+  \item{criteria}{The criteria to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
                 or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not  
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{criteria} is not  
              \code{"CV"}, \code{ncv} is useless.}
-  
-  \item{K_index}{A user-specified sequence of \code{K} values, where \code{K} is he number of B-spline base function. Default is \code{k_index=6}.}
+ 
     
   \item{r1_index}{A user-specified sequence of \eqn{r_1} values, where 
                    \eqn{r_1} is the first dimension of single value matrix of the 
@@ -50,6 +49,9 @@
               initial matrices are provided by random.}
         
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
+  
+  \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
+          functioin and the number of knots. Default is \code{6}.}
   
   \item{degr}{ the number of knots of B-spline base function. Default is \code{3}.}
   

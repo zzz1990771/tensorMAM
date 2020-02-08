@@ -9,18 +9,14 @@
   Fit a low-dimensional multivariate additive model using B-splines, without aparsity assumptions, and given ranks \eqn{r_1, r_2, r_3}.
 }
 
-\usage{mam(Y, X, K = 6, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, 
-           intercept = TRUE, degr = 3, eps = 1e-4, max_step = 20)
+\usage{mam(Y, X, r1 = NULL, r2 = NULL, r3 = NULL, SABC = NULL, 
+           intercept = TRUE, K = 6, degr = 3, eps = 1e-4, max_step = 20)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Y}{A \eqn{n\times q} numeric matrix of responses.}
   
   \item{X}{A \eqn{n\times p} numeric design matrix for the model.}
-  
-  \item{K}{The number of B-spline base function, that is the plus of both degrees of base functioin and the number of knots. Default is \code{6}.}
-  
-  \item{degr}{ the number of knots of B-spline base function. Default is \code{3}.}
   
   \item{r1}{The first dimension of single value matrix of the tensor. Default is 2.}
   
@@ -33,6 +29,11 @@
               initial matrices are provided by random.}
 
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
+  
+  \item{K}{The number of B-spline base function, that is the plus of both degrees 
+           of base functioin and the number of knots. Default is \code{6}.}
+  
+  \item{degr}{ the number of knots of B-spline base function. Default is \code{3}.}
     
   \item{eps}{Convergence threshhold.  The algorithm iterates until the
     relative change in any coefficient is less than \code{eps}.  Default

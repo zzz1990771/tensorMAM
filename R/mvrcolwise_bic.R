@@ -1,5 +1,5 @@
 ##--------------Estimation with Penalty by BIC----------------------##
-mvrcolwise_bic <- function(Y,X,Z,method,lambda,opts,opts_pen){    
+mvrcolwise_bic <- function(Y,X,Z,criteria,lambda,opts,opts_pen){    
   p = opts$p
   q = opts$q
   n = opts$n
@@ -9,7 +9,7 @@ mvrcolwise_bic <- function(Y,X,Z,method,lambda,opts,opts_pen){
     fit = EstMVR_colwise(Y,X,Z,lambda,opts,opts_pen)
     df = q*(colSums(fit$df)+pz)
     loglikelih =  n*q * log(fit$likhd/(n*q))
-    bic <- switch (method,
+    bic <- switch (criteria,
                    BIC = loglikelih + log(n*q)*df,
                    AIC = loglikelih + 2*df,
                    GCV = fit$likhd*(n*q)/(n*q-df)^2,
@@ -39,7 +39,7 @@ mvrcolwise_bic <- function(Y,X,Z,method,lambda,opts,opts_pen){
       df = colSums(df0) + pz
       likhd = fit$likhd[j,]
       loglikelih =  n*log(likhd/n)
-      bic0 <- switch (method,
+      bic0 <- switch (criteria,
                      BIC = loglikelih + log(n)*df,
                      AIC = loglikelih + 2*df,
                      GCV = likhd*n/(n-df)^2,

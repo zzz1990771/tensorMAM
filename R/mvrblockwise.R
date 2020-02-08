@@ -1,5 +1,5 @@
 mvrblockwise <- 
-  function(Y,X,Z=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,group=NULL,lambda=NULL,nlam=50,
+  function(Y,X,Z=NULL,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,group=NULL,lambda=NULL,nlam=50,
            intercept=TRUE,lam_min=1e-6,eps=1e-6,max_step=20,gamma_pen=2,dfmax=NULL,alpha=1){
     
     n <- nrow(Y)
@@ -10,7 +10,7 @@ mvrblockwise <-
     G = length(gunique)
     if(G==p){
       eps = eps/sqrt(q)
-      fit_mvr <- mvrcolwise(Y,X,Z,method,ncv,penalty,isPenColumn,lambda,nlam,intercept,lam_min,eps,max_step,gamma_pen,dfmax,alpha)
+      fit_mvr <- mvrcolwise(Y,X,Z,criteria,ncv,penalty,isPenColumn,lambda,nlam,intercept,lam_min,eps,max_step,gamma_pen,dfmax,alpha)
       fit_mvr$group = rep(1,p)
       return(fit_mvr)
     }
@@ -77,8 +77,8 @@ mvrblockwise <-
       else  opts_pen$nlam = nrow(lambda)
     }
     #---------------- The selection by CV or BIC  ---------------------# 
-    if(method=="CV") fit_mvr = mvrblockwise_cv(Y1,X2,Z1,ncv,lambda,lens,opts,opts_pen)
-    else fit_mvr = mvrblockwise_bic(Y1,X2,Z1,method,lambda,lens,opts,opts_pen)
+    if(criteria=="CV") fit_mvr = mvrblockwise_cv(Y1,X2,Z1,ncv,lambda,lens,opts,opts_pen)
+    else fit_mvr = mvrblockwise_bic(Y1,X2,Z1,criteria,lambda,lens,opts,opts_pen)
     if(pz) fit_mvr$Chat = L%*%fit_mvr$Chat
     if(intercept){
       if(pz) fit_mvr$muhat = Ybar-t(fit_mvr$Bhat)%*%X2bar-t(fit_mvr$Chat)%*%Zbar

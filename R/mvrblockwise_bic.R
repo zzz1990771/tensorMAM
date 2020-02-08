@@ -1,6 +1,6 @@
 
 ##--------------Estimation with Penalty by BIC----------------------##
-mvrblockwise_bic <- function(Y,X,Z,method,lambda,lens,opts,opts_pen){    
+mvrblockwise_bic <- function(Y,X,Z,criteria,lambda,lens,opts,opts_pen){    
   G = opts$p
   q = opts$q
   p = sum(lens)
@@ -11,7 +11,7 @@ mvrblockwise_bic <- function(Y,X,Z,method,lambda,lens,opts,opts_pen){
     fit = EstMVR_blockwise(Y,X,Z,lambda,lens,opts,opts_pen)
     df = q*mean(lens)*(colSums(fit$df)+pz)
     loglikelih =  n*q * log(fit$likhd/(n*q))
-    bic <- switch (method,
+    bic <- switch (criteria,
                    BIC = loglikelih + log(n*q)*df,
                    AIC = loglikelih + 2*df,
                    GCV = fit$likhd*(n*q)/(n*q-df)^2,
@@ -42,7 +42,7 @@ mvrblockwise_bic <- function(Y,X,Z,method,lambda,lens,opts,opts_pen){
       df = lens[j]*(colSums(df0)+pz)
       likhd = fit$likhd[j,]
       loglikelih =  n*log(likhd/n)
-      bic0 <- switch (method,
+      bic0 <- switch (criteria,
                      BIC = loglikelih + log(n)*df,
                      AIC = loglikelih + 2*df,
                      GCV = likhd*n/(n-df)^2,

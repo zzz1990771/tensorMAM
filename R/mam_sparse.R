@@ -1,23 +1,27 @@
 mam_sparse <- 
-  function(Y,X,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,K=6,r1=NULL,r2=NULL,r3=NULL,
-           lambda=NULL,SABC=NULL,intercept=TRUE,initMethod="LASSO",degr=3,nlam=20,lam_min=1e-3,
+  function(Y,X,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,r1=NULL,r2=NULL,r3=NULL,
+           lambda=NULL,SABC=NULL,intercept=TRUE,initMethod="LASSO",K=6,degr=3,nlam=20,lam_min=1e-3,
            eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- nrow(Y)
     q <- ncol(Y)
     p <- ncol(X)
-    K1 <- 6
     
     isblockwise = TRUE
     if(!is.null(initMethod)){
-      Z <- bsbasefun1(X,K1,degr)
-      group <- rep(1:p,each=K1)
-      fit_mvr <- mvrblockwise(Y,Z,W,method="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
+      Z <- bsbasefun1(X,K,degr)
+      group <- rep(1:p,each=K)
+      fit_mvr <- mvrblockwise(Y,Z,criteria="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
       selectX <- fit_mvr$activeX
       X1 <- X[,which(selectX==1)]
       p <- sum(selectX)
       SABC <- NULL
     }
     else X1 = X
+    Z = bsbasefun(X1,K,degr)
+    Zbar = colMeans(Z)
+    Z = Z - matrix(rep(Zbar,each=n),n)
+    Ybar = colMeans(Y)
+    Y1 = Y - matrix(rep(Ybar,each=n),n)
     
     if(degr>K-1) stop("K must be larger than degree+1 !")
     if(is.null(r1)) r1 <- 2 
@@ -52,11 +56,6 @@ mam_sparse <-
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
       if (n<=p) lam_min = 1e-1
       setlam = c(1,lam_min,alpha,nlam)
-      Z = bsbasefun(X1,K,degr)
-      Zbar = colMeans(Z)
-      Z = Z - matrix(rep(Zbar,each=n),n)
-      Ybar = colMeans(Y)
-      Y1 = Y - matrix(rep(Ybar,each=n),n)
       lambda = setuplambda(Y1,Z,A,B,C,S,nlam,setlam)
     }
     else {
@@ -65,18 +64,13 @@ mam_sparse <-
       setlam = c(1,lam_min,alpha,nlam)
     }
     #---------------- The selection by BIC or CV  ---------------------# 
-    Z = bsbasefun(X1,K,degr)
-    if(method=="BIC"){
-      Ybar = colMeans(Y)
-      Y1 = Y - matrix(rep(Ybar,each=n),n)
-      Zbar = colMeans(Z)
-      Z = Z - matrix(rep(Zbar,each=n),n)
+    if(criteria=="BIC"){
       if(isPenColumn){
         fit = EstPenColumn(Y1,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
                            lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
         df = fit$df*r1
         loglikelih = (n*q)*log(fit$likhd/(n*q))
-        bic <- switch (method,
+        bic <- switch (criteria,
                        BIC = loglikelih + log(n*q)*df,
                        AIC = loglikelih + 2*df,
                        GCV = fit$likhd*(n*q)/(n*q-df)^2,
@@ -121,19 +115,17 @@ mam_sparse <-
       if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
-    if(method=="CV"&&nlam>1){
-      len_cv = ceiling(n/ncv)
+    if(criteria=="CV"&&nlam>1){
+      len_cv = floor(n/ncv)
       RSS = rep(0,nlam)
       for(jj in 1:ncv){
         cv.id = ((jj-1)*len_cv+1):(jj*len_cv)
         if(jj==ncv) cv.id = ((jj-1)*len_cv+1):n
         Ytrain = Y1[-cv.id,]
-        Xtrain = X1[-cv.id,]
+        Ztrain = Z[-cv.id,]
         Ytest = Y1[cv.id,]
-        Xtest = X1[cv.id,]
-        
-        Ztrain = bsbasefun(Xtrain,K,degr) 
-        Ztest = bsbasefun(Xtest,K,degr)
+        Ztest = Z[cv.id,]
+      
         if(isPenColumn)
           fit = EstPenColumnCV(Ytrain,Ztrain,Ytest,Ztest,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
                                lambda,alpha, gamma, pen, dfmax, eps1,eps2,maxstep1,maxstep2)
@@ -145,10 +137,6 @@ mam_sparse <-
       selected = which.min(RSS)
       lambda_opt = lambda[selected]
       
-      Ybar = colMeans(Y)
-      Y1 = Y - matrix(rep(Ybar,each=n),n)
-      Zbar = colMeans(Z)
-      Z = Z - matrix(rep(Zbar,each=n),n)
       if(isPenColumn){
         fit_opt = EstPenColumn(Y1,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
                                lambda[1:selected], alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)
@@ -165,11 +153,7 @@ mam_sparse <-
       if(intercept)  mu = Ybar-Dnew%*%Zbar
       else mu = rep(0,q)
     }
-    if(method=="CV"&&nlam==1){
-      Ybar = colMeans(Y)
-      Y1 = Y - matrix(rep(Ybar,each=n),n)
-      Zbar = colMeans(Z)
-      Z = Z - matrix(rep(Zbar,each=n),n)
+    if(criteria=="CV"&&nlam==1){
       if(isPenColumn)
         fit = EstPenColumn(Y1,Z,as.matrix(A),as.matrix(B),as.matrix(C),as.matrix(S),
                            lambda, alpha, gamma, pen, dfmax, eps1, eps2, maxstep1, maxstep2)

@@ -1,9 +1,9 @@
 
 ##--------------without sparsity----------------------##
-mam <- function(Y,X,K=6,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,degr=3,eps=1e-4,max_step=20){
-  n <- dim(Y)[1]
-  q <- dim(Y)[2]
-  p <- dim(X)[2]
+mam <- function(Y,X,r1=NULL,r2=NULL,r3=NULL,SABC=NULL,intercept=TRUE,K=6,degr=3,eps=1e-4,max_step=20){
+  n <- nrow(Y)
+  q <- ncol(Y)
+  p <- ncol(X)
   if(is.null(r1)) r1 <- 2 
   if(is.null(r2)) r2 <- 2
   if(is.null(r3)) r3 <- 2

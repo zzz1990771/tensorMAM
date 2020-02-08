@@ -10,21 +10,22 @@
 }
 
 \usage{
-mam_sparse(Y, X, method="BIC",ncv=10, K = 6, r1 = NULL, r2 = NULL, r3 = NULL,
-           penalty="LASSO", isPenColumn=TRUE, lambda = NULL, SABC = NULL, intercept = TRUE,
-           initMethod="LASSO", degr = 3, nlam = 20, lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, 
-           eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
+mam_sparse(Y, X, criteria="BIC",ncv=10, r1 = NULL, r2 = NULL, r3 = NULL, 
+           penalty="LASSO",  isPenColumn=TRUE, lambda = NULL, SABC = NULL, 
+           intercept = TRUE, initMethod="LASSO", K = 6, degr = 3, nlam = 20,  
+           lam_min = 1e-3, eps1 = 1e-4, maxstep1 = 20, eps2 = 1e-4, 
+           maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Y}{A \eqn{n\times q} numeric matrix of responses.}
   
-  \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
+  \item{X}{A \eqn{n\times p} numeric design matrix for the model.}
   
-  \item{method}{The method to be applied to select parameters.  Either \code{BIC}
+  \item{criteria}{The criteria to be applied to select parameters.  Either \code{BIC}
                 (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}  
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{criteria} is not \code{CV}, \code{ncv} is useless.}  
   
   \item{penalty}{The penalty to be applied to the model. Either \code{LASSO} (the default),  
                 \code{MCP} or \code{SCAD}.}
@@ -34,17 +35,6 @@ mam_sparse(Y, X, method="BIC",ncv=10, K = 6, r1 = NULL, r2 = NULL, r3 = NULL,
                     \eqn{X_j} that affects simultaneously whole response \eqn{y} is penalized for each \eqn{j\in \{1,\cdots,p\}}. 
                     If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
                     \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.} 
- 
-  \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
-          functioin and the number of knots. Default is \code{6}.}
-          
-  \item{degr}{The number of knots of B-spline base function. Default is \code{3}.}
-  
-  \item{r1}{The first dimension of single value matrix of the tensor. Default is 2.}
-  
-  \item{r2}{The second dimension of single value matrix of the tensor. Default is 2.}
-  
-  \item{r3}{The third dimension of single value matrix of the tensor. Default is 2.}
   
   \item{lambda}{A user-specified sequence of lambda values.  By default,
         a sequence of values of length \code{nlam} is computed, equally
@@ -56,8 +46,19 @@ mam_sparse(Y, X, method="BIC",ncv=10, K = 6, r1 = NULL, r2 = NULL, r3 = NULL,
    
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
   
-  \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initMethod}
+  \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initcriteria}
                     can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{LASSO}}
+
+  \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
+          functioin and the number of knots. Default is \code{6}.}
+          
+  \item{degr}{The number of knots of B-spline base function. Default is \code{3}.}
+  
+  \item{r1}{The first dimension of single value matrix of the tensor. Default is 2.}
+  
+  \item{r2}{The second dimension of single value matrix of the tensor. Default is 2.}
+  
+  \item{r3}{The third dimension of single value matrix of the tensor. Default is 2.}
   
   \item{nlam}{The number of lambda values. Default is 20.}
    

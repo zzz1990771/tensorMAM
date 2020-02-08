@@ -1,5 +1,5 @@
 mvrcolwise <- 
-  function(Y,X,Z=NULL,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,nlam=50,
+  function(Y,X,Z=NULL,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,lambda=NULL,nlam=50,
            intercept=TRUE,lam_min=1e-4,eps=1e-6,max_step=20,gamma_pen=2,dfmax=NULL,alpha=1){
     n <- dim(Y)[1]
     q <- dim(Y)[2]
@@ -60,8 +60,8 @@ mvrcolwise <-
       else  opts_pen$nlam = nrow(lambda)
     }
     #---------------- The selection by CV or BIC  ---------------------#  
-    if(method=="CV") fit_mvr = mvrcolwise_cv(Y1,X2,Z1,ncv,lambda,opts,opts_pen)
-    else fit_mvr = mvrcolwise_bic(Y1,X2,Z1,method,lambda,opts,opts_pen)
+    if(criteria=="CV") fit_mvr = mvrcolwise_cv(Y1,X2,Z1,ncv,lambda,opts,opts_pen)
+    else fit_mvr = mvrcolwise_bic(Y1,X2,Z1,criteria,lambda,opts,opts_pen)
     if(pz) fit_mvr$Chat = L%*%fit_mvr$Chat
     if(intercept){
       if(pz) fit_mvr$muhat = Ybar-t(fit_mvr$Bhat)%*%X2bar-t(fit_mvr$Chat)%*%Zbar

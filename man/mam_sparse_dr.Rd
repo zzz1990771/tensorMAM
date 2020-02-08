@@ -11,22 +11,22 @@
 }
 
 \usage{
-mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
-              K_index = NULL, r1_index = NULL, r2_index = NULL, r3_index = NULL, 
-              lambda = NULL, SABC = NULL, intercept = TRUE, initMethod="LASSO", 
-              nlam = 50, degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, 
+mam_sparse_dr(Y, X, criteria = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
+              r1_index = NULL, r2_index = NULL, r3_index = NULL, lambda = NULL, 
+              SABC = NULL, intercept = TRUE, initMethod="LASSO", nlam = 50, 
+              K = 6, degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, 
               eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{Y}{A \eqn{n\times q} numeric matrix of responses.}
   
-  \item{X}{A \eqn{n\times q} numeric design matrix for the model.}
+  \item{X}{A \eqn{n\times p} numeric design matrix for the model.}
   
-  \item{method}{The method to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
+  \item{criteria}{The criteria to be applied to select parameters.  Either \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, 
                 or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{criteria} is not \code{CV}, \code{ncv} is useless.}
   
   \item{penalty}{The penalty to be applied to the model. Either \code{LASSO} (the default), \code{MCP} or \code{SCAD}.}
   
@@ -36,8 +36,6 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
                     If \code{isPenColumn} is \code{FALSE}, the coefficients associating with \eqn{X_j} that affects single response
                     \eqn{y_l} is penalized for each \eqn{j\in \{1,\cdots,p\}}, where \eqn{l\in \{1,\cdots,q\}}.}
                  
-  \item{K_index}{A user-specified sequence of \code{K} values, where \code{K} is he number 
-                 of B-spline base function. Default is \code{k_index=6}.}
                  
   \item{r1_index}{A user-specified sequence of \eqn{r_1} values, where 
                   \eqn{r_1} is the first dimension of single value matrix of the  
@@ -71,6 +69,9 @@ mam_sparse_dr(Y, X, method = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRU
                     
   \item{nlam}{The number of lambda values.  Default is 50.}
   
+   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
+          functioin and the number of knots. Default is \code{6}.}
+		  
   \item{degr}{The number of knots of B-spline base function. Default is \code{degr = 3}.}
   
   \item{lam_min}{The smallest value for lambda, as a fraction of

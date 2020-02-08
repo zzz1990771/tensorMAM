@@ -1,19 +1,18 @@
 
 ##--------------Estimation with Penalty by CV----------------------##
 mam_sparse_dr <- 
-  function(Y,X,method="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,K_index=NULL,r1_index=NULL,r2_index=NULL,
-           r3_index=NULL,lambda=NULL,SABC=NULL,intercept=FALSE,initMethod="LASSO",nlam=50,degr=3,lam_min=0.01,
+  function(Y,X,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,r1_index=NULL,r2_index=NULL,
+           r3_index=NULL,lambda=NULL,SABC=NULL,intercept=FALSE,initMethod="LASSO",nlam=50,K=6,degr=3,lam_min=0.01,
            eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- nrow(Y)
     q <- ncol(Y)
     p <- ncol(X)
-    K1 <- 6
     
     isblockwise = TRUE
     if(!is.null(initMethod)){
-      Z <- bsbasefun1(X,K1,degr)
-      group <- rep(1:p,each=K1)
-      fit_mvr <- mvrblockwise(Y,Z,method="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
+      Z <- bsbasefun1(X,K,degr)
+      group <- rep(1:p,each=K)
+      fit_mvr <- mvrblockwise(Y,Z,criteria="GCV",penalty=initMethod,isPenColumn=isblockwise,group=group)
       selectX <- fit_mvr$activeX
       X1 <- X[,which(selectX==1)]
       p <- sum(selectX)
@@ -21,10 +20,9 @@ mam_sparse_dr <-
     }
     else X1 = X
     
-    if(degr>min(6,K1-1)-1) stop("K must be larger than degree+1 !")
-    if(is.null(K_index)) K_index = min(6,K1-1):max(8,K1+1)
+    if(degr>min(6,K-1)-1) stop("K must be larger than degree+1 !")
     if(is.null(r1_index)) r1_index = 1:min(floor(log(n)),p)
-    if(is.null(r2_index)) r2_index = 1:min(K_index)
+    if(is.null(r2_index)) r2_index = 1:min(K)
     if(is.null(r3_index)) r3_index = 1:min(floor(log(n)),q)
     if (penalty == "LASSO") pen <- 1
     if (penalty == "MCP")   pen <- 2 
@@ -42,9 +40,8 @@ mam_sparse_dr <-
       r1_max = max(r1_index) 
       r2_max = max(r2_index) 
       r3_max = max(r3_index) 
-      K_max = max(K_index)
       A = rbind(diag(r1_max), matrix(0,p-r1_max,r1_max))
-      B = rbind(diag(r2_max), matrix(0,K_max-r2_max,r2_max))
+      B = rbind(diag(r2_max), matrix(0,K-r2_max,r2_max))
       C = rbind(diag(r3_max), matrix(0,q-r3_max,r3_max))
       S = matrix(rnorm(r1_max*r2_max*r3_max),r3_max,r1_max*r2_max)
     }
@@ -59,7 +56,7 @@ mam_sparse_dr <-
       if (nlam < 1||is.null(nlam)) stop("nlambda must be at least 1")
       if (n<=p) lam_min = 1e-1
       setlam = c(1,lam_min,alpha,nlam)
-      Z = bsbasefun(X1,max(K_index),degr)
+      Z = bsbasefun(X1,max(K),degr)
       Zbar = colMeans(Z)
       Z = Z - matrix(rep(Zbar,each=n),n)
       Ybar = colMeans(Y)
@@ -75,10 +72,10 @@ mam_sparse_dr <-
     if((max(r1_index)>dim(A)[2])|(max(r2_index)>dim(B)[2])|(max(r3_index)>dim(C)[2]))
       stop("maximum number of index sequence of r1, r2, and r3 must not be larger than A, B, and C, respectively !")
     
-    if(method=="CV") fit_dr = mam_sparse_cv(Y,X1,ncv,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                            intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
-    else fit_dr = mam_sparse_bic(Y,X1,method,K_index,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
-                                 intercept,nlam,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+    if(criteria=="CV") fit_dr = mam_sparse_cv(Y,X1,ncv,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
+                                            intercept,nlam,K,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
+    else fit_dr = mam_sparse_bic(Y,X1,criteria,r1_index,r2_index,r3_index,pen,isPenColumn,lambda,A,B,C,S,
+                                 intercept,nlam,K,degr,lam_min,eps1,maxstep1,eps2,maxstep2,gamma,dfmax,alpha)
 
     if(!is.null(initMethod)){
       if(isPenColumn){
@@ -98,6 +95,5 @@ mam_sparse_dr <-
         fit_dr$activeF = activeF
       }
     }
-    
     return(fit_dr)
   }

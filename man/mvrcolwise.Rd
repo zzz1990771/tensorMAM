@@ -11,9 +11,10 @@ This function provides the coefficient matrix estimator of high-dimensional mult
 \code{MCP} or \code{SCAD}). The tuning parameter is selected by \code{BIC} (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.
 }
 \usage{
-mvrcolwise(Y, X ,Z=NULL, method="BIC", ncv=10, penalty="LASSO", 
-            isPenColumn=TRUE,lambda=NULL, nlam=50, intercept=TRUE,  
-            lam_min=1e-4,eps=1e-6, max_step=50, gamma_pen=2, dfmax=NULL, alpha=1)
+mvrcolwise(Y, X ,Z=NULL, criteria="BIC", ncv=10, penalty="LASSO", 
+            isPenColumn=TRUE, lambda=NULL, nlam=50, intercept=TRUE,  
+            lam_min=1e-4, eps=1e-6, max_step=50, gamma_pen=2, 
+            dfmax=NULL, alpha=1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,10 +24,10 @@ mvrcolwise(Y, X ,Z=NULL, method="BIC", ncv=10, penalty="LASSO",
 
   \item{Z}{The covariates without penalization, a matrix with dimension \eqn{n\times d}. The default is \code{NULL}. }
   
-  \item{method}{The method to be applied to select parameters.  Either \code{BIC}
+  \item{criteria}{The criteria to be applied to select parameters.  Either \code{BIC}
                 (the default), \code{AIC}, \code{EBIC}, \code{CV}, or \code{GCV}.}
     
-  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{method} is not \code{CV}, \code{ncv} is useless.}  
+  \item{ncv}{The number of cross-validation folds.  Default is 10. If \code{criteria} is not \code{CV}, \code{ncv} is useless.}  
   
   \item{penalty}{The penalty to be applied to the model. Either \code{LASSO} (the default), \code{MCP} or \code{SCAD}.}
  
