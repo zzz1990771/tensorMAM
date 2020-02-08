@@ -35,9 +35,9 @@
     # The usage of function "mam_dr()"
     fit_dr <- mam_dr(mydata$Y, mydata$X)
     K <- fit_dr$K
-    D3hat <- fit$Dnew
+    D3hat <- fit_dr$Dnew
     D2hat <- TransferModalUnfoldings(D3hat,3,2,p,K,q)	
-    mu <- fit$mu
+    mu <- fit_dr$mu
     opt <- fit_dr$rk_opt	
     
     # Example 3 
