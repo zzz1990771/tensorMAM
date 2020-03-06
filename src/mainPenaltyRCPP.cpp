@@ -1148,7 +1148,7 @@ List EstPenColumnCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 		Z2 = extractColsZ(Ztest,p,K,activeA);
 		A2 = extractRows(A, activeA);
 		Dnew = C * S * kroneckerProduct(B.transpose(), A2.transpose());
-		likhd[l] = (Y - Z2 * Dnew.transpose()).squaredNorm();
+		likhd[l] = (Ytest - Z2 * Dnew.transpose()).squaredNorm();
 		betapath.col(l) = activeA;
 	}// end for
 	return List::create(Named("likhd") = likhd, Named("df") = df, Named("betapath")=betapath);
@@ -1245,7 +1245,7 @@ List EstPenSingleCV(MatrixXd Y, MatrixXd Z, MatrixXd Ytest, MatrixXd Ztest, Matr
 		for(j=0;j<p;j++) if(A.row(j).norm()) activeX[j]= 1;		
 		df[l] = activeX.sum();		
 		Dnew = C * S * kroneckerProduct(B.transpose(), A.transpose());		
-		likhd[l] = (Y - Ztest * Dnew.transpose()).squaredNorm();				
+		likhd[l] = (Ytest - Ztest * Dnew.transpose()).squaredNorm();				
 		activeA.resize(q*p,1);
 		betapath.col(l) = activeA;
 		activeXpath.col(l) = activeX;		

@@ -16,7 +16,7 @@
 # Usage
 
    - [x] [tensorMam-manual](https://github.com/xliusufe/tensorMam/blob/master/inst/tensorMam-manual.pdf) ------------ Details of the usage of the package.
-# Example
+# Examples
     
     library(tensorMam)
     # Example 1
