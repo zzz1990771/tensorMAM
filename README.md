@@ -1,4 +1,4 @@
-# tensorMam
+# tensorMAM
  A tensor estimation approach to multivariate additive models.
  
   For a high-dimensional multivariate additive model (MAM) using B-splines, with or without aparsity assumptions, 
@@ -11,14 +11,14 @@
     #install.packages("devtools")
     #install.packages("Rcpp")
     library(devtools)
-    install_github("xliusufe/tensorMam")
+    install_github("xliusufe/tensorMAM")
 
 # Usage
 
-   - [x] [tensorMam-manual](https://github.com/xliusufe/tensorMam/blob/master/inst/tensorMam-manual.pdf) ------------ Details of the usage of the package.
+   - [x] [tensorMAM-manual](https://github.com/xliusufe/tensorMAM/blob/master/inst/tensorMAM-manual.pdf) ------------ Details of the usage of the package.
 # Examples
     
-    library(tensorMam)
+    library(tensorMAM)
     # Example 1
     # The usage of function "mam()"
     p <- 5

@@ -1,6 +1,6 @@
-Package: tensorMam
+Package: tensorMAM
 Type: Package
-Title: tensorMam
+Title: tensorMAM
 Version: 0.1.0
 Authors@R: c(person(given = "Xu", family = "Liu", role = c("aut","cre"), email = "liu.xu@sufe.edu.cn"),
              person(given = "Jian", family = "Huang", role = "aut"),
@@ -18,6 +18,6 @@ LinkingTo: Rcpp, RcppEigen
 RoxygenNote: 6.0.1
 NeedsCompilation: yes
 Repository: github
-URL: https://github.com/xliusufe/tensorMam
+URL: https://github.com/xliusufe/tensorMAM
 Encoding: UTF-8
 Packaged: 2019-09-20 01:35:21 UTC; admin

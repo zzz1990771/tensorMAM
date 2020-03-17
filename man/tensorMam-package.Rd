@@ -1,6 +1,6 @@
-\name{tensorMam-package}
-\alias{tensorMam-package}
-\alias{tensorMam}
+\name{tensorMAM-package}
+\alias{tensorMAM-package}
+\alias{tensorMAM}
 \docType{package}
 \title{
   A tensor estimation approach to multivariate additive models
