@@ -2,7 +2,7 @@
 ##--------------Estimation with Penalty by CV----------------------##
 mam_sparse_dr <- 
   function(Y,X,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,r1_index=NULL,r2_index=NULL,
-           r3_index=NULL,lambda=NULL,SABC=NULL,intercept=FALSE,initMethod="LASSO",nlam=50,K=6,degr=3,lam_min=0.01,
+           r3_index=NULL,lambda=NULL,SABC=NULL,intercept=FALSE,initMethod=NULL,nlam=50,K=6,degr=3,lam_min=0.01,
            eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- nrow(Y)
     q <- ncol(Y)

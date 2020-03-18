@@ -47,7 +47,7 @@ mam_sparse(Y, X, criteria="BIC",ncv=10, r1 = NULL, r2 = NULL, r3 = NULL,
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
   
   \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initcriteria}
-                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{LASSO}}
+                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{NULL}}, which means no sparse initial to be provided.
 
   \item{K}{The number of B-spline base function, that is the plus of both degrees of base  
           functioin and the number of knots. Default is \code{6}.}

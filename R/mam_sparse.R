@@ -1,6 +1,6 @@
 mam_sparse <- 
   function(Y,X,criteria="BIC",ncv=10,penalty="LASSO",isPenColumn=TRUE,r1=NULL,r2=NULL,r3=NULL,
-           lambda=NULL,SABC=NULL,intercept=TRUE,initMethod="LASSO",K=6,degr=3,nlam=20,lam_min=1e-3,
+           lambda=NULL,SABC=NULL,intercept=TRUE,initMethod=NULL,K=6,degr=3,nlam=20,lam_min=1e-3,
            eps1=1e-4,maxstep1=20,eps2=1e-4,maxstep2=20,gamma=2,dfmax=NULL,alpha=1){
     n <- nrow(Y)
     q <- ncol(Y)

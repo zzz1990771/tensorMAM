@@ -13,7 +13,7 @@
 \usage{
 mam_sparse_dr(Y, X, criteria = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=TRUE, 
               r1_index = NULL, r2_index = NULL, r3_index = NULL, lambda = NULL, 
-              SABC = NULL, intercept = TRUE, initMethod="LASSO", nlam = 50, 
+              SABC = NULL, intercept = TRUE, initMethod=NULL, nlam = 50, 
               K = 6, degr = 3, lam_min = 0.01, eps1 = 1e-4, maxstep1 = 20, 
               eps2 = 1e-4, maxstep2 = 20, gamma = 2, dfmax = NULL, alpha = 1)
 }
@@ -65,7 +65,7 @@ mam_sparse_dr(Y, X, criteria = "BIC", ncv = 10, penalty = "LASSO", isPenColumn=T
   \item{intercept}{Should intercept(s) be fitted (default=\code{TRUE}) or set to zero (\code{FALSE})?}
   
   \item{initMethod}{One can estimate the initial tensor \eqn{D_{(3)}} as a metrix by choosing a penalty to penalize group-column wise. \code{initMethod}
-                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{LASSO}}
+                    can be \code{LASSO}, \code{MCP} or \code{SCAD}. The default is \code{NULL}}, which means no sparse initial to be provided.
                     
   \item{nlam}{The number of lambda values.  Default is 50.}
   
