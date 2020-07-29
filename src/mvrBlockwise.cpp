@@ -30,7 +30,7 @@ struct Options_pen
 
 //----------------------------------------------------------------**
 //***----update the jth row of matrix A with penalty--------------**
-VectorXd update_colj(VectorXd z, double lambda, double alpha, double gamma, int penalty)
+Eigen::VectorXd update_colj(Eigen::VectorXd z, double lambda, double alpha, double gamma, int penalty)
 {
 	double znorm = z.norm();
 	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
@@ -38,7 +38,7 @@ VectorXd update_colj(VectorXd z, double lambda, double alpha, double gamma, int 
 }
 //----------------------------------------------------------------**
 //***----update the jth row of matrix A with penalty--------------**
-MatrixXd update_blockj(MatrixXd z, double lambda, double alpha, double gamma, int penalty)
+Eigen::MatrixXd update_blockj(Eigen::MatrixXd z, double lambda, double alpha, double gamma, int penalty)
 {
 	double znorm = z.norm();
 	znorm = penalties(znorm, 1, lambda, alpha, gamma, penalty) / znorm;
@@ -47,11 +47,11 @@ MatrixXd update_blockj(MatrixXd z, double lambda, double alpha, double gamma, in
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]
-VectorXd setuplambdaMVR_colwise(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam)
+Eigen::VectorXd setuplambdaMVR_colwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z, int nlam, Eigen::VectorXd setlam)
 {
 	int n=Y.rows(), p = Z.cols(), q = Y.cols(), j;
 	double lam_max, lam_min, alpha, max_lam, max_tmp=0;
-	VectorXd lambda, lambda1, znorm;	
+	Eigen::VectorXd lambda, lambda1, znorm;	
 	znorm = Z.colwise().norm()/sqrt(n);
 	for(j=0;j<p;j++) max_tmp = MAX(max_tmp,(Y.transpose()*Z.col(j)).norm()/znorm[j]);	
 	lam_max = setlam[0];
@@ -73,12 +73,12 @@ VectorXd setuplambdaMVR_colwise(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setla
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]
-MatrixXd setuplambdaMVR_lasso(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam)
+Eigen::MatrixXd setuplambdaMVR_lasso(Eigen::MatrixXd Y, Eigen::MatrixXd Z, int nlam, Eigen::VectorXd setlam)
 {
 	int n = Y.rows(), p = Z.cols(), q = Y.cols(), j, k;
 	double lam_max, lam_min, alpha, max_lam, max_tmp;
-	VectorXd lambda, lambda1, znorm;	
-	MatrixXd lambda_all = MatrixXd::Constant(nlam, q, 0);
+	Eigen::VectorXd lambda, lambda1, znorm;	
+	Eigen::MatrixXd lambda_all = Eigen::MatrixXd::Constant(nlam, q, 0);
 	
 	znorm = Z.colwise().norm()/sqrt(n);	
 	for(k=0; k<q; k++){	
@@ -105,12 +105,12 @@ MatrixXd setuplambdaMVR_lasso(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam)
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]
-VectorXd setuplambdaMVR_blockwise(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam, VectorXi lengths)
+Eigen::VectorXd setuplambdaMVR_blockwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z, int nlam, Eigen::VectorXd setlam, Eigen::VectorXi lengths)
 {
 	int n = Y.rows(), p = lengths.size(), q = Y.cols(), j, d = 0, dj;
 	double lam_max, lam_min, alpha, max_lam, max_tmp=0;
-	VectorXd lambda, lambda1;	
-	MatrixXd V, L, Vnorm;
+	Eigen::VectorXd lambda, lambda1;	
+	Eigen::MatrixXd V, L, Vnorm;
 	for(j=0;j<p;j++){		 
 	    dj = lengths[j];
 		V = Z.middleCols(d,dj);
@@ -137,13 +137,13 @@ VectorXd setuplambdaMVR_blockwise(MatrixXd Y, MatrixXd Z, int nlam, VectorXd set
 //----------------------------------------------------------------**
 //***-------------setup tuning parameters for MVR-----------------**
 // [[Rcpp::export]]
-MatrixXd setuplambdaMVR_glasso(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam, VectorXi lengths)
+Eigen::MatrixXd setuplambdaMVR_glasso(Eigen::MatrixXd Y, Eigen::MatrixXd Z, int nlam, Eigen::VectorXd setlam, Eigen::VectorXi lengths)
 {
 	int n=Y.rows(), p = lengths.size(), q = Y.cols(), j, k, d = 0, dj;
 	double lam_max, lam_min, alpha, max_lam, max_tmp;
-	VectorXd lambda, lambda1, znorm;	
-	MatrixXd lambda_all = MatrixXd::Constant(nlam, q, 0);
-	MatrixXd V, L, Vnorm, zynorm;
+	Eigen::VectorXd lambda, lambda1, znorm;	
+	Eigen::MatrixXd lambda_all = Eigen::MatrixXd::Constant(nlam, q, 0);
+	Eigen::MatrixXd V, L, Vnorm, zynorm;
 	zynorm.setZero(p, q);
 
 	for(j=0;j<p;j++){		 
@@ -176,7 +176,7 @@ MatrixXd setuplambdaMVR_glasso(MatrixXd Y, MatrixXd Z, int nlam, VectorXd setlam
 }
 //***-------------------------------------------------------------**
 //***-------update the jth row of matrix A with penalty-----------**
-List MVR_colwise(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXi &activeA, VectorXd lambda, VectorXd &likhd)
+List MVR_colwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z1, Eigen::MatrixXd W, MatrixXi &activeA, Eigen::VectorXd lambda, Eigen::VectorXd &likhd)
 {
 /*
 	Input:
@@ -197,9 +197,9 @@ List MVR_colwise(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXi &activeA, VectorX
 	double alpha = opts_pen.alpha, eps = opts.eps;
 	double lambda1,diffmax=0,diffnorm;
 
-    MatrixXd Anew=MatrixXd::Constant(q, p, 0), Bnew, Z = Z1;
-	MatrixXd betapath = MatrixXd::Constant(p*q, nlam, 0), Cbeta, Cnew0, Cnew;
-	VectorXd ajnew,gj, ajnorm, znorm, diff;
+    Eigen::MatrixXd Anew=Eigen::MatrixXd::Constant(q, p, 0), Bnew, Z = Z1;
+	Eigen::MatrixXd betapath = Eigen::MatrixXd::Constant(p*q, nlam, 0), Cbeta, Cnew0, Cnew;
+	Eigen::VectorXd ajnew,gj, ajnorm, znorm, diff;
 	if(pz){
 		Cbeta.setZero(pz*q,nlam);
 		Cnew0.setZero(pz,q);
@@ -208,7 +208,7 @@ List MVR_colwise(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXi &activeA, VectorX
 		Cnew0.setZero(1,q);
 		Cbeta.setZero(q,nlam);
 	}
-	MatrixXd r = Y;
+	Eigen::MatrixXd r = Y;
 	ajnorm.setZero(p);
 	znorm = Z1.colwise().norm()/sqrt(n);
 	for(j=0;j<p;j++) Z.col(j) = Z1.col(j)/znorm[j];	
@@ -258,7 +258,7 @@ List MVR_colwise(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXi &activeA, VectorX
 }
 //***-------------------------------------------------------------** 
 //***-------update the jth row of matrix A with penalty-----------** 
-List MVR_lasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd lambda, VectorXd &likhd)
+List MVR_lasso(Eigen::VectorXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, MatrixXi &activeA, Eigen::VectorXd lambda, Eigen::VectorXd &likhd)
 {
 /*
 	Input:
@@ -279,8 +279,8 @@ List MVR_lasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd l
 	int dfmax = opts_pen.dfmax, max_step = opts.max_step, gamma = opts_pen.gamma_pen, penalty = opts_pen.pen, pz=opts.pz;
 	double alpha = opts_pen.alpha, eps = opts.eps;
 	
-	MatrixXd beta = MatrixXd::Constant(p,nlam,0), Cbeta;
-	VectorXd Anew, ajnorm, r = Y, Cnew0, Cnew;
+	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(p,nlam,0), Cbeta;
+	Eigen::VectorXd Anew, ajnorm, r = Y, Cnew0, Cnew;
 	Anew.setZero(p);
 	ajnorm = Anew;
 	if(pz){
@@ -330,7 +330,7 @@ List MVR_lasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd l
 }
 //***-------------------------------------------------------------**
 //***-------update the jth row of matrix A with penalty-----------**
-List MVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd lambda, VectorXd &likhd, VectorXi lengths)
+List MVR_blockwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, MatrixXi &activeA, Eigen::VectorXd lambda, Eigen::VectorXd &likhd, Eigen::VectorXi lengths)
 {
 /*
 	Input:
@@ -351,9 +351,9 @@ List MVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, Vector
 	double alpha = opts_pen.alpha, eps = opts.eps, gamma = opts_pen.gamma_pen;
 	double lambda1,diffmax,diffnorm;
 
-    MatrixXd Anew=MatrixXd::Constant(p0, q, 0), Bnew, Cbeta, Cnew0, Cnew;
-	MatrixXd betapath = MatrixXd::Constant(p0*q, nlam, 0), gj, diff, ajnew;
-	VectorXd ajnorm;
+    Eigen::MatrixXd Anew=Eigen::MatrixXd::Constant(p0, q, 0), Bnew, Cbeta, Cnew0, Cnew;
+	Eigen::MatrixXd betapath = Eigen::MatrixXd::Constant(p0*q, nlam, 0), gj, diff, ajnew;
+	Eigen::VectorXd ajnorm;
 	ajnorm.setZero(p);
 	if(pz){
 		Cbeta.setZero(pz*q,nlam);
@@ -363,9 +363,9 @@ List MVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, Vector
 		Cnew0.setZero(1,q);
 		Cbeta.setZero(q,nlam);
 	}	
-	MatrixXd r = Y;
-	MatrixXd V, L, Vnorm, Vnew;
-	Vnew = MatrixXd::Constant(n, p0, 0);
+	Eigen::MatrixXd r = Y;
+	Eigen::MatrixXd V, L, Vnorm, Vnew;
+	Vnew = Eigen::MatrixXd::Constant(n, p0, 0);
 	List Gamma_sqrtn(p);
     	
 	for(d = 0, j=0;j<p;j++){	
@@ -431,7 +431,7 @@ List MVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, Vector
 }
 //***-------------------------------------------------------------**
 //***-------update the jth row of matrix A with penalty-----------**
-List MVR_glasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd lambda, VectorXd &likhd, VectorXi lengths)
+List MVR_glasso(Eigen::VectorXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, MatrixXi &activeA, Eigen::VectorXd lambda, Eigen::VectorXd &likhd, Eigen::VectorXi lengths)
 {
 /*
 	Input:
@@ -452,8 +452,8 @@ List MVR_glasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd 
 	int dfmax = opts_pen.dfmax, max_step = opts.max_step, penalty = opts_pen.pen, pz=opts.pz;
 	double alpha = opts_pen.alpha, eps = opts.eps, gamma = opts_pen.gamma_pen;
 	
-	MatrixXd beta = MatrixXd::Constant(p0,nlam,0), Vnorm, Cbeta;
-	VectorXd Anew, ajnorm, r = Y, ajnew, gj, diff, Cnew0, Cnew;
+	Eigen::MatrixXd beta = Eigen::MatrixXd::Constant(p0,nlam,0), Vnorm, Cbeta;
+	Eigen::VectorXd Anew, ajnorm, r = Y, ajnew, gj, diff, Cnew0, Cnew;
 	Anew.setZero(p0);
 	ajnorm.setZero(p);
 	if(pz){
@@ -508,7 +508,7 @@ List MVR_glasso(VectorXd Y, MatrixXd Z, MatrixXd W, MatrixXi &activeA, VectorXd 
 //----------------------------------------------------------------**
 //***----------Estimation Multivariate with  penalty--------------**
 // [[Rcpp::export]]
-List EstMVR_colwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, List optsList, List optsList_pen){
+List EstMVR_colwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, Eigen::VectorXd lambda, List optsList, List optsList_pen){
 	opts.eps = as<double>(optsList["eps"]);	
 	opts.max_step = as<int>(optsList["max_step"]);
 	opts.n = as<int>(optsList["n"]);
@@ -528,7 +528,7 @@ List EstMVR_colwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, List op
 	int nlam=opts_pen.nlam, p=opts.p;
 	opts.n=Y.rows();
 	MatrixXi df = MatrixXi::Constant(p,nlam, 0);
-	VectorXd likhd = VectorXd::Constant(nlam, 0);
+	Eigen::VectorXd likhd = Eigen::VectorXd::Constant(nlam, 0);
 	List fit;
 	fit = MVR_colwise(Y, Z, W, df, lambda, likhd);
 	return List::create(Named("betapath") = fit[0], Named("df") = df, Named("likhd") = likhd, Named("Cpath") = fit[1]);
@@ -536,7 +536,7 @@ List EstMVR_colwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, List op
 //----------------------------------------------------------------**
 //***----------Estimation Multivariate with  penalty--------------**
 // [[Rcpp::export]]
-List EstMVR_lasso(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXd lambda, List optsList, List optsList_pen){
+List EstMVR_lasso(Eigen::MatrixXd Y, Eigen::MatrixXd Z1, Eigen::MatrixXd W, Eigen::MatrixXd lambda, List optsList, List optsList_pen){
 	opts.eps = as<double>(optsList["eps"]);	
 	opts.max_step = as<int>(optsList["max_step"]);
 	opts.n = as<int>(optsList["n"]);
@@ -555,10 +555,10 @@ List EstMVR_lasso(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXd lambda, List opt
 
 	int j,k,nlam=opts_pen.nlam, p=opts.p, q=opts.q, n=Y.rows(), pz=opts.pz;
 	opts.n=n;
-	MatrixXd betapath = MatrixXd::Constant(p*q, nlam, 0), Z = Z1, beta, Cnew, Cpath;
+	Eigen::MatrixXd betapath = Eigen::MatrixXd::Constant(p*q, nlam, 0), Z = Z1, beta, Cnew, Cpath;
 	MatrixXi df = MatrixXi::Constant(p*q,nlam, 0), activeA;
-	VectorXd znorm, likhd0;
-	MatrixXd likhd = MatrixXd::Constant(q, nlam, 0);
+	Eigen::VectorXd znorm, likhd0;
+	Eigen::MatrixXd likhd = Eigen::MatrixXd::Constant(q, nlam, 0);
 	likhd0.setZero(nlam);
 	List fit;
 	if(pz)	Cpath.setZero(pz*q,nlam);
@@ -582,7 +582,7 @@ List EstMVR_lasso(MatrixXd Y, MatrixXd Z1, MatrixXd W, MatrixXd lambda, List opt
 //----------------------------------------------------------------**
 //***----------Estimation Multivariate with  penalty--------------**
 // [[Rcpp::export]]
-List EstMVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, VectorXi lengths, List optsList, List optsList_pen){
+List EstMVR_blockwise(Eigen::MatrixXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, Eigen::VectorXd lambda, Eigen::VectorXi lengths, List optsList, List optsList_pen){
 	opts.eps = as<double>(optsList["eps"]);	
 	opts.max_step = as<int>(optsList["max_step"]);
 	opts.n = as<int>(optsList["n"]);
@@ -602,7 +602,7 @@ List EstMVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, Vecto
 	int nlam=opts_pen.nlam, p=opts.p;
 	opts.n=Y.rows();
 	MatrixXi df = MatrixXi::Constant(p,nlam, 0);
-	VectorXd likhd = VectorXd::Constant(nlam, 0);
+	Eigen::VectorXd likhd = Eigen::VectorXd::Constant(nlam, 0);
 	List fit;
    
 	fit = MVR_blockwise(Y, Z, W, df, lambda, likhd, lengths);
@@ -611,7 +611,7 @@ List EstMVR_blockwise(MatrixXd Y, MatrixXd Z, MatrixXd W, VectorXd lambda, Vecto
 //----------------------------------------------------------------**
 //***----------Estimation Multivariate with  penalty--------------**
 // [[Rcpp::export]]
-List EstMVR_glasso(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXd lambda, VectorXi lengths, List optsList, List optsList_pen){
+List EstMVR_glasso(Eigen::MatrixXd Y, Eigen::MatrixXd Z, Eigen::MatrixXd W, Eigen::MatrixXd lambda, Eigen::VectorXi lengths, List optsList, List optsList_pen){
 	opts.eps = as<double>(optsList["eps"]);	
 	opts.max_step = as<int>(optsList["max_step"]);
 	opts.n = as<int>(optsList["n"]);
@@ -630,16 +630,16 @@ List EstMVR_glasso(MatrixXd Y, MatrixXd Z, MatrixXd W, MatrixXd lambda, VectorXi
 
 	int j,k,d,dj,nlam=opts_pen.nlam, p=opts.p, q=opts.q, n=Y.rows(), p0 = lengths.sum(), pz=opts.pz;
 	opts.n=n;
-	MatrixXd betapath = MatrixXd::Constant(p0*q, nlam, 0), beta, Cbeta, Cpath;
+	Eigen::MatrixXd betapath = Eigen::MatrixXd::Constant(p0*q, nlam, 0), beta, Cbeta, Cpath;
 	MatrixXi df = MatrixXi::Constant(p*q,nlam, 0), activeA;
-	MatrixXd likhd = MatrixXd::Constant(q, nlam, 0);
-	VectorXd likhd0;
+	Eigen::MatrixXd likhd = Eigen::MatrixXd::Constant(q, nlam, 0);
+	Eigen::VectorXd likhd0;
 	likhd0.setZero(nlam);
 	List fit;
 	if(pz)	Cpath.setZero(pz*q,nlam);
 	else Cpath.setZero(q,nlam);	
 
-	MatrixXd V, L, Vnew = MatrixXd::Constant(n, p0, 0);
+	Eigen::MatrixXd V, L, Vnew = Eigen::MatrixXd::Constant(n, p0, 0);
 	List Gamma_sqrtn(p);
 	for(d=0,j=0;j<p;j++){	
         dj = lengths[j];

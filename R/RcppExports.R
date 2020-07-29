@@ -2,66 +2,66 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 TransferModalUnfoldings <- function(S, d1, d2, r1, r2, r3) {
-    .Call(`_tensorMam_TransferModalUnfoldings`, S, d1, d2, r1, r2, r3)
+    .Call(`_tensorMAM_TransferModalUnfoldings`, S, d1, d2, r1, r2, r3)
 }
 
 Estimation <- function(Y, Z, A, B, C, S, threshold, max_step) {
-    .Call(`_tensorMam_Estimation`, Y, Z, A, B, C, S, threshold, max_step)
+    .Call(`_tensorMAM_Estimation`, Y, Z, A, B, C, S, threshold, max_step)
 }
 
 setuplambda <- function(Y, Z, A, B, C, S, nlam, setlam) {
-    .Call(`_tensorMam_setuplambda`, Y, Z, A, B, C, S, nlam, setlam)
+    .Call(`_tensorMAM_setuplambda`, Y, Z, A, B, C, S, nlam, setlam)
 }
 
 EstPenColumn <- function(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
-    .Call(`_tensorMam_EstPenColumn`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+    .Call(`_tensorMAM_EstPenColumn`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
 EstPenSingle <- function(Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
-    .Call(`_tensorMam_EstPenSingle`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+    .Call(`_tensorMAM_EstPenSingle`, Y, Z, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
 EstPenColumnCV <- function(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
-    .Call(`_tensorMam_EstPenColumnCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+    .Call(`_tensorMAM_EstPenColumnCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
 EstPenSingleCV <- function(Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter) {
-    .Call(`_tensorMam_EstPenSingleCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
+    .Call(`_tensorMAM_EstPenSingleCV`, Y, Z, Ytest, Ztest, A, B, C, S, lambda, alpha, gamma, penalty, dfmax, threshold, eps, max_step, max_iter)
 }
 
 EstimationD3 <- function(Y, Z) {
-    .Call(`_tensorMam_EstimationD3`, Y, Z)
+    .Call(`_tensorMAM_EstimationD3`, Y, Z)
 }
 
 setuplambdaMVR_colwise <- function(Y, Z, nlam, setlam) {
-    .Call(`_tensorMam_setuplambdaMVR_colwise`, Y, Z, nlam, setlam)
+    .Call(`_tensorMAM_setuplambdaMVR_colwise`, Y, Z, nlam, setlam)
 }
 
 setuplambdaMVR_lasso <- function(Y, Z, nlam, setlam) {
-    .Call(`_tensorMam_setuplambdaMVR_lasso`, Y, Z, nlam, setlam)
+    .Call(`_tensorMAM_setuplambdaMVR_lasso`, Y, Z, nlam, setlam)
 }
 
 setuplambdaMVR_blockwise <- function(Y, Z, nlam, setlam, lengths) {
-    .Call(`_tensorMam_setuplambdaMVR_blockwise`, Y, Z, nlam, setlam, lengths)
+    .Call(`_tensorMAM_setuplambdaMVR_blockwise`, Y, Z, nlam, setlam, lengths)
 }
 
 setuplambdaMVR_glasso <- function(Y, Z, nlam, setlam, lengths) {
-    .Call(`_tensorMam_setuplambdaMVR_glasso`, Y, Z, nlam, setlam, lengths)
+    .Call(`_tensorMAM_setuplambdaMVR_glasso`, Y, Z, nlam, setlam, lengths)
 }
 
 EstMVR_colwise <- function(Y, Z, W, lambda, optsList, optsList_pen) {
-    .Call(`_tensorMam_EstMVR_colwise`, Y, Z, W, lambda, optsList, optsList_pen)
+    .Call(`_tensorMAM_EstMVR_colwise`, Y, Z, W, lambda, optsList, optsList_pen)
 }
 
 EstMVR_lasso <- function(Y, Z1, W, lambda, optsList, optsList_pen) {
-    .Call(`_tensorMam_EstMVR_lasso`, Y, Z1, W, lambda, optsList, optsList_pen)
+    .Call(`_tensorMAM_EstMVR_lasso`, Y, Z1, W, lambda, optsList, optsList_pen)
 }
 
 EstMVR_blockwise <- function(Y, Z, W, lambda, lengths, optsList, optsList_pen) {
-    .Call(`_tensorMam_EstMVR_blockwise`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
+    .Call(`_tensorMAM_EstMVR_blockwise`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
 }
 
 EstMVR_glasso <- function(Y, Z, W, lambda, lengths, optsList, optsList_pen) {
-    .Call(`_tensorMam_EstMVR_glasso`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
+    .Call(`_tensorMAM_EstMVR_glasso`, Y, Z, W, lambda, lengths, optsList, optsList_pen)
 }
 
